@@ -1,5 +1,6 @@
 *! dagstrats v1.0.0 MJBaker 17July2014
-program dagstrats, rclass
+*! dagamestrats v2.0.0 MJBaker 50May2023
+program dagamestrats, rclass
 	version 11.2
 	syntax varname(numeric) [if] [in], GROUP(varname) GENerate(string) 
 	marksample touse
