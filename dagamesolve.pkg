@@ -11,8 +11,8 @@ d
 d Author: M. J. Baker, Hunter College and the Graduate Center, City University of New York
 d
 F dagamesolve.ado
-F dagstrats.ado
+F dagamestrats.ado
 F dagamesolve.sthlp
 F dagamestrats.sthlp
-F ldagsolve.mlib
+F ldagamesolve.mlib
 
