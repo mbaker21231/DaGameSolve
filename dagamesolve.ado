@@ -1,6 +1,6 @@
 *! dagsolve v1.0.1 MJBaker 21july2014
 *! dagsolve v1.0.2 MJBaker 18sep2014
-*! dagamesolver v1.0.3 MJBaker 8may2023
+*! dagamesolve v1.0.3 MJBaker 8may2023
 program dagamesolve, rclass
 	version 11.2
 	syntax varlist(numeric) [if] [in], PAYoffs(varlist numeric) GROUP(varname) EQuilibria(string) ///
