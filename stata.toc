@@ -1,0 +1,9 @@
+v 1.0.0
+d Materials by M. J. Baker
+d Hunter College and the Graduate Center, CUNY
+d matthew.baker@hunter.cuny.edu
+d https://github.com/mbaker21213/github
+
+d 'dagamesolve': solve discrete-action, N-player games
+
+p dagamesolve
