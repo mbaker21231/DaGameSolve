@@ -1253,7 +1253,7 @@ real matrix probReshape(real matrix id, real matrix acts, real matrix prob)
 	}	
 	return(pHold)
 }
-mata mlib create ldagsolve, dir(PERSONAL) replace
-mata mlib add ldagsolve *()
+mata mlib create ldagamesolve, dir(PERSONAL) replace
+mata mlib add ldagamesolve *()
 mata mlib index
 end
