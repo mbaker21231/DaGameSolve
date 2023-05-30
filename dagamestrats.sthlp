@@ -6,18 +6,18 @@
 {title:Title}
 
 {p2colset 5 19 21 2}{...}
-{p2col:{hi:dagstrats}{hline 2}} Create pure-strategy profiles for N-player discrete action games{p_end}
+{p2col:{hi:dagamestrats}{hline 2}} Create pure-strategy profiles for N-player discrete action games{p_end}
 {p2colreset}{...}
 
 {title:Syntax}
 
 {p 8 14 2}
-{cmd:dagstrats} {ifin}{cmd:,} {cmdab:act:ions(}{varname}{cmd:)}
+{cmd:dagamestrats} {ifin}{cmd:,} {cmdab:act:ions(}{varname}{cmd:)}
 {cmdab:group(}{varname}{cmd:)}  {cmdab:gen:erate(}string{cmd:)}
 
 {title:Description}
 
-{pstd}{cmd:dgastrats} generates a series of variables which collectively contain all possible
+{pstd}{cmd:dagamestrats} generates a series of variables which collectively contain all possible
 pure-strategy action profiles for an N-player game where each player has a discrete number of actions. The players in a game are identified 
 by the variable {cmdab:group(}{varname}{cmd:)}, which serves as a game identifier.
 The strategy profiles are listed and numbered in the new variables indicated by {cmdab:gen:erate(}string{cmd:)}. 
@@ -25,8 +25,8 @@ The strategy profiles are listed and numbered in the new variables indicated by 
 listed in {cmdab:group(}{varname}{cmd:)}. Each grouping variable contains a strategy profile.
 {p_end}
 
-{pstd}{cmd: dagstrats} is intended to be used as a utility that renders use of {bf:{help dagsolve}} a bit easier. To be processed 
-by {bf:{help dagsolve}}, games must be written in what can be called a
+{pstd}{cmd: dagamestrats} is intended to be used as a utility that renders use of {bf:{help dagamesolve}} a bit easier. To be processed 
+by {bf:{help dagamesolve}}, games must be written in what can be called a
 "list" form. As an example, consider the following two-player, two-action game written in normal form, 
 where player one chooses rows and player two chooses columns, and, player one's payoffs are
 listed first in the normal-form payoff matrix:{p_end}
