@@ -1,4 +1,4 @@
-d 'DAGAMESOLVE': module to solve simultaneous-move, discrete-action, full-information games. 
+d 'DAGAMESOLVE': module to solve sequences of simultaneous-move, discrete-action, full-information games. 
 d
 d dagamesolve solves sequences of discrete-action, simultaneous-move full-information games with payoffs specified in list form.
 d 
