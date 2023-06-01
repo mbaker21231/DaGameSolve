@@ -57,7 +57,7 @@ program dagamesolve, rclass
 	mata: noise =st_local("noise")
 	mata: pureonly=st_local("pureonly")
 
-	mata: Z=dagSolverN(AA,PP,id,tol,digits,mbwidth,coltol,mnits,method,noise,pureonly,actVec,Pays=.)
+	mata: Z=dagameSolverN(AA,PP,id,tol,digits,mbwidth,coltol,mnits,method,noise,pureonly,actVec,Pays=.)
 	mata: Count=rownonmissing(Z)/totActs
 	mata: _editvalue(Count,0,.)
 	mata: maxEqs=cols(Z)/totActs

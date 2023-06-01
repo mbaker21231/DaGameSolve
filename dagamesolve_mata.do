@@ -1080,7 +1080,7 @@ void discreteGameSolver(struct gameDescription Game) {
 	}
 }
 /* Called by solver */
-real matrix dagSolverN(real matrix AA,real matrix PP,real matrix id,
+real matrix dagameSolverN(real matrix AA,real matrix PP,real matrix id,
 	real scalar tol,real scalar digits,real scalar mbwidth, real scalar coltol,
 	real scalar mnits, string scalar method, string scalar noise, 
 	string scalar pureonly, real vector K,
@@ -1253,7 +1253,7 @@ real matrix probReshape(real matrix id, real matrix acts, real matrix prob)
 	}	
 	return(pHold)
 }
-mata mlib create ldagamesolve, dir(PERSONAL) replace
+mata mlib create ldagamesolve, dir(C:\ado\PLUS\l) replace
 mata mlib add ldagamesolve *()
 mata mlib index
 end
