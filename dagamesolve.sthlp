@@ -135,8 +135,12 @@ are written in a format that is compatible with the command {bf:{help dagsolve}}
 {title: Additional Comments}
 
 {cmd:dagamestrats} requires that the {bf:{help moremata}} package be installed, and also requires that package {bf:{help dagsolve}}
-be installed, with its accompanying mata library {bf:ldagsolve_mata}.  Package {bf:{help dagsolve}} requires packages {bf:{help int_utils}},
-{bf:{help rowmat_utils}}, and {bf:{help intsolve}}. All materials can be downloaded from SSC. 
+be installed, with its accompanying mata library {bf:ldagamesolve.mlib}.  Package {bf:{help dagamesolve}} requires packages {bf:{help int_utils}},
+{bf:{help rowmat_utils}}, and {bf:{help intsolve}}. All of these supporting materials can be downloaded from SSC. 
+
+Available on the project's github site (browse: "http://github.com/mbaker21231/dagamesolve": mbaker21231/dagamesolve) in the Support directory are files dagamesolve_examples.do, which contains 
+some examples to work with that are periodically updated, and also a file dagamesolve_mata.do, which generates the mata library that supports the package.
+The aim in making the latter file available is transparency, so other researchers can see how the nuts and bolts of solutions work.
 
 {title:Author}
 
