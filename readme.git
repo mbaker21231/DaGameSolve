@@ -2,4 +2,4 @@ This repository is for my never-ending project on finding ALL solutions to discr
 
 ssc install rowmat_utils
 ssc install int_utils
-
+ssc install intsolver
