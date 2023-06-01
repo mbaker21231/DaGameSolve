@@ -1,4 +1,4 @@
-ssc install moremata
-ssc install int_utils
-ssc install rowmat_utils
-ssc install intsolver
+ssc install moremata, update
+ssc install int_utils, update
+ssc install rowmat_utils, update
+ssc install intsolver, update
