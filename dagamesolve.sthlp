@@ -75,9 +75,6 @@ which can also be handy in characterizing the payoffs to games.{p_end}
 
 {pstd}{cmd:dagamesolve} Each pure-strategy profile should be contained in its own stata variable, and corresponding
 to each strategy profile should be a stata variable containing payoffs to each player. 
-
-{pstd}{cmd: dagamesolve} can be used in conjunction with
-the utility function {bf:{dagamerets}} a bit easier, as might be made clear from the examples.
 	
 {title:Examples}
 
@@ -134,13 +131,17 @@ are written in a format that is compatible with the command {bf:{help dagsolve}}
 
 {title: Additional Comments}
 
-{cmd:dagamestrats} requires that the {bf:{help moremata}} package be installed, and also requires that package {bf:{help dagsolve}}
-be installed, with its accompanying mata library {bf:ldagamesolve.mlib}.  Package {bf:{help dagamesolve}} requires packages {bf:{help int_utils}},
-{bf:{help rowmat_utils}}, and {bf:{help intsolve}}. All of these supporting materials can be downloaded from SSC. 
+{pstd}{cmd:dagamestrats} requires that the {bf:{help moremata}} package be installed.  Package {bf:{help dagamesolve}} also requires packages {bf:{help int_utils}},
+{bf:{help rowmat_utils}}, and {bf:{help intsolve}}. All of these supporting materials can be downloaded from SSC. {p_end}
 
-Available on the project's github site (browse: "http://github.com/mbaker21231/dagamesolve": mbaker21231/dagamesolve) in the Support directory are files dagamesolve_examples.do, which contains 
-some examples to work with that are periodically updated, and also a file dagamesolve_mata.do, which generates the mata library that supports the package.
-The aim in making the latter file available is transparency, so other researchers can see how the nuts and bolts of solutions work.
+{pstd}Available on the project's github site (browse: "http://github.com/mbaker21231/dagamesolve": mbaker21231/dagamesolve) in the Support directory are files dagamesolve_examples.do, 
+which contains some examples to work with that are periodically updated, and also a file dagamesolve_mata.do, which generates the mata library that supports the package.
+The aim in making the latter file available is transparency, so other researchers can see how the nuts and bolts of solutions work.{p_end}
+
+{title: Full discosure!}
+{pstd}{cmd:dagamestrats} is an experimental package. While it was devised with the idea that it would facilitate integration of game-theoretic estimators with Stata more seamlessly, for a couple
+of reasons it perhaps is not well-suited to this objective. For one, it is very slow for games of even moderate size (i.e., 4 players, 3 actions). Second, freely avaiable packages such as {bf:Gambit} are
+now fairly easy to integrate with Stata via Python.{p_end} 
 
 {title:Author}
 
