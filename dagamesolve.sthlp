@@ -35,7 +35,8 @@ by the variable {cmdab:group(}{varname}{cmd:)}, which also serves as a game iden
 Strategy profiles are passed to {cmd:dagamesolve} in a {varlist}, 
 while corresponding payoffs indicated by {cmdab:pay:offs(}varlist{cmd:)}. 
 {cmdab:eq:uilibria({dagamesolve} generates an exhaustive list of values for the grouping variable
-listed in {cmdab:group(}{varname}{cmd:)}. Each grouping variable contains a strategy profile.
+listed in {cmdab:group(}{varname}{cmd:)}. Each grouping variable contains a strategy profile. The user might wish to consult some
+of the qualifying {help remarks##rems} before using {cmd: dagamesolve}. 
 {p_end}
 
 {pstd}
@@ -129,16 +130,18 @@ Generating payoffs for each firm given the parameterization:{p_end}
 {pstd}After running the above code, one has the payoffs from three random entry games, with the desired payoffs. The payoffs and action profiles
 are written in a format that is compatible with the command {bf:{help dagsolve}}.{p_end}
 
+{marker rems}
 {title: Additional Comments}
 
 {pstd}{cmd:dagamestrats} requires that the {bf:{help moremata}} package be installed.  Package {bf:{help dagamesolve}} also requires packages {bf:{help int_utils}},
 {bf:{help rowmat_utils}}, and {bf:{help intsolve}}. All of these supporting materials can be downloaded from SSC. {p_end}
 
-{pstd}Available on the project's github site (browse: "http://github.com/mbaker21231/dagamesolve": mbaker21231/dagamesolve) in the Support directory are files dagamesolve_examples.do, 
+{pstd}Available on the project's github site {browse: "http://github.com/mbaker21231/dagamesolve": mbaker21231/dagamesolve} in the Support directory are files dagamesolve_examples.do, 
 which contains some examples to work with that are periodically updated, and also a file dagamesolve_mata.do, which generates the mata library that supports the package.
 The aim in making the latter file available is transparency, so other researchers can see how the nuts and bolts of solutions work.{p_end}
 
 {title: Full discosure!}
+
 {pstd}{cmd:dagamestrats} is an experimental package. While it was devised with the idea that it would facilitate integration of game-theoretic estimators with Stata more seamlessly, for a couple
 of reasons it perhaps is not well-suited to this objective. For one, it is very slow for games of even moderate size (i.e., 4 players, 3 actions). Second, freely avaiable packages such as {bf:Gambit} are
 now fairly easy to integrate with Stata via Python.{p_end} 
@@ -150,5 +153,5 @@ matthew.baker@hunter.cuny.edu{p_end}
 
 {title: Also see}
 
-{bf:{help dagamerets}}, {bf:{help dagamesolve}}
+{bf:{help dagamestrats}}
 
