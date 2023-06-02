@@ -12,7 +12,7 @@
 {title:Syntax}
 
 {p 8 14 2}
-{cmd:dagamesolve}} {varlist} {ifin}{cmd:,} 
+{cmd:dagamesolve} {varlist} {ifin}{cmd:,} 
 {cmdab:group(}{varname}{cmd:)}  
 {cmdab:pay:offs(}varlist{cmd:)}
 {cmdab:eq:uilibria(}varlist{cmd:)}
@@ -34,14 +34,13 @@ similar games. Players in a game are identified
 by the variable {cmdab:group(}{varname}{cmd:)}, which also serves as a game identifier.
 Strategy profiles are passed to {cmd:dagamesolve} in a {varlist}, 
 while corresponding payoffs indicated by {cmdab:pay:offs(}varlist{cmd:)}. 
-{cmdab:eq:uilibria({dagamesolve} generates an exhaustive list of values for the grouping variable
+{cmdab:eq:uilibria(}varlist{cmd:)} generates an exhaustive list of values for the grouping variable
 listed in {cmdab:group(}{varname}{cmd:)}. Each grouping variable contains a strategy profile. The user might wish to consult some
-of the qualifying {help dagamesolve##rems: remarks} before using {cmd: dagamesolve}. 
+of the qualifying {help dagamesolve##rems:remarks} before using {cmd:dagamesolve}. 
 {p_end}
 
 {pstd}
-To be processed 
-by {bf:{help dagamesolve}}, games should be written in what can be called a
+To be processed by {cmd:dagamesolve}, games should be written in what can be called a
 "list" form. As an example, consider the following two-player, two-action game written in normal form, 
 where player one chooses rows, player two chooses columns, and player one's payoffs are
 listed first in the normal-form payoff matrix:{p_end}
@@ -62,7 +61,70 @@ listed first in the normal-form payoff matrix:{p_end}
     1, 0, 0, 3  
     2,.1, 0, 1
 
-{pstd}As a further, more expansive example, consider a three-player game in which player one has two actions to choose from, player two has three actions to choose from, and player three has four actions to choose from. Then, the list form
+{pstd} One could program this game into stata using a brute force method as follows:
+
+{phang}{cmd:. set obs 2}{p_end}
+{phang}{cmd:. gen id=1}{p_end}
+{phang}{cmd:. gen a1 = 1}{p_end}
+{phang}{cmd:. gen a2 = 1}{p_end}
+{phang}{cmd:. replace a2 = 2 in 2}{p_end}
+{phang}{cmd:. gen a3 = 2}{p_end}
+{phang}{cmd:. replace a3 = 1 in 2}{p_end}
+{phang}{cmd:. gen a4 = 2}{p_end}
+
+{pstd} Now that all the action profiles have been described, one describes
+payoffs in an order corresponding with the action profiles:{p_end}
+
+{phang}{cmd:. gen pay1 = 1}{p_end}
+{phang}{cmd:. replace pay1 = 2 in 2}{p_end}
+{phang}{cmd:. gen pay2 = 0}{p_end}
+{phang}{cmd:. replace pay2 = .1 in 2}{p_end}
+{phang}{cmd:. gen pay3 = 0}{p_end}
+{phang}{cmd:. gen pay4 = 3}{p_end}
+{phang}{cmd:. replace pay4 = 1 in 2}{p_end}
+{phang}{cmd:. list}
+
+        {c TLC}{hline 44}{c TRC}
+{txt}        {c |}{res} id  a1  a2  a3  a4  pay1  pay2  pay3  pay4 {c |}
+        {c LT}{hline 44}{c RT}
+{txt}     1. {c |}{res}  1   1   1   2   2     1     0     0     3 {c |}
+{txt}     2. {c |}{res}  1   1   2   1   2     2    .1     0     1 {c |}
+        {c BLC}{hline 44}{c BRC}
+{txt}
+
+{pstd} The game can now be solved by passing action and payoff information to {cmd:dagamesolve}:{p_end}
+
+{phang}{cmd:. dagamesolve a1 a2 a3 a4, group(id) pay(pay1 pay2 pay3 pay4) eq(e)}{p_end}
+
+{pstd} Equilibria are now collected in newly generated variables {cmd:e*}, which are numbered by equilibrium, player, 
+and then probability that each strategy is played in equilibrium:{p_end}
+
+{phang}{cmd:. describe e*}
+
+Variable	Storage	Display	Value
+name	type	format	label	Variable	label
+						
+e_rets_1	float	%9.0g		     
+e_1_1_1	float	%9.0g		     
+e_1_1_2	float	%9.0g		     
+e_1_2_1	float	%9.0g		     
+e_1_2_2	float	%9.0g		     
+e_rets_2	float	%9.0g		     
+e_2_1_1	float	%9.0g		     
+e_2_1_2	float	%9.0g		     
+e_2_2_1	float	%9.0g		     
+e_2_2_2	float	%9.0g		     
+e_rets_3	float	%9.0g		     
+e_3_1_1	float	%9.0g		     
+e_3_1_2	float	%9.0g		     
+e_3_2_1	float	%9.0g		     
+e_3_2_2	float	%9.0g		     
+e_count	float	%9.0g		     
+
+
+
+{pstd}As a further, more expansive example, consider a three-player game in which player one has two actions to choose from, 
+player two has three actions to choose from, and player three has four actions to choose from. Then, the list form
 	of the game would begin by specifying actions as:{p_end}
 	
     1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2
@@ -71,10 +133,10 @@ listed first in the normal-form payoff matrix:{p_end}
 	
 {pstd}So, all possible actions profiles are created and can be read as columns.{p_end} 
 
-{pstd}{cmd:dagamestrats} automates the production of lists of actions like those above as new stata variables, 
+{pstd}{help dagamestrats} automates the production of lists of actions like those above as new stata variables, 
 which can also be handy in characterizing the payoffs to games.{p_end} 
 
-{pstd}{cmd:dagamesolve} Each pure-strategy profile should be contained in its own stata variable, and corresponding
+{pstd}To use {cmd:dagamesolve} each pure-strategy profile should be contained in its own stata variable, and corresponding
 to each strategy profile should be a stata variable containing payoffs to each player. 
 	
 {title:Examples}
@@ -128,11 +190,11 @@ Generating payoffs for each firm given the parameterization:{p_end}
 {phang}{txt:  4. }{cmd:{c )-}}{p_end}
 
 {pstd}After running the above code, one has the payoffs from three random entry games, with the desired payoffs. The payoffs and action profiles
-are written in a format that is compatible with the command {bf:{help dagsolve}}.{p_end}
+are written in a format that is compatible with the command {bf:{help dagamesolve}}.{p_end}
 
 {marker rems}{title: Additional Comments}
 
-{pstd}{cmd:dagamestrats} requires that the {bf:{help moremata}} package be installed.  Package {bf:{help dagamesolve}} also requires packages {bf:{help int_utils}},
+{pstd}{cmd:dagamesolve} requires that the {bf:{help moremata}} package be installed.  Package {bf:{help dagamesolve}} also requires packages {bf:{help int_utils}},
 {bf:{help rowmat_utils}}, and {bf:{help intsolver}}. All of these supporting materials can be downloaded from SSC. {p_end}
 
 {pstd}Available on the project's github site {browse: "http://github.com/mbaker21231/dagamesolve": mbaker21231/dagamesolve} in the Support directory are files dagamesolve_examples.do, 
@@ -141,7 +203,7 @@ The aim in making the latter file available is transparency, so other researcher
 
 {title: Full discosure!}
 
-{pstd}{cmd:dagamestrats} is an experimental package. While it was devised with the idea that it would facilitate integration of game-theoretic estimators with Stata more seamlessly, for a couple
+{pstd}{cmd:dagamesolve} is an experimental package. While it was devised with the idea that it would facilitate integration of game-theoretic estimators with Stata more seamlessly, for a couple
 of reasons it perhaps is not well-suited to this objective. For one, it is very slow for games of even moderate size (i.e., 4 players, 3 actions). Second, freely avaiable packages 
 such as {browse: "http://www.gambit-project.org/": Gambit} are
 now fairly easy to integrate with Stata via Python.{p_end} 
