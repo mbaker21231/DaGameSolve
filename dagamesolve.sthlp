@@ -133,7 +133,7 @@ are written in a format that is compatible with the command {bf:{help dagsolve}}
 {marker rems}{title: Additional Comments}
 
 {pstd}{cmd:dagamestrats} requires that the {bf:{help moremata}} package be installed.  Package {bf:{help dagamesolve}} also requires packages {bf:{help int_utils}},
-{bf:{help rowmat_utils}}, and {bf:{help intsolve}}. All of these supporting materials can be downloaded from SSC. {p_end}
+{bf:{help rowmat_utils}}, and {bf:{help intsolver}}. All of these supporting materials can be downloaded from SSC. {p_end}
 
 {pstd}Available on the project's github site {browse: "http://github.com/mbaker21231/dagamesolve": mbaker21231/dagamesolve} in the Support directory are files dagamesolve_examples.do, 
 which contains some examples to work with that are periodically updated, and also a file dagamesolve_mata.do, which generates the mata library that supports the package.
@@ -142,7 +142,8 @@ The aim in making the latter file available is transparency, so other researcher
 {title: Full discosure!}
 
 {pstd}{cmd:dagamestrats} is an experimental package. While it was devised with the idea that it would facilitate integration of game-theoretic estimators with Stata more seamlessly, for a couple
-of reasons it perhaps is not well-suited to this objective. For one, it is very slow for games of even moderate size (i.e., 4 players, 3 actions). Second, freely avaiable packages such as {bf:Gambit} are
+of reasons it perhaps is not well-suited to this objective. For one, it is very slow for games of even moderate size (i.e., 4 players, 3 actions). Second, freely avaiable packages 
+such as {browse: "http://www.gambit-project.org/": Gambit} are
 now fairly easy to integrate with Stata via Python.{p_end} 
 
 {title:Author}
