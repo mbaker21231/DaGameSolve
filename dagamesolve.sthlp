@@ -36,7 +36,7 @@ Strategy profiles are passed to {cmd:dagamesolve} in a {varlist},
 while corresponding payoffs indicated by {cmdab:pay:offs(}varlist{cmd:)}. 
 {cmdab:eq:uilibria({dagamesolve} generates an exhaustive list of values for the grouping variable
 listed in {cmdab:group(}{varname}{cmd:)}. Each grouping variable contains a strategy profile. The user might wish to consult some
-of the qualifying {help remarks##rems} before using {cmd: dagamesolve}. 
+of the qualifying {help dagamesolve##rems: remarks} before using {cmd: dagamesolve}. 
 {p_end}
 
 {pstd}
@@ -130,8 +130,7 @@ Generating payoffs for each firm given the parameterization:{p_end}
 {pstd}After running the above code, one has the payoffs from three random entry games, with the desired payoffs. The payoffs and action profiles
 are written in a format that is compatible with the command {bf:{help dagsolve}}.{p_end}
 
-{marker rems}
-{title: Additional Comments}
+{marker rems}{title: Additional Comments}
 
 {pstd}{cmd:dagamestrats} requires that the {bf:{help moremata}} package be installed.  Package {bf:{help dagamesolve}} also requires packages {bf:{help int_utils}},
 {bf:{help rowmat_utils}}, and {bf:{help intsolve}}. All of these supporting materials can be downloaded from SSC. {p_end}
