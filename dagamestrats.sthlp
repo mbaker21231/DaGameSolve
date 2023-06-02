@@ -56,7 +56,7 @@ listed first in the normal-form payoff matrix:{p_end}
 	
 {pstd}So, all possible actions profiles are created and can be read as columns.{p_end} 
 
-{pstd}{cmd: dagstrats} automates the production of lists of actions like those above as new stata variables, 
+{pstd}{cmd: dagamestrats} automates the production of lists of actions like those above as new stata variables, 
 which can also be handy in characterizing the payoffs to games.{p_end} 
 	
 {title:Examples}
@@ -68,7 +68,7 @@ and player three has two actions: {p_end}
 {phang}{cmd:. gen id=1}{p_end}
 {phang}{cmd:. gen acts=2{p_end}
 {phang}{cmd:. replace acts=3 in 2}{p_end}
-{phang}{cmd:. dagstrats, group(id) actions(acts) gen(a)}{p_end}
+{phang}{cmd:. dagamestrats, group(id) actions(acts) gen(a)}{p_end}
 {phang}{cmd:. list a*}{p_end}
     
         {c TLC}{hline 57}{c TRC}
@@ -87,9 +87,9 @@ and player three has two actions: {p_end}
 {phang}{cmd:. gen acts=2}{p_end}
 {phang}{cmd:. replace id=2 in 5/8}{p_end}
 {phang}{cmd:. replace id=3 in 9/12}{p_end}
-{phang}{cmd:. dagstrats, group(id) actions(acts) gen(profiles) }{p_end}
+{phang}{cmd:. dagamestrats, group(id) actions(acts) gen(profiles) }{p_end}
 
-{pstd}To see how {cmd:dagstrats} might be useful in assembling payoffs, suppose that the previous scenario is designed
+{pstd}To see how {cmd:dagamestrats} might be useful in assembling payoffs, suppose that the previous scenario is designed
 to model an entry game, where any of the four players might be entrants into a market. Suppose that action 1 denotes
 staying out of the market, where action 2 denotes entering the market. Suppose further that firms' profits consist
  of a random constant that is normally distributed with a mean of 2 and a standard deviation
@@ -110,13 +110,17 @@ Generating payoffs for each firm given the parameterization:{p_end}
 {phang}{txt:  4. }{cmd:{c )-}}{p_end}
 
 {pstd}After running the above code, one has the payoffs from three random entry games, with the desired payoffs. The payoffs and action profiles
-are written in a format that is compatible with the command {bf:{help dagsolve}}.{p_end}
+are written in a format that is compatible with the command {bf:{help dagamesolve}}.{p_end}
 
 {title: Additional Comments}
 
-{cmd:dagstrats} requires that the {bf:{help moremata}} package be installed, and also requires that package {bf:{help dagsolve}}
-be installed, with its accompanying mata library {bf:ldagsolve_mata}.  Package {bf:{help dagsolve}} requires packages {bf:{help int_utils}},
-{bf:{help rowmat_utils}}, and {bf:{help intsolve}}. All materials can be downloaded from SSC. 
+{pstd}{cmd:dagamestrats} requires that the {bf:{help moremata}} package be installed, and also requires that package {bf:{help dagamesolve}}
+be installed, with its accompanying mata library {bf:ldagamesolve_mata}.  Package {bf:{help dagamesolve}} requires packages {bf:{help int_utils}},
+{bf:{help rowmat_utils}}, and {bf:{help intsolve}}. All materials can be downloaded from SSC.{p_end}
+
+{title: Qualifying Remarks}
+
+{pstd}There are some reasons not to use {cmd: dagamesolve} which are discussed {help dagamesolve##rems: here}. Please consider these remarks carefully.{p_end}
 
 {title:Author}
 
