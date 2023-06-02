@@ -1,8 +1,8 @@
 d 'DAGAMESOLVE': module to solve sequences of simultaneous-move, discrete-action, full-information games. 
 d
 d dagamesolve solves sequences of discrete-action, simultaneous-move full-information games with payoffs specified in list form.
-d
-d Some additional details: the package also does this, that, and the other thing.
+d The package is experimental, and also somewhat superfluous, given the existence of effective game solvers in other languages
+d that are now well-integrated with Stata (e.g., Gambit). 
 d 
 d KW: game theory, Nash equilibrium
 d 
