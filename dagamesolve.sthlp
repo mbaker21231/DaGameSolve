@@ -29,26 +29,28 @@
 {title:Description}
 
 {pstd}{cmd:dagamesolve} solves N-player, discrete action games, meaning that in principal
-{cmd:dagamesolve} can find all equilibria - mixed-strategy and pure-strategy - of sequences of 
-similar games. Players in a game are identified 
+{cmd:dagamesolve} can find all equilibria - mixed-strategy, pure-strategy, and pure-mixed strategy - of sequences of 
+similar games - games that have the same number of players and actions, but differ in payoffs. Players in a game are identified 
 by the variable {cmdab:group(}{varname}{cmd:)}, which also serves as a game identifier.
 Strategy profiles are passed to {cmd:dagamesolve} in a {varlist}, 
-while corresponding payoffs indicated by {cmdab:pay:offs(}varlist{cmd:)}. 
-{cmdab:eq:uilibria(}varlist{cmd:)} generates an exhaustive list of values for the grouping variable
-listed in {cmdab:group(}{varname}{cmd:)}. Each grouping variable contains a strategy profile. The user might wish to consult some
+with corresponding payoffs indicated by {cmdab:pay:offs(}varlist{cmd:)}. 
+{cmdab:eq:uilibria(}varlist{cmd:)} collects equilibrium strategy profiles for each game in {cmdab:group(}{varname}{cmd:)}. 
+One note of caution: the user might wish to consult some
 of the qualifying {help dagamesolve##rems:remarks} before using {cmd:dagamesolve}. 
 {p_end}
 
 {pstd}
-To be processed by {cmd:dagamesolve}, games should be written in what can be called a
-"list" form. As an example, consider the following two-player, two-action game written in normal form, 
-where player one chooses rows, player two chooses columns, and player one's payoffs are
+To be processed by {cmd:dagamesolve}, games should be written in what might be called the
+"list" form, in which each action variable denotes players' selection of pure strategies, and action variables
+together collect all potential such selections across all players. Each action variable corresponds with a payoff variable, listing the payoffs
+each player receives at the action. As an example, consider the following two-player, 
+two-action game written in normal form, where player one chooses rows, player two chooses columns, and player one's payoffs are
 listed first in the normal-form payoff matrix:{p_end}
 
         {txt}             strategy 1  strategy 2
         {txt}{hline 38}
-        {txt}strategy 1  |   1,2        0,0.1
-        {txt}strategy 2  |   0,0        3,1
+        {txt}strategy 1  |   1,2    |    0,0.1 |
+        {txt}strategy 2  |   0,0    |    3,1   | 
         {txt}{hline 38}
 
 {pstd}The list form of the above game collects the actions into a matrix with entries{p_end}
@@ -92,7 +94,7 @@ payoffs in an order corresponding with the action profiles:{p_end}
         {c BLC}{hline 44}{c BRC}
 {txt}
 
-{pstd} The game can now be solved by passing action and payoff information to {cmd:dagamesolve}:{p_end}
+{pstd} The game can now be solved by passing action and payoff information to {cmd:dagamesolve} as follows:{p_end}
 
 {phang}{cmd:. dagamesolve a1 a2 a3 a4, group(id) pay(pay1 pay2 pay3 pay4) eq(e)}{p_end}
 
@@ -110,26 +112,18 @@ and then probability that each strategy is played in equilibrium:{p_end}
         {c BLC}{hline 131}{c BRC}
 {txt}
 
-{pstd} Equilibria are described in additional column variables aligned with the last observation of the grouping variable ({cmd:id}
+{pstd} Equilibria are created as new variables collected in the last observation of the grouping variable ({cmd:id}
 in this case). The new entries are labled according to the equilibrium number, the player, and then the probability that
-the player plays the given strategy. The {cmd:e_rets_i} variable collects the expected returns to each player at the given strategy, and
-the very last vaiable, {cmd:e_count} contains a simple count of the equilibria. Evidently, the game in question has three
+the player plays each possible strategy. The {cmd:e_rets_i} variable collects the expected returns to each player at the given strategy, and
+the very last variable, {cmd:e_count} contains a simple count of the equilibria.{p_end} 
+
+{pstd}Evidently, the game in question has three
 equilibria. The first two equilibria are pure-strategy equilibria, while the third equilibrium is a mixed-strategy equilibrium in which
 player one plays strategy one with a probability of ~.34 and strategy two with probability ~.66, and player two plays strategy one
 with probability ~.75 and strategy two with probability ~.25.{p_end}
 
-{pstd}As a further, more expansive example, consider a three-player game in which player one has two actions to choose from, 
-player two has three actions to choose from, and player three has four actions to choose from. Then, the list form
-	of the game would begin by specifying actions as:{p_end}
-	
-    1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2
-    1,1,1,1,2,2,2,2,3,3,3,3,1,1,1,1,2,2,2,2,3,3,3,3
-    1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4
-	
-{pstd}So, all possible actions profiles are created and can be read as columns.{p_end}
-
-{pstd}{help dagamestrats} automates the production of lists of actions like those above as new stata variables, 
-which can also be handy in characterizing the payoffs to games. This is a feature of the following examples.{p_end} 
+{pstd}{help dagamestrats} automates the production of lists of actions like those above as new Stata variables, 
+which can also be handy in characterizing the payoffs to games. This is a feature of some of the following examples.{p_end} 
 	
 {title:Examples}
 
@@ -170,7 +164,7 @@ some feedback on how the solution is progressing.:{p_end}
 {phang}{cmd:.......................}{p_end}
 {phang}{cmd:Game Solved. Equilibria:        1}{p_end}
 
-{pstd}This game, it seems has a single equilibrium.{p_end}
+{pstd}This game has a single equilibrium.{p_end}
 
 {pstd}{it:Example two - solving a sequence of games}{p_end}
 
@@ -186,12 +180,12 @@ player has two strategies. Generating the pure strategy profiles: {p_end}
 {phang}{cmd:. replace id=3 in 9/12}{p_end}
 {phang}{cmd:. dagamestrats acts, group(id) gen(profiles) }{p_end}
 
-{pstd}To see how {cmd:dagamestrats} might be useful in assembling payoffs, suppose one is interested 
-in modelling an entry game, where any of the four players might decide to enter the market or not. Suppose that action 1 denotes
+{pstd}Suppose one is interested 
+in modelling an entry game, where any of the four players are firms deciding to enter the market or not. Suppose that action 1 denotes
 staying out of the market, where action 2 denotes entry. Suppose further that firms' profits consist
  of a random constant that is normally distributed with a mean of 2 and a standard deviation
-of one, and that profits are decreasing in the number of entrants besides the firm, so that profits are K-#(other entrants). Generating a count
-of the number of total entering firms might go as follows:{p_end}
+of one, and that profits are decreasing in the number of entrants besides the firm, so that profits are K-#(other entrants). A first step is to 
+generate a count of the number of entrants based on action profiles:{p_end}
 
 {phang}{cmd:. forvalues i=1/16 {c -(}}{p_end}
 {phang}{txt:  2. }{cmd:bysort id: egen entrants`i'=total(profiles`i'==2)}{p_end}
@@ -212,19 +206,19 @@ are written in a format that is compatible with the command {com: dagamesolve}. 
 option gives some feedback as solutions proceed: {p_end}
 
 {phang}{cmd:. dagamesolve profiles*, group(id) pay(payoffs*) eq(eqs) noisy}{p_end}
-{phang}Subgames:        7{p_end}
-{phang}.......{p_end}
-{phang} Game Solved. Equilibria:         1{p_end}
-{phang}Subgames:       33{p_end}
-{phang}.................................{p_end}
-{phang} Game Solved. Equilibria:         1{p_end}
-{phang}{p_end}
-{phang} Game Solved. Equilibria:         1{p_end}
+{phang}{cmd:Subgames:        7}{p_end}
+{phang}{cmd:.......}{p_end}
+{phang}{cmd: Game Solved. Equilibria:         1}{p_end}
+{phang}{cmd:Subgames:       33}{p_end}
+{phang}{cmd:.................................}{p_end}
+{phang}{cmd: Game Solved. Equilibria:         1}{p_end}
+{phang}{cmd: }{p_end}
+{phang}{cmd: Game Solved. Equilibria:         1}{p_end}
 
 {pstd}The above output generated by the {cmd:noisy} option conveys a little bit of information about the underlying game. FOr example,
 the first game, after elimination of dominated strategies, had to solve 7 remaining subgames, and once this was done, there was
 1 equilibrium left. The second game pared down solution to 33 different subgames once dominated strategies were eliminated, yet
-was still able to narrow down the resulting set to a single equilibrium. The last game, evidently, was completely dominance-solvable.{p_end}
+was still able to narrow down the resulting set to a single equilibrium. The last game it seems was completely dominance-solvable.{p_end}
 
 {pstd}One way of viewing results is to look at the resulting entry rates of the firms (if we can indeed think about the first observation
 in each group as corresponding to a consistent entity across the games). {p_end}
@@ -255,13 +249,23 @@ generated. A count of the profiles is generated by {cmd:dagamestrats}, which is 
 {phang}{cmd:. mata: ids = (1::20)#J(3, 1, 1)}{p_end}
 {phang}{cmd:. getmata ids}{p_end}
 {phang}{cmd:. gen acts = 3}{p_end}
-{phang}{cmd:. dagamestrats acts, group(id) gen(a)}{p_end}
+{phang}{cmd:. dagamestrats acts, group(id) gen(s)}{p_end}
 {phang}{cmd:. scalar P = r(profiles)}{p_end}
-{phang}{cmd:. forvalues i=1/16 {c -(}}{p_end}
-{phang}{txt:  2. }{cmd:bysort id: egen entrants`i'=total(profiles`i'==2)}{p_end}
+{phang}{cmd:. forvalues i=1/`=P' {c -(}}{p_end}
+{phang}{txt:  2. }{cmd:gen pay`i'=rnormal(0, 1)}{p_end}
 {phang}{txt:  3. }{cmd:{c )-}}{p_end}
+{phang}{cmd:. dagamesolve s*, group(id) pay(pay*) eq(eqs) noisy}{p_end}
 
+{phang}{it:<Output ommitted>}
 
+{phang}The previous example makes it abudantly clear that {cmd:dagsolve} is {it:slow} (the above example took about 2 hours to run on a computer with 16GB of ram. 
+This is because {cmd:dagamesolve} relies on interval methods and bisection to find solutions to systems of polynomials. While interval methods are stable (for further
+discussion, see {help:intsolver}), they also use what is effectively brute force to solve polynomial systems.{p_end}
+
+{phang}For this reason, {cmd:dagamesolve} also allows the user to sidestep slowness and use Newton methods in parallel to solve the systems of equations associated with
+mixed strategies. For example, the user can even specify that an arbitrarily large space of starting points for interation be used. While this speeds up computation, 
+it also does not gaurantee that all equilibria can be found. While in the author's experience, it almost always gives at least one equilibrium, there is also no guarantee
+that this is always true. 
 
 
 
