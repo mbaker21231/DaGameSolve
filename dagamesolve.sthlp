@@ -99,29 +99,24 @@ payoffs in an order corresponding with the action profiles:{p_end}
 {pstd} Equilibria are now collected in newly generated variables {cmd:e*}, which are numbered by equilibrium, player, 
 and then probability that each strategy is played in equilibrium:{p_end}
 
-{phang}{cmd:. describe e*}
+{phang}{cmd:. format e* %9.2f}{p_end}
+{phang}{cmd:. list e*}{p_end}
 
-Variable	Storage	Display	Value
-name	type	format	label	Variable	label
-						
-e_rets_1	float	%9.0g		     
-e_1_1_1	float	%9.0g		     
-e_1_1_2	float	%9.0g		     
-e_1_2_1	float	%9.0g		     
-e_1_2_2	float	%9.0g		     
-e_rets_2	float	%9.0g		     
-e_2_1_1	float	%9.0g		     
-e_2_1_2	float	%9.0g		     
-e_2_2_1	float	%9.0g		     
-e_2_2_2	float	%9.0g		     
-e_rets_3	float	%9.0g		     
-e_3_1_1	float	%9.0g		     
-e_3_1_2	float	%9.0g		     
-e_3_2_1	float	%9.0g		     
-e_3_2_2	float	%9.0g		     
-e_count	float	%9.0g		     
+        {c TLC}{hline 131}{c TRC}
+{txt}        {c |}{res} e_rets_1 e_1_1_1 e_1_1_2 e_1_2_1 e_1_2_2 e_rets_1 e_2_1_1 e_2_1_2 e_2_2_1 e_2_2_2 e_rets_3 e_3_1_1 e_3_1_2 e_3_2_1 e_3_2_2 e_count{c |}
+        {c LT}{hline 131}{c RT}
+{txt}     1. {c |}{res}     1.00       .       .       .       .     3.00       .       .       .       .     0.75       .       .       .       .       .{c |}
+{txt}     2. {c |}{res}     2.00    1.00    0.00    1.00    0.00     1.00    0.00    1.00    0.00    1.00     0.69    0.34    0.66    0.75    0.25    3.00{c |}
+        {c BLC}{hline 131}{c BRC}
+{txt}
 
-
+{pstd} Equilibria are described in additional column variables aligned with the last observation of the grouping variable ({cmd:id}
+in this case). The new entries are labled according to the equilibrium number, the player, and then the probability that
+the player plays the given strategy. The {cmd:e_rets_i} variable collects the expected returns to each player at the given strategy, and
+the very last vaiable, {cmd:e_count} contains a simple count of the equilibria. Evidently, the game in question has three
+equilibria. The first two equilibria are pure-strategy equilibria, while the third equilibrium is a mixed-strategy equilibrium in which
+player one plays strategy one with a probability of ~.34 and strategy two with probability ~.66, and player two plays strategy one
+with probability ~.75 and strategy two with probability ~.25.{p_end}
 
 {pstd}As a further, more expansive example, consider a three-player game in which player one has two actions to choose from, 
 player two has three actions to choose from, and player three has four actions to choose from. Then, the list form
@@ -131,24 +126,24 @@ player two has three actions to choose from, and player three has four actions t
     1,1,1,1,2,2,2,2,3,3,3,3,1,1,1,1,2,2,2,2,3,3,3,3
     1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4,1,2,3,4
 	
-{pstd}So, all possible actions profiles are created and can be read as columns.{p_end} 
+{pstd}So, all possible actions profiles are created and can be read as columns.{p_end}
 
 {pstd}{help dagamestrats} automates the production of lists of actions like those above as new stata variables, 
-which can also be handy in characterizing the payoffs to games.{p_end} 
-
-{pstd}To use {cmd:dagamesolve} each pure-strategy profile should be contained in its own stata variable, and corresponding
-to each strategy profile should be a stata variable containing payoffs to each player. 
+which can also be handy in characterizing the payoffs to games. This is a feature of the following examples.{p_end} 
 	
 {title:Examples}
 
-{pstd}Pure-strategy profiles for a single 3-player game in which player one has two actions, player two has three actions, 
+{pstd}{it:Example one - solving a simple game}{p_end}
+
+{pstd}Generate strategy profiles for a single 3-player game in which player one has two actions, player two has three actions, 
 and player three has two actions: {p_end}
 
+{phang}{cmd:. clear all}{p_end}
 {phang}{cmd:. set obs 3}{p_end}
 {phang}{cmd:. gen id=1}{p_end}
-{phang}{cmd:. gen acts=2{p_end}
+{phang}{cmd:. gen acts=2}{p_end}
 {phang}{cmd:. replace acts=3 in 2}{p_end}
-{phang}{cmd:. dagamestrats, group(id) actions(acts) gen(a)}{p_end}
+{phang}{cmd:. dagamestrats acts, group(id) gen(a)}{p_end}
 {phang}{cmd:. list a*}{p_end}
     
         {c TLC}{hline 57}{c TRC}
@@ -160,18 +155,40 @@ and player three has two actions: {p_end}
         {c BLC}{hline 57}{c BRC}
 {txt}
 
-{pstd}Pure-strategy profiles for 3 4-player where each player has two strategies: {p_end}
+{pstd}Randomly generated standard normal payoffs for the above strategy profiles.{p_end} 
 
+{phang}{cmd:. set seed 5150}{p_end}
+{phang}{cmd:. forvalues i=1/12 {c -(}}{p_end}
+{phang}2. {cmd:gen pay`i'=rnormal()}{p_end}
+{phang}3. {cmd:{c )-}}{p_end}
+
+{pstd}Compute all the equilibria of the game, using the {cmd:noisy} option to get 
+some feedback on how the solution is progressing.:{p_end}
+
+{phang}{cmd:. dagamesolve a1-a12, group(id) pay(pay1-pay12) eq(eqs) noisy}{p_end}
+{phang}{cmd:Subgames:        23}{p_end}
+{phang}{cmd:.......................}{p_end}
+{phang}{cmd:Game Solved. Equilibria:        1}{p_end}
+
+{pstd}This game, it seems has a single equilibrium.{p_end}
+
+{pstd}{it:Example two - solving a sequence of games}{p_end}
+
+{pstd}One can also use {cmd:dagamestrats} and {cmd:dagamesolve} in the same way to create
+sequences of similar games and solve them. Here we have three four-player games, where each
+player has two strategies. Generating the pure strategy profiles: {p_end}
+
+{phang}{cmd:. clear all}{p_end}
 {phang}{cmd:. set obs 12}{p_end}
 {phang}{cmd:. gen id=1}{p_end}
 {phang}{cmd:. gen acts=2}{p_end}
 {phang}{cmd:. replace id=2 in 5/8}{p_end}
 {phang}{cmd:. replace id=3 in 9/12}{p_end}
-{phang}{cmd:. dagamestrats, group(id) actions(acts) gen(profiles) }{p_end}
+{phang}{cmd:. dagamestrats acts, group(id) gen(profiles) }{p_end}
 
-{pstd}To see how {cmd:dagamestrats} might be useful in assembling payoffs, suppose that the previous scenario is designed
-to model an entry game, where any of the four players might be entrants into a market. Suppose that action 1 denotes
-staying out of the market, where action 2 denotes entering the market. Suppose further that firms' profits consist
+{pstd}To see how {cmd:dagamestrats} might be useful in assembling payoffs, suppose one is interested 
+in modelling an entry game, where any of the four players might decide to enter the market or not. Suppose that action 1 denotes
+staying out of the market, where action 2 denotes entry. Suppose further that firms' profits consist
  of a random constant that is normally distributed with a mean of 2 and a standard deviation
 of one, and that profits are decreasing in the number of entrants besides the firm, so that profits are K-#(other entrants). Generating a count
 of the number of total entering firms might go as follows:{p_end}
@@ -183,14 +200,70 @@ of the number of total entering firms might go as follows:{p_end}
 {pstd}The loop runs over 16 observations, as in this case there are 2^4=16 distinct action profiles for the game.
 Generating payoffs for each firm given the parameterization:{p_end}
 
+{phang}{cmd:. set seed 5150}{p_end}
 {phang}{cmd:. gen K=rnormal(2,1)}{p_end}
 {phang}{cmd:. forvalues i=1/16 {c -(}}{p_end}
 {phang}{txt:  2. }{cmd:gen payoffs`i'=0}{p_end}
 {phang}{txt:  3. }{cmd:quietly replace payoffs`i'=K-(entrants`i'-1) if profiles`i'==2}{p_end}
 {phang}{txt:  4. }{cmd:{c )-}}{p_end}
 
-{pstd}After running the above code, one has the payoffs from three random entry games, with the desired payoffs. The payoffs and action profiles
-are written in a format that is compatible with the command {bf:{help dagamesolve}}.{p_end}
+{pstd}One has now created payoffs for three random entry games, with the desired payoffs. The payoffs and action profiles
+are written in a format that is compatible with the command {com: dagamesolve}. Solving the games with the {cmd:noisy} 
+option gives some feedback as solutions proceed: {p_end}
+
+{phang}{cmd:. dagamesolve profiles*, group(id) pay(payoffs*) eq(eqs) noisy}{p_end}
+{phang}Subgames:        7{p_end}
+{phang}.......{p_end}
+{phang} Game Solved. Equilibria:         1{p_end}
+{phang}Subgames:       33{p_end}
+{phang}.................................{p_end}
+{phang} Game Solved. Equilibria:         1{p_end}
+{phang}{p_end}
+{phang} Game Solved. Equilibria:         1{p_end}
+
+{pstd}The above output generated by the {cmd:noisy} option conveys a little bit of information about the underlying game. FOr example,
+the first game, after elimination of dominated strategies, had to solve 7 remaining subgames, and once this was done, there was
+1 equilibrium left. The second game pared down solution to 33 different subgames once dominated strategies were eliminated, yet
+was still able to narrow down the resulting set to a single equilibrium. The last game, evidently, was completely dominance-solvable.{p_end}
+
+{pstd}One way of viewing results is to look at the resulting entry rates of the firms (if we can indeed think about the first observation
+in each group as corresponding to a consistent entity across the games). {p_end}
+
+{phang}{cmd:. sum eqs_1_*_2}{p_end}
+
+
+{txt}    Variable   {c |}  Obs       Mean    Std. dev.     Min       Max 
+     {hline 10}{c LT}{hline 48}
+{txt}     eqs_1_1_2 {c |}{res}    3          1           0        1         1   
+{txt}     eqs_1_2_2 {c |}{res}    3   .3333333    .5773503        0         1
+{txt}     eqs_1_3_2 {c |}{res}    3   .3333333    .5773503        0         1
+{txt}     eqs_1_4_2 {c |}{res}    3   .6666667    .5773503        0         1	  
+{txt}
+
+It appears that across the sequence of the three games, the first firm always enters, the second and third firm enters only one of the three
+markets, while the fourth firm enters two of the three markets. 
+
+{pstd}{it: Example three: solving sequence of games and counting equilibria}{p_end}
+
+{pstd}One can also solve a large number of games, but this might take awhile. In this example, 20 three-player games are solved, 
+where each player has three possible actions. This should generate 27 possible action profiles, for which random payoffs are 
+generated. A count of the profiles is generated by {cmd:dagamestrats}, which is used to create a local and generate random payoffs.{p_end}
+
+{phang}{cmd:. clear all}{p_end}
+{phang}{cmd:. set seed 522150}{p_end}
+{phang}{cmd:. set more off}{p_end}
+{phang}{cmd:. mata: ids = (1::20)#J(3, 1, 1)}{p_end}
+{phang}{cmd:. getmata ids}{p_end}
+{phang}{cmd:. gen acts = 3}{p_end}
+{phang}{cmd:. dagamestrats acts, group(id) gen(a)}{p_end}
+{phang}{cmd:. scalar P = r(profiles)}{p_end}
+{phang}{cmd:. forvalues i=1/16 {c -(}}{p_end}
+{phang}{txt:  2. }{cmd:bysort id: egen entrants`i'=total(profiles`i'==2)}{p_end}
+{phang}{txt:  3. }{cmd:{c )-}}{p_end}
+
+
+
+
 
 {marker rems}{title: Additional Comments}
 
