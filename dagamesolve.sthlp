@@ -39,6 +39,38 @@ One note of caution: the user might wish to consult some
 of the qualifying {help dagamesolve##rems:remarks} before using {cmd:dagamesolve}. 
 {p_end}
 
+{title:Options}
+
+{pstd} Finding all Nash equilibria for a game requires finding mixed-strategy equilibria, which involves solving polynomial systems. All of the following options excepting {cmd:pureonly} 
+are associated with numerical control over the solution procedure.{p_end}
+
+{pstd}{cmd:fast} skips the usual procedure by which {dagamesolve} finds mixed strategy and partially mixed-strategy equilibria. In particular, in the solution of nonlinear systems
+required by mixed strategies, it skips the bisection step and proceeds directly from a randomly chosen point in the mixed-strategy simplex in an attempt to find a mixed-strategy equilibrium (see exmaples)
+{p_end}
+
+{pstd}{cmd:randompoints(#)} is used in conjunction with {cmd:fast} - it specifies the number of randomly selected points from which to perform Newton iteration (see examples) The default is {it:50}. 
+{p_end}
+
+{pstd}{cmd:pureonly} instructs {cmd:dagamesolve} to only look fore pure strategy equilibria. If {cmd:pureonly} is specified, {cmd:dagamesolve} makes no attempt to find any mixed strategy equilibria.{p_end]
+
+{pstd}{cmd:noisy} generates output indicating how solutions are going - each time an attempt at a solution is made, a dot (.) is printed, and once solution of a game has concluded, the number of equilibria
+are printed out (see examples).{p_end}
+
+{pstd}{cmd:width(#)} is the minimum interval size used to describe a box for bisection. The default size is {it:10e-4}. 
+{p_end}
+
+{pstd}{cmd:tol(#)} specifies the tolerance at which Newton iteration is to stop, summed over the number of iterations specified by random. The default is {it:10e-4}. 
+{p_end}
+
+{pstd}{cmd:digits(#)} is used to control floating-point arithmetic and what numbers can be considered the same. The default is {it:10e-8}, which means that .051234331 and .051234334 would be considered
+the same number by {cmd:dagamesolve}. This is used to eliminate double-counting equilibria that are essentially the same but have been arrived at from different starting points in Newton iteration.
+{p_end}
+
+{pstd}{cmd:mnits(#)} sets the maximum number of Newton iterations to perform. The default is {it:100}.
+{p_end}
+
+{title:Detailed Description}
+
 {pstd}
 To be processed by {cmd:dagamesolve}, games should be written in what might be called the
 "list" form, in which each action variable denotes players' selection of pure strategies, and action variables
@@ -99,7 +131,7 @@ payoffs in an order corresponding with the action profiles:{p_end}
 {phang}{cmd:. dagamesolve a1 a2 a3 a4, group(id) pay(pay1 pay2 pay3 pay4) eq(e)}{p_end}
 
 {pstd} Equilibria are now collected in newly generated variables {cmd:e*}, which are numbered by equilibrium, player, 
-and then probability that each strategy is played in equilibrium:{p_end}
+and then probability that each strategy is played in equilibrium ({it:note - if the output below does not display correctly expand the width of the help window}):{p_end}
 
 {phang}{cmd:. format e* %9.2f}{p_end}
 {phang}{cmd:. list e*}{p_end}
@@ -113,17 +145,17 @@ and then probability that each strategy is played in equilibrium:{p_end}
 {txt}
 
 {pstd} Equilibria are created as new variables collected in the last observation of the grouping variable ({cmd:id}
-in this case). The new entries are labled according to the equilibrium number, the player, and then the probability that
-the player plays each possible strategy. The {cmd:e_rets_i} variable collects the expected returns to each player at the given strategy, and
-the very last variable, {cmd:e_count} contains a simple count of the equilibria.{p_end} 
+in the present case). The new entries are labled according to the equilibrium number, the player, and then the probability that
+the player plays each possible strategy. The {cmd:e_rets_i} variable collects the expected returns to each player at the given equilibrium strategy profile, and
+the very last variable, {cmd:e_count} contains a simple count of the total number of equilibria.{p_end} 
 
-{pstd}Evidently, the game in question has three
+{pstd}Evidently, the game in the example has three
 equilibria. The first two equilibria are pure-strategy equilibria, while the third equilibrium is a mixed-strategy equilibrium in which
 player one plays strategy one with a probability of ~.34 and strategy two with probability ~.66, and player two plays strategy one
 with probability ~.75 and strategy two with probability ~.25.{p_end}
 
 {pstd}{help dagamestrats} automates the production of lists of actions like those above as new Stata variables, 
-which can also be handy in characterizing the payoffs to games. This is a feature of some of the following examples.{p_end} 
+which can also be handy in characterizing the payoffs to games. This is a feature of the following examples.{p_end} 
 	
 {title:Examples}
 
@@ -149,7 +181,7 @@ and player three has two actions: {p_end}
         {c BLC}{hline 57}{c BRC}
 {txt}
 
-{pstd}Randomly generated standard normal payoffs for the above strategy profiles.{p_end} 
+{pstd}Randomly generated standard normal payoffs for the above strategy profiles:{p_end} 
 
 {phang}{cmd:. set seed 5150}{p_end}
 {phang}{cmd:. forvalues i=1/12 {c -(}}{p_end}
@@ -157,7 +189,7 @@ and player three has two actions: {p_end}
 {phang}3. {cmd:{c )-}}{p_end}
 
 {pstd}Compute all the equilibria of the game, using the {cmd:noisy} option to get 
-some feedback on how the solution is progressing.:{p_end}
+some feedback on how the solution is progressing:{p_end}
 
 {phang}{cmd:. dagamesolve a1-a12, group(id) pay(pay1-pay12) eq(eqs) noisy}{p_end}
 {phang}{cmd:Subgames:        23}{p_end}
@@ -227,15 +259,15 @@ in each group as corresponding to a consistent entity across the games). {p_end}
 
 
 {txt}    Variable   {c |}  Obs       Mean    Std. dev.     Min       Max 
-     {hline 10}{c LT}{hline 48}
+     {hline 10}{c +}{hline 48}
 {txt}     eqs_1_1_2 {c |}{res}    3          1           0        1         1   
 {txt}     eqs_1_2_2 {c |}{res}    3   .3333333    .5773503        0         1
 {txt}     eqs_1_3_2 {c |}{res}    3   .3333333    .5773503        0         1
 {txt}     eqs_1_4_2 {c |}{res}    3   .6666667    .5773503        0         1	  
 {txt}
 
-It appears that across the sequence of the three games, the first firm always enters, the second and third firm enters only one of the three
-markets, while the fourth firm enters two of the three markets. 
+{pstd}It appears that across the sequence of the three games, the first firm always enters, the second and third firms enter only one of the three
+markets, while the fourth firm enters two of the three markets.{p_end} 
 
 {pstd}{it: Example three - solving a sequence of 100 two-player, four-action games}{p_end}
 
@@ -246,31 +278,53 @@ markets, while the fourth firm enters two of the three markets.
 {phang}{cmd:. dagamestrats acts, group(id) gen(s) }{p_end}
 {phang}{cmd:. scalar profiles=r(profiles)         }{p_end}
 {phang}{cmd:. set seed 1000011001           }{p_end}
-{phang}{cmd:. forvalues i=1/`=profiles'{c -({}{p_end}
-{phang}{cmd:. 1. gen pay`i'=runiform() }{p_end}
-{phang}{cmd:. 2. {c -(}{p_end}
+{phang}{cmd:. forvalues i=1/`=profiles' {c -(}}{p_end}
+{phang}{txt:  2. }{cmd:gen pay`i'=runiform()}{p_end}
+{phang}{txt:  3. }{cmd:{c )-}}{p_end}
 {phang}{cmd:. dagamesolve s*, group(id) pay(pay*) eq(e) noisy}{p_end}
 
-{pstd}{ {it:<output omitted>}{p_end}
+{pstd} {it:<output omitted>}{p_end}
 
 {phang}{cmd:. tab e_count }{p_end}
 
+{txt}   e_count {c |}{res}      Freq.     Percent     Cum.
+{txt} {hline 10}{c +}{hline 35}
+{txt} 1         {c |}{res}         65       65.00       65.00
+{txt} 3         {c |}{res}         29       29.00       94.00
+{txt} 5         {c |}{res}          5        5.00       99.00
+{txt} 7         {c |}{res}          1        1.00      100.00
+{txt} {hline 10}{c +}{hline 35}
+{txt}     Total {c |}{res}        100      100.00
+{txt}
 
+{pstd} This example accentuates the slowness of {cmd:dagamesolve}, which owes to its brute-force approach to solving systems of nonlinear equations. 
+That having been said, the above results are encouraging. The sequence of random 2-player, 4-action games
+produce a variety of different sorts of equilibria, but always produce an odd number of equilibria, corrresponding with Wilson's (1971) proof that all "almost
+all" discrete action, finite-player games have odd numbers of equilibria. This provides some assurance that {cmd:dagamesolve} is at least approximating its
+intended goal of finding all the equilibria of sequences of games.{p_end}
 
- 
+{pstd}{it: Speeding up solutions (at a cost)}
 
+{pstd}{cmd:dagamesolve} spends most of its time trying to find mixed or partially-mixed strategy equilibria. This problem involves solving sequences of nonlinear
+systems of equations, which dagsolve solves by using a combination of interval methods (see Jaulin et. al. 2001), which amounts to using bisection, interval arithmetic,
+and then Newton iteration. To speed up solution of these systems, one can skip the bisection step and proceed directly to the Newton iteration step. 
+This is fast due to the fact that newton iteration can be done across many points in parallel. This is accomplished using the {help rowmat_utils} package, 
+which must be installed for {cmd:dagamesolve} to work.{p_end}
 
+{pstd} Bisection purposefully searches for places where mixed-strategy might lie; skipping this step and using {cmd:fast} amounts to a shotgun approach in which {cmd:dagamesolve} 
+randomly guesses starting points across the strategy-space simplex, and iterate from there, hoping to find an interior resting point. This often produces results quite similar to 
+full solution, but works much faster. As an illustration that extends the example, 
+one might try the following:{p_end}
 
+{cmd:. dagamesolve s*, group(id) pay(pay*) eq(ef) noisy fast random(100)}
 
-
-
-
+{pstd}This chooses 100 random points in the strategy-space simplex as starting points for Newton iteration. Interior points thusly found are mixed-strategy equilibria;
+one can verify that in the present example the same equilibria for the sequences of 100 equilibria are found.{p_end} 
 
 {pstd}{it: Example four - solving a sequence of three-player, three actions games}{p_end}
 
-{pstd}In this example, 20 three-player games are solved, where each player has three possible actions. This example serves to
-point out some of the limitations of {cmd:dagamesolve}, as it takes a long time to run, and the results have some features
-which might cause the user discomfort. Three players, each with three actions, results in 3*3*3=27 possible strategy profiles, 
+{pstd}In this example, 20 three-player games are solved, where each player has three possible actions.  Three players, each with three actions, 
+results in 3*3*3=27 possible strategy profiles, 
 and when {cmd:dagamesolve} is confronted with problems of this size, it slows down rather drammatically. The example uses a command-generated
 profile count to create random payoffs, and then solves the games.{p_end}
 
@@ -287,44 +341,42 @@ profile count to create random payoffs, and then solves the games.{p_end}
 {phang}{txt:  3. }{cmd:{c )-}}{p_end}
 {phang}{cmd:. dagamesolve s*, group(id) pay(pay*) eq(eqs) noisy}{p_end}
 
-
-. dagamesolve s*, group(id) pay(pay*) eq(eqs) noisy
-
 {phang}{it:<Output ommitted>}
 
-. tab eqs_count
+{phang}{cmd:. tab eqs_count }{p_end}
 
-  eqs_count |      Freq.     Percent        Cum.
-------------+-----------------------------------
-          1 |          2       10.00       10.00
-          3 |          9       45.00       55.00
-          4 |          1        5.00       60.00
-          5 |          3       15.00       75.00
-          6 |          1        5.00       80.00
-          7 |          2       10.00       90.00
-          9 |          1        5.00       95.00
-         10 |          1        5.00      100.00
-------------+-----------------------------------
-      Total |         20      100.00
+{txt}   e_count {c |}{res}      Freq.     Percent       Cum.
+{txt} {hline 10}{c +}{hline 35}
+{txt} 1         {c |}{res}         2       10.00       10.00
+{txt} 3         {c |}{res}         9       45.00       55.00
+{txt} 4         {c |}{res}         1        5.00       60.00
+{txt} 5         {c |}{res}         3       15.00       75.00
+{txt} 6         {c |}{res}         1        5.00       80.00
+{txt} 7         {c |}{res}         2       10.00       90.00
+{txt} 9         {c |}{res}         1        5.00       95.00
+{txt} 10        {c |}{res}         1        5.00      100.00
+{txt} {hline 10}{c +}{hline 35}
+{txt}     Total {c |}{res}        20      100.00
+{txt}
 
 
-{phang}The previous example makes it abudantly clear that {cmd:dagsolve} is {it:slow} (the above example took about 2 hours to run on a computer with 16GB of ram. 
+{pstd}The previous example makes it abudantly clear that {cmd:dagamesolve} is {it:slow} (the above example took about 2 hours to run on a computer with 16GB of ram. 
 This is because {cmd:dagamesolve} relies on interval methods and bisection to find solutions to systems of polynomials. While interval methods are stable (for further
-discussion, see {help:intsolver}), they also use what is effectively brute force to solve polynomial systems.{p_end}
+discussion, see {help intsolver}), they also use what is effectively brute force to solve polynomial systems. A cause for concern with the above results is that
+{cmd:dagamesolve} finds 2, 6, and 10 equilibria for 3 of the 20 games, which does not conform with the expectations of Wilson's (1971) oddness theorem. Why this has happened
+in these instances is not clear to the author. One might conjecture this is because the games truly fall into that small group of games that have even numbers of equilibria. 
+Another possibility is that these anomalous outcomes are numerical artifacts; equilibria that are effectively the same look different to {cmd:dagamesolve} or vice versa. 
+By careful and judicious use of the numerical options available, these problems
+may be mitigated to some degree.{p_end}
 
-{phang}For this reason, {cmd:dagamesolve} also allows the user to sidestep slowness and use Newton methods in parallel to solve the systems of equations associated with
-mixed strategies. For example, the user can even specify that an arbitrarily large space of starting points for interation be used. While this speeds up computation, 
-it also does not gaurantee that all equilibria can be found. While in the author's experience, it almost always gives at least one equilibrium, there is also no guarantee
-that this is always true. 
-
-
+{pstd}Of course, in these instances one might employ the {fast} option, but there is no guarantee the results are 100% accurate.{p_end} 
 
 {marker rems}{title: Additional Comments}
 
 {pstd}{cmd:dagamesolve} requires that the {bf:{help moremata}} package be installed.  Package {bf:{help dagamesolve}} also requires packages {bf:{help int_utils}},
 {bf:{help rowmat_utils}}, and {bf:{help intsolver}}. All of these supporting materials can be downloaded from SSC. {p_end}
 
-{pstd}Available on the project's github site {browse: "http://github.com/mbaker21231/dagamesolve": mbaker21231/dagamesolve} in the Support directory are files dagamesolve_examples.do, 
+{pstd}Available on the project's github site {browse "http://github.com/mbaker21231/dagamesolve": mbaker21231/dagamesolve} in the Support directory are files dagamesolve_examples.do, 
 which contains some examples to work with that are periodically updated, and also a file dagamesolve_mata.do, which generates the mata library that supports the package.
 The aim in making the latter file available is transparency, so other researchers can see how the nuts and bolts of solutions work.{p_end}
 
@@ -332,7 +384,7 @@ The aim in making the latter file available is transparency, so other researcher
 
 {pstd}{cmd:dagamesolve} is an experimental package. While it was devised with the idea that it would facilitate integration of game-theoretic estimators with Stata more seamlessly, for a couple
 of reasons it perhaps is not well-suited to this objective. For one, it is very slow for games of even moderate size (i.e., 4 players, 3 actions). Second, freely avaiable packages 
-such as {browse: "http://www.gambit-project.org/": Gambit} are
+such as {browse  "http://www.gambit-project.org/": Gambit} are
 now fairly easy to integrate with Stata via Python.{p_end} 
 
 {title:Author}
@@ -346,16 +398,10 @@ matthew.baker@hunter.cuny.edu{p_end}
 	Jaulin, Luc, Michel Kieffer, Olivier Didrit, and Eric Walter. 2001. {it:Applied Interval Analysis}. London, Berlin, and Heidelberg: Spring-Verlag.
 
 {p 8 8 2}
-	McKelvey, Richard D., McLennan, Andrew M., and Turocy, Theodore L. 2016. Gambit: Software Tools for Game Theory, Version 16.0.1. http://www.gambit-project.org. 
+	McKelvey, Richard D., McLennan, Andrew M., and Turocy, Theodore L. 2016. Gambit: Software Tools for Game Theory, Version 16.0.1. {browse www.gambit-project.org: http://www.gambit-project.org}. 
 	
 {p 8 8 2}
 	Wilson, Robert. 1971. Computing Equilibria of N-Person Games. {it:SIAM Journal on Applied Mathematics} 21(1): 80-87.
-
-
-
-
-
-
 
 {title: Also see}
 

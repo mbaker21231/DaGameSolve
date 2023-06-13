@@ -66,7 +66,7 @@ and player three has two actions: {p_end}
 
 {phang}{cmd:. set obs 3}{p_end}
 {phang}{cmd:. gen id=1}{p_end}
-{phang}{cmd:. gen acts=2{p_end}
+{phang}{cmd:. gen acts=2}{p_end}
 {phang}{cmd:. replace acts=3 in 2}{p_end}
 {phang}{cmd:. dagamestrats, group(id) actions(acts) gen(a)}{p_end}
 {phang}{cmd:. list a*}{p_end}
