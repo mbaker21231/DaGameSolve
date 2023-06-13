@@ -30,19 +30,21 @@
 
 {pstd}{cmd:dagamesolve} solves N-player, discrete action games, meaning that in principal
 {cmd:dagamesolve} can find all equilibria - mixed-strategy, pure-strategy, and pure-mixed strategy - of sequences of 
-similar games - games that have the same number of players and actions, but differ in payoffs. Players in a game are identified 
-by the variable {cmdab:group(}{varname}{cmd:)}, which also serves as a game identifier.
+similar games - games that have the same number of players and actions, but differ in payoffs. The participants in a game are identified 
+by the variable {cmdab:group(}{varname}{cmd:)}, where each players' action profiles and payoffs are collected sequentially in rows.
 Strategy profiles are passed to {cmd:dagamesolve} in a {varlist}, 
 with corresponding payoffs indicated by {cmdab:pay:offs(}varlist{cmd:)}. 
 {cmdab:eq:uilibria(}varlist{cmd:)} collects equilibrium strategy profiles for each game in {cmdab:group(}{varname}{cmd:)}. 
-One note of caution: the user might wish to consult some
-of the qualifying {help dagamesolve##rems:remarks} before using {cmd:dagamesolve}. 
+Before using {cmd:dagamesolve} the prospective user might wish to consult some
+of the qualifying {help dagamesolve##rems:remarks}. 
 {p_end}
 
 {title:Options}
 
-{pstd} Finding all Nash equilibria for a game requires finding mixed-strategy equilibria, which involves solving polynomial systems. All of the following options excepting {cmd:pureonly} 
-are associated with numerical control over the solution procedure.{p_end}
+{pstd} Finding all Nash equilibria for a game requires finding mixed-strategy equilibria, which involves solving polynomial systems. Solving polynomial systems is not
+a simple task, and {cmd:dagamesolve} solves systems using interval methods (Jaulin et al (2001)), which blends Interval methods, bisection, and Newton iteration.
+All of the following options excepting {cmd:pureonly} 
+are associated with numerical control over the three aspects of the solution procedure.{p_end}
 
 {pstd}{cmd:fast} skips the usual procedure by which {dagamesolve} finds mixed strategy and partially mixed-strategy equilibria. In particular, in the solution of nonlinear systems
 required by mixed strategies, it skips the bisection step and proceeds directly from a randomly chosen point in the mixed-strategy simplex in an attempt to find a mixed-strategy equilibrium (see exmaples)
