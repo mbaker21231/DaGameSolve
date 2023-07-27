@@ -44,7 +44,7 @@ of the qualifying {help dagamesolve##rems:remarks}.
 {pstd} Finding all Nash equilibria for a game requires finding mixed-strategy equilibria, which involves solving polynomial systems. Solving polynomial systems is not
 a simple task, and {cmd:dagamesolve} solves systems using interval methods (Jaulin et al (2001)), which blends Interval methods, bisection, and Newton iteration.
 All of the following options excepting {cmd:pureonly} 
-are associated with numerical control over the three aspects of the solution procedure.{p_end}
+are associated with numerical control over the three aspects of thegit  solution procedure.{p_end}
 
 {pstd}{cmd:fast} skips the usual procedure by which {dagamesolve} finds mixed strategy and partially mixed-strategy equilibria. In particular, in the solution of nonlinear systems
 required by mixed strategies, it skips the bisection step and proceeds directly from a randomly chosen point in the mixed-strategy simplex in an attempt to find a mixed-strategy equilibrium (see exmaples)
