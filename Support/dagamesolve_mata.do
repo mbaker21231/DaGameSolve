@@ -1253,7 +1253,7 @@ real matrix probReshape(real matrix id, real matrix acts, real matrix prob)
 	}	
 	return(pHold)
 }
-mata mlib create ldagamesolve, dir(C:\ado\PLUS\l) replace
-mata mlib add ldagamesolve *()
+mata mlib create ldagamesolve, dir(.) replace
+mata mlib add ldagamesolve *(), dir(.)
 mata mlib index
 end
