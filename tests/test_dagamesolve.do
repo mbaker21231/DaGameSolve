@@ -59,3 +59,39 @@ assert e_count==1 if id==2 & player==2
 assert e_count==1 if id==3 & player==2
 
 display "PASS: sequence of games solved correctly"
+
+*------------------------------------------------------------*
+* TEST: complete solver versus fast solver on sequence of games
+*------------------------------------------------------------*
+
+clear
+set seed 5150
+
+mata: id=(1::100)#J(3,1,1)
+getmata id
+
+gen acts = 2
+dagamestrats acts, group(id) generate(s)
+
+scalar profiles = r(profiles)
+
+forvalues i=1/`=profiles' {
+    gen pay`i' = rnormal()
+}
+
+* Complete solver
+dagamesolve s*, group(id) payoffs(pay*) equilibria(ec)
+
+* Fast Newton-based solver
+set seed 5150
+dagamesolve s*, group(id) payoffs(pay*) equilibria(ef) ///
+    fast randompoints(50)
+
+* Both methods should find the same number of equilibria
+assert ec_count == ef_count if !missing(ec_count)
+
+display "PASS: fast and complete solvers agree on equilibrium counts"
+
+
+
+
