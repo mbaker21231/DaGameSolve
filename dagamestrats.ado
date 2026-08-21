@@ -1,5 +1,5 @@
 *! dagstrats v1.0.0 MJBaker 17July2014
-*! dagamestrats v2.0.0 MJBaker 50May2023
+*! dagamestrats v2.0.0 MJBaker 30May2023
 program dagamestrats, rclass
 	version 11.2
 	syntax varname(numeric) [if] [in], GROUP(varname) GENerate(string) 
