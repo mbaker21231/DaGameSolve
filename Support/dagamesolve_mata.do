@@ -252,13 +252,16 @@ real matrix payGradWrapper(real matrix p,
 						 real scalar i,
 						 transmorphic Z)
 {
-	real matrix A, P, actkey, actkey_foc, maxact_foc
+	real matrix A, P, actkey, actkey_foc, maxact_foc, result
 	A=*Z[1]
 	P=*Z[2]
 	actkey=*Z[3]
 	actkey_foc=*Z[4]
 	maxact_foc=*Z[5]
-	return(payGrad(p,A,P,actkey,actkey_foc,maxact_foc,i))
+	timer_on(3)
+	result = payGrad(p,A,P,actkey,actkey_foc,maxact_foc,i)
+	timer_off(3)
+	return(result)
 	
 	/* Wraps paygrad for use with intsolver package */
 }
@@ -328,13 +331,16 @@ real matrix payJacWrapper(real matrix p,
 						 real scalar j,
 						 transmorphic Z)
 {
-	real matrix A, P, actkey, actkey_foc, maxact_foc
+	real matrix A, P, actkey, actkey_foc, maxact_foc, result
 	A=*Z[1]
 	P=*Z[2]
 	actkey=*Z[3]
 	actkey_foc=*Z[4]
 	maxact_foc=*Z[5]
-	return(payJac(p,A,P,actkey,actkey_foc,maxact_foc,i,j))
+	timer_on(4)
+	result = payJac(p,A,P,actkey,actkey_foc,maxact_foc,i,j)
+	timer_off(4)
+	return(result)
 	
 	/* Wrapper for the above function to work with the intsolver */
 }
@@ -983,8 +989,14 @@ void mixedStratSolve(struct gameDescription G)
 				Solns=int_prob_pts_vals(GameSolver)
 			}
 			else {
+				timer_on(1)
 				int_solve(GameSolver)							/* Solve the problem      */
+				timer_off(1)
+				
+				timer_on(2)
 				int_newton_iter(GameSolver)								/* Iterate solutions      */
+				timer_off(2)
+				
 				Solns=int_prob_pts_vals(GameSolver)
 			}
 
