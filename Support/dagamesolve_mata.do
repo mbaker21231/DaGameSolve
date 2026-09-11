@@ -733,13 +733,16 @@ real matrix payGradIWrapper(real matrix pI,
 						 real scalar digits,
 						 transmorphic Z)
 {
-	real matrix A, P, actkey, actkey_foc, maxact_foc
+	real matrix A, P, actkey, actkey_foc, maxact_foc, result
 	A=*Z[1]
 	P=*Z[2]
 	actkey=*Z[3]
 	actkey_foc=*Z[4]
 	maxact_foc=*Z[5]
-	return(payGradI(pI,A,P,actkey,actkey_foc,maxact_foc,i,digits))
+	timer_on(16)
+	result=payGradI(pI,A,P,actkey,actkey_foc,maxact_foc,i,digits)
+	timer_off(16)
+	return(result)
 }
 real matrix payJacI(real matrix pI,
 				    real matrix A,
@@ -801,13 +804,16 @@ real matrix payJacIWrapper(real matrix pI,
 						 real scalar digits,
 						 transmorphic Z)
 {
-	real matrix A, P, actkey, actkey_foc, maxact_foc
+	real matrix A, P, actkey, actkey_foc, maxact_foc, result
 	A=*Z[1]
 	P=*Z[2]
 	actkey=*Z[3]
 	actkey_foc=*Z[4]
 	maxact_foc=*Z[5]
-	return(payJacI(pI,A,P,actkey,actkey_foc,maxact_foc,i,j,digits))
+	timer_on(17)
+	result=payJacI(pI,A,P,actkey,actkey_foc,maxact_foc,i,j,digits)
+	timer_off(17)
+	return(result)
 	/* Wrapper for the above so it works with intsolver */
 }
 real rowvector placeSolProbs(real rowvector sets, 
