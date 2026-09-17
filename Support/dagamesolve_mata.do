@@ -693,8 +693,9 @@ real matrix payGradI(real matrix pI,
 					 real scalar digits)
 {
 	real scalar player,pactno,pm1,pm0,j,k
-	real matrix plistmod, problist, part1, part2, pother
+	real matrix plistmod, problist, part1, part2, pother, result
 
+	timer_on(18)
 	player=actkey_foc[i,1]
 
 	pactno=select(maxact_foc[,2],maxact_foc[,1]:==player)
@@ -721,7 +722,13 @@ real matrix payGradI(real matrix pI,
 	
 	if (rows(pother)>0) plistmod[,pother]=J(rows(plistmod),cols(pother'),0)
 	
-    return(payoffsI(A,P,actkey,plistmod,digits)[,2*player-1::2*player])
+	
+	timer_off(18)
+	
+	timer_on(19)
+	result = payoffsI(A,P,actkey,plistmod,digits)[,2*player-1::2*player] 
+    timer_off(19)
+	return(result)
 	
 	/* The tricky thing here is that j should refer to an equation number! Not an action */
 	/* This is producing an error for anything greater than the number of players. Clearly, i */
@@ -754,12 +761,14 @@ real matrix payJacI(real matrix pI,
 				    real scalar digits)
 {
 	real scalar playeri,playerj,pactnoi,pactnoj,pmi,pmj,pmi0,pmj0,k,R
-	real matrix plistmod, problist, part1, part2, potheri, potherj
+	real matrix plistmod, problist, part1, part2, potheri, potherj, result
 
 	playeri=actkey_foc[i,1]
 	playerj=actkey_foc[j,1]
 	
 	if (playeri==playerj) return(J(rows(pI),2,0))
+	
+	timer_on(20)
 	
 	problist=J(rows(pI),0,.)
 
@@ -792,7 +801,13 @@ real matrix payJacI(real matrix pI,
 
 	if (rows((potheri \ potherj))>0) plistmod[,(potheri\potherj)]=J(rows(plistmod),rows((potheri\potherj)),0)
 
-	return(payoffsI(A,P,actkey,plistmod,digits)[,2*playeri-1::2*playeri])
+    timer_off(20)
+
+    timer_on(21)
+    result=payoffsI(A,P,actkey,plistmod,digits)[,2*playeri-1::2*playeri]
+    timer_off(21)
+
+    return(result)
 	
 	/* This function works as the above. The first part translates a vector of probabilities */
 	/* into a full vector by adding in the Nth action for each player as "all other a's - 1  */
