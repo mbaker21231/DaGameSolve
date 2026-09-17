@@ -652,7 +652,8 @@ real matrix outcomeProbsI(real matrix K,real matrix pI, real scalar digits)
 /* Each row is a probability of corresponding action profile */
 /* Columns count multiple probability vectors */
 }
-real matrix payoffsI(real matrix A, real matrix P, real matrix actkey, real matrix problistI, digits)
+real matrix payoffsI(real matrix A, real matrix P, real matrix actkey, 
+    real matrix problistI, digits, | real scalar player)
 {
 	real scalar k,j
 	real matrix probs,Payoffs,Klist,PayoffsPrime,probsPrime,Total1,Total2
@@ -661,7 +662,9 @@ real matrix payoffsI(real matrix A, real matrix P, real matrix actkey, real matr
 	for (k=1;k<=cols(A);k++) Klist[k]=rows(uniqrows(A[,k]))	/* same as dg_actcount */
 
 	probs=outcomeProbsI(Klist,problistI,digits)	/* A list of probabilities of each outcome (intervals) */
-	Payoffs=P#J(1,2,1)
+
+	if (args()==6) Payoffs=P[,player]#J(1,2,1)
+    else Payoffs=P#J(1,2,1)
 	
 	Total1=J(rows(probs),0,.)
 	
@@ -726,7 +729,7 @@ real matrix payGradI(real matrix pI,
 	timer_off(18)
 	
 	timer_on(19)
-	result = payoffsI(A,P,actkey,plistmod,digits)[,2*player-1::2*player] 
+	result = payoffsI(A,P,actkey,plistmod,digits,player) 
     timer_off(19)
 	return(result)
 	
@@ -804,7 +807,7 @@ real matrix payJacI(real matrix pI,
     timer_off(20)
 
     timer_on(21)
-    result=payoffsI(A,P,actkey,plistmod,digits)[,2*playeri-1::2*playeri]
+    result=payoffsI(A,P,actkey,plistmod,digits,playeri)
     timer_off(21)
 
     return(result)
