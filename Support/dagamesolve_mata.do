@@ -626,25 +626,35 @@ real matrix outcomeProbsI(real matrix K,real matrix pI, real scalar digits)
 				pPrime=J(KMult,1,1)#pPrime
 				payMat=payMat#J(K[i],1,1)
 				payMatp=J(rows(payMat),cols(payMat),.)
-				for (j=1;j<=rows(payMat);j++) {
-					add1=int_mult(colshape(payMat[j,],2),colshape(pPrime[j,],2),digits)
-					payMatp[j,]=rowshape(add1,1)
-				}
+				timer_on(23)
+				payMatp = rowshape(
+					int_mult(
+						colshape(payMat,2),
+						colshape(pPrime,2),
+						digits
+					),
+					rows(payMat)
+				)
+				timer_off(23)
 				payMat=payMatp
 		}
 		else {
 			KMult=ceil(exp(rowsum(ln(K[1::i-1]))))
 			pPrime=J(KMult,1,1)#pPrime
 			payMat=payMat#J(K[i],1,1)
-			payMatp=J(rows(payMat),cols(payMat),.)	
-			for (j=1;j<=rows(payMat);j++) {
-				add1=int_mult(colshape(payMat[j,],2),colshape(pPrime[j,],2),digits)
-				payMatp[j,]=rowshape(add1,1)
-			}
+			payMatp=J(rows(payMat),cols(payMat),.)
+				timer_on(23)
+				payMatp = rowshape(
+					int_mult(
+						colshape(payMat,2),
+						colshape(pPrime,2),
+						digits
+					),
+					rows(payMat)
+				)
+				timer_off(23)
 				payMat=payMatp
-		
-		
-					}
+		}
 		count=count+2*K[i]
 	}	
 	return(payMat)
@@ -661,25 +671,29 @@ real matrix payoffsI(real matrix A, real matrix P, real matrix actkey,
 	Klist=J(1,cols(A),.)
 	for (k=1;k<=cols(A);k++) Klist[k]=rows(uniqrows(A[,k]))	/* same as dg_actcount */
 
+	timer_on(22)
 	probs=outcomeProbsI(Klist,problistI,digits)	/* A list of probabilities of each outcome (intervals) */
-
+    timer_off(22)
 	if (args()==6) Payoffs=P[,player]#J(1,2,1)
     else Payoffs=P#J(1,2,1)
 	
 	Total1=J(rows(probs),0,.)
-	
+	timer_on(24)	
 	for (j=1;j<=cols(probs);j=j+2) {
 		for (k=1;k<=cols(Payoffs);k=k+2) {
 			Total1=Total1,int_mult(Payoffs[,k::k+1],probs[,j::j+1],digits)
 		}
 	}
-
+    timer_off(24)
+	
+	timer_on(25)
 	Total1=int_transpose(Total1)
 	Total2=J(rows(Total1),2,0)
 	for (j=1;j<=cols(Total1);j=j+2) {
 		Total2=int_add(Total1[,j::j+1],Total2,digits)
 	}
 	
+	timer_off(25)
 	return(rowshape(Total2,rows(problistI)))
 
 	/* Utility tool: Takes a vector (really many vectors) of probabilities and then computes
@@ -692,22 +706,22 @@ real matrix payGradI(real matrix pI,
 					 real matrix actkey,
 					 real matrix actkey_foc,
 					 real matrix maxact_foc,
+					 real matrix gradInfo,
 					 real scalar i,
 					 real scalar digits)
 {
-	real scalar player,pactno,pm1,pm0,j,k
-	real matrix plistmod, problist, part1, part2, pother, result
+	real scalar player,j,k
+	real matrix plistmod, problist, part1, part2, 
+	    pother, pm0, pm1, result
 
 	timer_on(18)
-	player=actkey_foc[i,1]
+    player=gradInfo[i,1]
 
-	pactno=select(maxact_foc[,2],maxact_foc[,1]:==player)
-	pm0=mm_which(rowsum(actkey#J(2,1,1):==(player,actkey_foc[i,2])):==2)
-	pm1=mm_which(rowsum(actkey#J(2,1,1):==(player,pactno)):==2)
-	
-		pother=mm_which((actkey[,1]#J(2,1,1):==player):*
-				    (actkey[,2]#J(2,1,1):!=actkey_foc[i,2]):*
-					 (actkey[,2]#J(2,1,1):!=pactno))
+    pm0=gradInfo[i,2::3]'
+    pm1=gradInfo[i,4::5]'
+
+    pother=gradInfo[i,6::cols(gradInfo)]'
+    pother=select(pother,pother:<.)
 	
 	problist=J(rows(pI),0,.)
 
@@ -743,14 +757,16 @@ real matrix payGradIWrapper(real matrix pI,
 						 real scalar digits,
 						 transmorphic Z)
 {
-	real matrix A, P, actkey, actkey_foc, maxact_foc, result
+	real matrix A, P, actkey, actkey_foc, maxact_foc, gradInfo, result
 	A=*Z[1]
 	P=*Z[2]
 	actkey=*Z[3]
 	actkey_foc=*Z[4]
 	maxact_foc=*Z[5]
+	gradInfo=*Z[6]
+	
 	timer_on(16)
-	result=payGradI(pI,A,P,actkey,actkey_foc,maxact_foc,i,digits)
+	result=payGradI(pI,A,P,actkey,actkey_foc,maxact_foc,gradInfo,i,digits)
 	timer_off(16)
 	return(result)
 }
@@ -944,7 +960,11 @@ void mixedStratSolve(struct gameDescription G)
 {
 	real matrix Sets, mixedEqs, As, Ps, dh, key, Solns,
 			Cands, Cands2, CandsInd, Focs, K, actKey, actKeyFoc,
-			actKeyMax, draws, drawComp, players
+			actKeyMax, draws, drawComp, players,
+			gradInfo, pm0, pm1, pother
+			
+	real scalar g, player, pactno
+	
 	transmorphic junk, crap, i, GameSolver, Z, z 
 			
 	Sets=createSubGameList(G.redAct,key=.)
@@ -968,6 +988,40 @@ void mixedStratSolve(struct gameDescription G)
 			actKey=actKeyCreate(As)
 			actKeyConvert(actKey,actKeyFoc=.,actKeyMax=.)
 			
+			/* Precompute gradient indexing information for this support */
+			gradInfo=J(rows(actKeyFoc),5+2*rows(actKey),.)
+
+			for (g=1;g<=rows(actKeyFoc);g++) {
+
+				player=actKeyFoc[g,1]
+				pactno=select(actKeyMax[,2],actKeyMax[,1]:==player)
+
+				pm0=mm_which(
+					rowsum(actKey#J(2,1,1):==
+					(player,actKeyFoc[g,2])):==2
+					)
+
+				pm1=mm_which(
+					rowsum(actKey#J(2,1,1):==
+						(player,pactno)):==2
+				)
+
+				pother=mm_which(
+					(actKey[,1]#J(2,1,1):==player):*
+					(actKey[,2]#J(2,1,1):!=actKeyFoc[g,2]):*
+					(actKey[,2]#J(2,1,1):!=pactno)
+				)
+
+				gradInfo[g,1]=player
+				gradInfo[g,2::3]=rowshape(pm0,1)
+				gradInfo[g,4::5]=rowshape(pm1,1)
+
+		if (rows(pother)>0 & cols(pother)>0) {
+			pother=rowshape(pother,1)
+			gradInfo[g,6::5+cols(pother)]=pother
+			}
+		}			
+			
 			GameSolver=int_prob_init()
 			int_prob_f_Iform(GameSolver,&payGradIWrapper())
 			int_prob_jac_Iform(GameSolver,&payJacIWrapper())
@@ -985,13 +1039,14 @@ void mixedStratSolve(struct gameDescription G)
 			int_prob_ival(GameSolver,J(1,Focs,(0,1)))			/* Set up intervals       */
 			int_prob_args(GameSolver,Focs)	
 
-			Z=J(5,1,NULL)
+			Z=J(6,1,NULL)
 
-			Z[1]=&As		
+			Z[1]=&As        
 			Z[2]=&Ps
 			Z[3]=&actKey
 			Z[4]=&actKeyFoc
 			Z[5]=&actKeyMax
+			Z[6]=&gradInfo
 
 			int_prob_addinfo(GameSolver,Z)
 
