@@ -663,18 +663,15 @@ real matrix outcomeProbsI(real matrix K,real matrix pI, real scalar digits)
 /* Columns count multiple probability vectors */
 }
 real matrix payoffsI(real matrix A, real matrix P, real matrix actkey, 
-    real matrix problistI, digits, | real scalar player)
+    real matrix problistI, real matrix Klist, digits, | real scalar player)
 {
 	real scalar k,j
-	real matrix probs,Payoffs,Klist,PayoffsPrime,probsPrime,Total1,Total2
+	real matrix probs, Payoffs, PayoffsPrime, probsPrime, Total1, Total2
 	
-	Klist=J(1,cols(A),.)
-	for (k=1;k<=cols(A);k++) Klist[k]=rows(uniqrows(A[,k]))	/* same as dg_actcount */
-
 	timer_on(22)
 	probs=outcomeProbsI(Klist,problistI,digits)	/* A list of probabilities of each outcome (intervals) */
     timer_off(22)
-	if (args()==6) Payoffs=P[,player]#J(1,2,1)
+	if (args() == 7) Payoffs=P[,player]#J(1,2,1)
     else Payoffs=P#J(1,2,1)
 	
 	Total1=J(rows(probs),0,.)
@@ -701,20 +698,23 @@ real matrix payoffsI(real matrix A, real matrix P, real matrix actkey,
 	   we don't have to do this every time! */
 }
 real matrix payGradI(real matrix pI, 
-					 real matrix A, 
-					 real matrix P,
-					 real matrix actkey,
-					 real matrix actkey_foc,
-					 real matrix maxact_foc,
-					 real matrix gradInfo,
+                     real matrix A, 
+                     real matrix P,
+                     real matrix actkey,
+                     real matrix actkey_foc,
+                     real matrix maxact_foc,
+                     real matrix gradInfo,
+                     real matrix probMap,
+                     real matrix K,
 					 real scalar i,
-					 real scalar digits)
+                     real scalar digits)
 {
-	real scalar player,j,k
-	real matrix plistmod, problist, part1, part2, 
-	    pother, pm0, pm1, result
+    real scalar player, k
+    real matrix plistmod, problist, part1, part2, 
+                pother, pm0, pm1, result
 
-	timer_on(18)
+    timer_on(18)
+
     player=gradInfo[i,1]
 
     pm0=gradInfo[i,2::3]'
@@ -722,133 +722,214 @@ real matrix payGradI(real matrix pI,
 
     pother=gradInfo[i,6::cols(gradInfo)]'
     pother=select(pother,pother:<.)
-	
-	problist=J(rows(pI),0,.)
+    
+    problist=J(rows(pI),0,.)
 
-	j=uniqrows(actkey[,1])
-	for (k=1;k<=rows(j);k++) {
-		part1=select(pI',actkey_foc[,1]#J(2,1,1):==J(2*rows(actkey_foc),1,j[k]))'
-		part2=int_sub(J(rows(part1),2,1),int_rowadd(part1),digits)
-		problist=problist,part1,part2
-	}
+    /*
+       Reconstruct the full probability list.
+       probMap tells us directly which pI columns belong to each player.
+    */
+    for (k=1;k<=rows(probMap);k++) {
 
-	plistmod=problist
-	
-	plistmod[,pm0]=J(rows(plistmod),2,1)
-	plistmod[,pm1]=J(rows(plistmod),2,-1)
-	
-	if (rows(pother)>0) plistmod[,pother]=J(rows(plistmod),cols(pother'),0)
-	
-	
-	timer_off(18)
-	
-	timer_on(19)
-	result = payoffsI(A,P,actkey,plistmod,digits,player) 
+        /*
+           If this player has free probability variables,
+           pull them directly from pI.
+        */
+        if (probMap[k,2]<.) {
+
+            part1=pI[,probMap[k,2]::probMap[k,3]]
+
+            part2=int_sub(
+                J(rows(part1),2,1),
+                int_rowadd(part1),
+                digits
+            )
+
+            problist=problist,part1,part2
+        }
+
+        /*
+           If the player has only one action, there are no free
+           probabilities in pI. That action has probability [1,1].
+        */
+        else {
+            problist=problist,J(rows(pI),2,1)
+        }
+    }
+
+    plistmod=problist
+    
+    plistmod[,pm0]=J(rows(plistmod),2,1)
+    plistmod[,pm1]=J(rows(plistmod),2,-1)
+    
+    if (rows(pother)>0) {
+        plistmod[,pother]=J(rows(plistmod),cols(pother'),0)
+    }
+    
+    timer_off(18)
+    
+    timer_on(19)
+
+    result=payoffsI(
+        A, P, actkey, plistmod, K, digits, player
+    )
+
     timer_off(19)
-	return(result)
-	
-	/* The tricky thing here is that j should refer to an equation number! Not an action */
-	/* This is producing an error for anything greater than the number of players. Clearly, i */
-	/* Should roll over actions, not players! */
-	
+
+    return(result)
 }
 real matrix payGradIWrapper(real matrix pI,
-						 real scalar i,
-						 real scalar digits,
-						 transmorphic Z)
+                         real scalar i,
+                         real scalar digits,
+                         transmorphic Z)
 {
-	real matrix A, P, actkey, actkey_foc, maxact_foc, gradInfo, result
-	A=*Z[1]
-	P=*Z[2]
-	actkey=*Z[3]
-	actkey_foc=*Z[4]
-	maxact_foc=*Z[5]
-	gradInfo=*Z[6]
-	
-	timer_on(16)
-	result=payGradI(pI,A,P,actkey,actkey_foc,maxact_foc,gradInfo,i,digits)
-	timer_off(16)
-	return(result)
+    real matrix A, P, actkey, actkey_foc, maxact_foc,
+                gradInfo, probMap, K, result
+
+    A          = *Z[1]
+    P          = *Z[2]
+    actkey     = *Z[3]
+    actkey_foc = *Z[4]
+    maxact_foc = *Z[5]
+    gradInfo   = *Z[6]
+    probMap    = *Z[7]
+	K          = *Z[8]
+
+    timer_on(16)
+
+    result=payGradI(
+        pI, A, P, actkey, actkey_foc, maxact_foc,
+            gradInfo, probMap, K, i, digits
+        )
+
+    timer_off(16)
+
+    return(result)
 }
 real matrix payJacI(real matrix pI,
-				    real matrix A,
-				    real matrix P,
-				    real matrix actkey,
-				    real matrix actkey_foc,
-				    real matrix maxact_foc,
-				    real scalar i, real scalar j,
-				    real scalar digits)
+                    real matrix A,
+                    real matrix P,
+                    real matrix actkey,
+                    real matrix actkey_foc,
+                    real matrix maxact_foc,
+                    real matrix gradInfo,
+                    real matrix probMap,
+					real matrix K,
+                    real scalar i,
+                    real scalar j,
+                    real scalar digits)
 {
-	real scalar playeri,playerj,pactnoi,pactnoj,pmi,pmj,pmi0,pmj0,k,R
-	real matrix plistmod, problist, part1, part2, potheri, potherj, result
+    real scalar playeri, playerj, k
+    real matrix plistmod, problist, part1, part2,
+                potheri, potherj, pmi, pmj, pmi0, pmj0, result
 
-	playeri=actkey_foc[i,1]
-	playerj=actkey_foc[j,1]
-	
-	if (playeri==playerj) return(J(rows(pI),2,0))
-	
-	timer_on(20)
-	
-	problist=J(rows(pI),0,.)
+    playeri=gradInfo[i,1]
+    playerj=gradInfo[j,1]
+    
+    if (playeri==playerj) return(J(rows(pI),2,0))
+    
+    timer_on(20)
+    
+    problist=J(rows(pI),0,.)
 
-	R=uniqrows(actkey[,1])
-	for (k=1;k<=rows(R);k++) {
-		part1=select(pI',actkey_foc[,1]#J(2,1,1):==J(2*rows(actkey_foc),1,R[k]))'
-		part2=int_sub(J(rows(part1),2,1),int_rowadd(part1))
-		problist=problist,part1,part2
-		}
+    /*
+       Reconstruct full probability list using the precomputed
+       pI column ranges for each player.
+    */
+    for (k=1;k<=rows(probMap);k++) {
 
-	pactnoi=select(maxact_foc[,2],maxact_foc[,1]:==playeri)	
-	pactnoj=select(maxact_foc[,2],maxact_foc[,1]:==playerj)
-		
-	pmi=mm_which(rowsum(actkey#J(2,1,1):==(playeri,actkey_foc[i,2])):==2)
-	pmj=mm_which(rowsum(actkey#J(2,1,1):==(playerj,actkey_foc[j,2])):==2)
-	pmi0=mm_which(rowsum(actkey#J(2,1,1):==(playeri,pactnoi)):==2)	
-	pmj0=mm_which(rowsum(actkey#J(2,1,1):==(playerj,pactnoj)):==2)
-	
-	potheri=mm_which((actkey[,1]#J(2,1,1):==playeri):*
-			    (actkey[,2]#J(2,1,1):!=actkey_foc[i,2]):*
-				 (actkey[,2]#J(2,1,1):!=pactnoi))	
-	
-	potherj=mm_which((actkey[,1]#J(2,1,1):==playerj):*
-		    (actkey[,2]#J(2,1,1):!=actkey_foc[j,2]):*
-			 (actkey[,2]#J(2,1,1):!=pactnoj))	
-	
-	plistmod=problist
-	plistmod[,(pmi\pmj)]=J(rows(plistmod),4,1)
-	plistmod[,(pmi0\pmj0)]=J(rows(plistmod),4,-1)	
+        /*
+           Player has free probability variables.
+        */
+        if (probMap[k,2]<.) {
 
-	if (rows((potheri \ potherj))>0) plistmod[,(potheri\potherj)]=J(rows(plistmod),rows((potheri\potherj)),0)
+            part1=pI[,probMap[k,2]::probMap[k,3]]
+
+            /*
+               Preserve the original payJacI interval calculation.
+            */
+            part2=int_sub(
+                J(rows(part1),2,1),
+                int_rowadd(part1)
+            )
+
+            problist=problist,part1,part2
+        }
+
+        /*
+           Player has only one available action.
+        */
+        else {
+            problist=problist,J(rows(pI),2,1)
+        }
+    }
+
+    /*
+       All derivative-index information is already contained
+       in gradInfo.
+    */
+    pmi=gradInfo[i,2::3]'
+    pmj=gradInfo[j,2::3]'
+
+    pmi0=gradInfo[i,4::5]'
+    pmj0=gradInfo[j,4::5]'
+
+    potheri=gradInfo[i,6::cols(gradInfo)]'
+    potheri=select(potheri,potheri:<.)
+
+    potherj=gradInfo[j,6::cols(gradInfo)]'
+    potherj=select(potherj,potherj:<.)
+    
+    plistmod=problist
+
+    plistmod[,(pmi\pmj)]=J(rows(plistmod),4,1)
+    plistmod[,(pmi0\pmj0)]=J(rows(plistmod),4,-1)    
+
+    if (rows((potheri\potherj))>0) {
+        plistmod[,(potheri\potherj)] =
+            J(rows(plistmod),rows((potheri\potherj)),0)
+    }
 
     timer_off(20)
 
     timer_on(21)
-    result=payoffsI(A,P,actkey,plistmod,digits,playeri)
+
+    result=payoffsI(
+        A, P, actkey, plistmod, K, digits, playeri
+    )
+
     timer_off(21)
 
     return(result)
-	
-	/* This function works as the above. The first part translates a vector of probabilities */
-	/* into a full vector by adding in the Nth action for each player as "all other a's - 1  */
-	/* It then puts ones and negative ones in the right places to get the derivatives */
 }
 real matrix payJacIWrapper(real matrix pI,
-						 real scalar i,
-						 real scalar j,
-						 real scalar digits,
-						 transmorphic Z)
+                         real scalar i,
+                         real scalar j,
+                         real scalar digits,
+                         transmorphic Z)
 {
-	real matrix A, P, actkey, actkey_foc, maxact_foc, result
-	A=*Z[1]
-	P=*Z[2]
-	actkey=*Z[3]
-	actkey_foc=*Z[4]
-	maxact_foc=*Z[5]
-	timer_on(17)
-	result=payJacI(pI,A,P,actkey,actkey_foc,maxact_foc,i,j,digits)
-	timer_off(17)
-	return(result)
-	/* Wrapper for the above so it works with intsolver */
+    real matrix A, P, actkey, actkey_foc, maxact_foc,
+                gradInfo, probMap, K, result
+
+    A             = *Z[1]
+    P             = *Z[2]
+    actkey        = *Z[3]
+    actkey_foc    = *Z[4]
+    maxact_foc    = *Z[5]
+    gradInfo      = *Z[6]
+    probMap       = *Z[7]
+	K             = *Z[8]
+
+    timer_on(17)
+
+    result=payJacI(
+        pI, A, P, actkey, actkey_foc, maxact_foc,
+        gradInfo, probMap, K, i, j, digits
+    )
+
+    timer_off(17)
+
+    return(result)
 }
 real rowvector placeSolProbs(real rowvector sets, 
 							 real rowvector key, 
@@ -961,7 +1042,7 @@ void mixedStratSolve(struct gameDescription G)
 	real matrix Sets, mixedEqs, As, Ps, dh, key, Solns,
 			Cands, Cands2, CandsInd, Focs, K, actKey, actKeyFoc,
 			actKeyMax, draws, drawComp, players,
-			gradInfo, pm0, pm1, pother
+			gradInfo, pm0, pm1, pother, probMap, eqpos
 			
 	real scalar g, player, pactno
 	
@@ -987,6 +1068,13 @@ void mixedStratSolve(struct gameDescription G)
 
 			actKey=actKeyCreate(As)
 			actKeyConvert(actKey,actKeyFoc=.,actKeyMax=.)
+			
+			/* Precompute number of actions per player for payoffsI */
+			K=J(1,cols(As),.)
+
+			for (g=1;g<=cols(As);g++) {
+				K[g]=rows(uniqrows(As[,g]))
+			}
 			
 			/* Precompute gradient indexing information for this support */
 			gradInfo=J(rows(actKeyFoc),5+2*rows(actKey),.)
@@ -1016,11 +1104,27 @@ void mixedStratSolve(struct gameDescription G)
 				gradInfo[g,2::3]=rowshape(pm0,1)
 				gradInfo[g,4::5]=rowshape(pm1,1)
 
-		if (rows(pother)>0 & cols(pother)>0) {
-			pother=rowshape(pother,1)
-			gradInfo[g,6::5+cols(pother)]=pother
+				if (rows(pother)>0 & cols(pother)>0) {
+					pother=rowshape(pother,1)
+					gradInfo[g,6::5+cols(pother)]=pother
+				}
 			}
-		}			
+
+			/* Precompute pI column ranges for each player */
+			players=uniqrows(actKey[,1])
+			probMap=J(rows(players),3,.)
+
+			probMap[,1]=players
+
+			for (g=1;g<=rows(players);g++) {
+
+				eqpos=mm_which(actKeyFoc[,1]:==players[g])
+
+				if (rows(eqpos)>0) {
+					probMap[g,2]=2*eqpos[1]-1
+					probMap[g,3]=2*eqpos[rows(eqpos)]
+				}
+			}
 			
 			GameSolver=int_prob_init()
 			int_prob_f_Iform(GameSolver,&payGradIWrapper())
@@ -1032,14 +1136,14 @@ void mixedStratSolve(struct gameDescription G)
 			int_prob_maxit(GameSolver,G.maxit)
 			int_prob_digits(GameSolver,G.digits)
 			int_prob_tol(GameSolver,G.tol)
-			int_prob_tolsols(GameSolver,G.tolsols)	/* Options for controlling solution process */
+			int_prob_tolsols(GameSolver,G.tolsols)			/* Options for controlling solution process */
 
 			Focs=rows(actKeyFoc)								/* Get argument count     */
 
-			int_prob_ival(GameSolver,J(1,Focs,(0,1)))			/* Set up intervals       */
+			int_prob_ival(GameSolver,J(1,Focs,(0,1)))		/* Set up intervals       */
 			int_prob_args(GameSolver,Focs)	
 
-			Z=J(6,1,NULL)
+			Z=J(8,1,NULL)
 
 			Z[1]=&As        
 			Z[2]=&Ps
@@ -1047,6 +1151,8 @@ void mixedStratSolve(struct gameDescription G)
 			Z[4]=&actKeyFoc
 			Z[5]=&actKeyMax
 			Z[6]=&gradInfo
+			Z[7]=&probMap
+			Z[8]=&K
 
 			int_prob_addinfo(GameSolver,Z)
 
@@ -1056,7 +1162,10 @@ void mixedStratSolve(struct gameDescription G)
 				players=uniqrows(actKeyFoc[,1])
 			
 				for (z=1;z<=rows(players);z++) {
-					drawComp=simplexDraw(colsum(actKeyFoc[,1]:==players[z])+1,G.initPts)
+					drawComp=simplexDraw(
+						colsum(actKeyFoc[,1]:==players[z])+1,
+						G.initPts
+					)
 					drawComp=drawComp[,1::cols(drawComp)-1]
 					draws=draws,drawComp
 				}
@@ -1069,37 +1178,53 @@ void mixedStratSolve(struct gameDescription G)
 			}
 			else {
 				timer_on(1)
-				int_solve(GameSolver)							/* Solve the problem      */
+				int_solve(GameSolver)						/* Solve the problem      */
 				timer_off(1)
 				
 				timer_on(2)
-				int_newton_iter(GameSolver)								/* Iterate solutions      */
+				int_newton_iter(GameSolver)				/* Iterate solutions      */
 				timer_off(2)
 				
 				Solns=int_prob_pts_vals(GameSolver)
 			}
 
-			if (rows(Solns)>0) {									/* Arrange solutions in readable form */
+			if (rows(Solns)>0) {							/* Arrange solutions in readable form */
 				Cands=J(0,cols(Sets),.)
 				for (z=1;z<=rows(Solns);z++) {
-					Cands=Cands \ placeSolProbs(Sets[i,],key,Solns[z,])				
+					Cands=Cands \ placeSolProbs(
+						Sets[i,],
+						key,
+						Solns[z,]
+					)				
 				}
 
-				CandsInd=lyapFun(G.redAct,G.redPay,Cands,G.redActDesc,G.redActKey)
+				CandsInd=lyapFun(
+					G.redAct,
+					G.redPay,
+					Cands,
+					G.redActDesc,
+					G.redActKey
+				)
 				
-				CandsInd=rowsum((CandsInd:<1e-10):*(Cands:>=0))		/*Shouldn't this be user-defined? */
-				if (CandsInd==cols(Cands)) mixedEqs=mixedEqs \ Cands
+				CandsInd=rowsum(
+					(CandsInd:<1e-10):*(Cands:>=0)
+				)							/* Shouldn't this be user-defined? */
+
+				if (CandsInd==cols(Cands)) {
+					mixedEqs=mixedEqs \ Cands
+				}
 			}
-		}					/* Completes outer if-block */
+		}							/* Completes outer if-block */
+
 		if (G.noise==1) {
 			if (i/50==floor(i/50)) {
 				printf(" %9.0f\n",i);displayflush()
 			}
 			else {
-				printf(".");displayflush()	/*Make noise*/
+				printf(".");displayflush()	/* Make noise */
 			}
 		}
-	}					/* Completes the for loop checking for mixedEqs */
+	}								/* Completes the for loop checking for mixedEqs */
 
 	G.redMixedEqs=mixedEqs
 }
