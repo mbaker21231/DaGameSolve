@@ -1,0 +1,2276 @@
+\documentclass[11pt]{article}
+
+    \usepackage[breakable]{tcolorbox}
+    \usepackage{parskip} % Stop auto-indenting (to mimic markdown behaviour)
+    
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % Keep aspect ratio if custom image width or height is specified
+    \setkeys{Gin}{keepaspectratio}
+    % Maintain compatibility with old templates. Remove in nbconvert 6.0
+    \let\Oldincludegraphics\includegraphics
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionFormat{nocaption}{}
+    \captionsetup{format=nocaption,aboveskip=0pt,belowskip=0pt}
+
+    \usepackage{float}
+    \floatplacement{figure}{H} % forces figures to be placed at the correct location
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+
+    \usepackage{iftex}
+    \ifPDFTeX
+        \usepackage[T1]{fontenc}
+        \IfFileExists{alphabeta.sty}{
+              \usepackage{alphabeta}
+          }{
+              \usepackage[mathletters]{ucs}
+              \usepackage[utf8x]{inputenc}
+          }
+    \else
+        \usepackage{fontspec}
+        \usepackage{unicode-math}
+    \fi
+
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics
+                         % to support a larger range
+    \makeatletter % fix for old versions of grffile with XeLaTeX
+    \@ifpackagelater{grffile}{2019/11/01}
+    {
+      % Do nothing on new versions
+    }
+    {
+      \def\Gread@@xetex#1{%
+        \IfFileExists{"\Gin@base".bb}%
+        {\Gread@eps{\Gin@base.bb}}%
+        {\Gread@@xetex@aux#1}%
+      }
+    }
+    \makeatother
+    \usepackage[Export]{adjustbox} % Used to constrain images to a maximum size
+    \adjustboxset{max size={0.9\linewidth}{0.9\paperheight}}
+
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    % The default LaTeX title has an obnoxious amount of whitespace. By default,
+    % titling removes some of it. It also provides customization options.
+    \usepackage{titling}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage{array}     % table support for pandoc >= 2.11.3
+    \usepackage{calc}      % table minipage width calculation for pandoc >= 2.11.1
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{soul}      % strikethrough (\st) support for pandoc >= 3.0.0
+    \usepackage{mathrsfs}
+    
+
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % common color for the border for error outputs.
+    \definecolor{outerrorbackground}{HTML}{FFDFDF}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \makeatletter
+    \newsavebox\pandoc@box
+    \newcommand*\pandocbounded[1]{%
+      \sbox\pandoc@box{#1}%
+      % scaling factors for width and height
+      \Gscale@div\@tempa\textheight{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+      \Gscale@div\@tempb\linewidth{\wd\pandoc@box}%
+      % select the smaller of both
+      \ifdim\@tempb\p@<\@tempa\p@
+        \let\@tempa\@tempb
+      \fi
+      % scaling accordingly (\@tempa < 1)
+      \ifdim\@tempa\p@<\p@
+        \scalebox{\@tempa}{\usebox\pandoc@box}%
+      % scaling not needed, use as it is
+      \else
+        \usebox{\pandoc@box}%
+      \fi
+    }
+    \makeatother
+
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{dagamesolve: A Package for Finding All Nash Equilibria in Sequences of Discrete-Action Games in Stata}
+    
+    
+    \date{October 2026}
+    
+    
+    
+    
+    \author{Matthew J. Baker}
+    
+    
+    
+% Pygments definitions
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\@namedef{PY@tok@w}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\@namedef{PY@tok@c}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cp}{\def\PY@tc##1{\textcolor[rgb]{0.61,0.40,0.00}{##1}}}
+\@namedef{PY@tok@k}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kt}{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\@namedef{PY@tok@o}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ow}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@nb}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nf}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@nn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@ne}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.80,0.25,0.22}{##1}}}
+\@namedef{PY@tok@nv}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@no}{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\@namedef{PY@tok@nl}{\def\PY@tc##1{\textcolor[rgb]{0.46,0.46,0.00}{##1}}}
+\@namedef{PY@tok@ni}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@na}{\def\PY@tc##1{\textcolor[rgb]{0.41,0.47,0.13}{##1}}}
+\@namedef{PY@tok@nt}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@nd}{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\@namedef{PY@tok@s}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sd}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@si}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@se}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.36,0.12}{##1}}}
+\@namedef{PY@tok@sr}{\def\PY@tc##1{\textcolor[rgb]{0.64,0.35,0.47}{##1}}}
+\@namedef{PY@tok@ss}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sx}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@m}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@gh}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gu}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\@namedef{PY@tok@gd}{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\@namedef{PY@tok@gi}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.52,0.00}{##1}}}
+\@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
+\@namedef{PY@tok@ge}{\let\PY@it=\textit}
+\@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
+\@namedef{PY@tok@ges}{\let\PY@bf=\textbf\let\PY@it=\textit}
+\@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
+\@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\@namedef{PY@tok@err}{\def\PY@bc##1{{\setlength{\fboxsep}{\string -\fboxrule}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}}
+\@namedef{PY@tok@kc}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kd}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kn}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@kr}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@bp}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\@namedef{PY@tok@fm}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\@namedef{PY@tok@vc}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vg}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vi}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@vm}{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\@namedef{PY@tok@sa}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sb}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sc}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@dl}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s2}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@sh}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@s1}{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\@namedef{PY@tok@mb}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mf}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mh}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mi}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@il}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@mo}{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\@namedef{PY@tok@ch}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cm}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cpf}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@c1}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+\@namedef{PY@tok@cs}{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.24,0.48,0.48}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % For linebreaks inside Verbatim environment from package fancyvrb.
+    \makeatletter
+        \newbox\Wrappedcontinuationbox
+        \newbox\Wrappedvisiblespacebox
+        \newcommand*\Wrappedvisiblespace {\textcolor{red}{\textvisiblespace}}
+        \newcommand*\Wrappedcontinuationsymbol {\textcolor{red}{\llap{\tiny$\m@th\hookrightarrow$}}}
+        \newcommand*\Wrappedcontinuationindent {3ex }
+        \newcommand*\Wrappedafterbreak {\kern\Wrappedcontinuationindent\copy\Wrappedcontinuationbox}
+        % Take advantage of the already applied Pygments mark-up to insert
+        % potential linebreaks for TeX processing.
+        %        {, <, #, %, $, ' and ": go to next line.
+        %        _, }, ^, &, >, - and ~: stay at end of broken line.
+        % Use of \textquotesingle for straight quote.
+        \newcommand*\Wrappedbreaksatspecials {%
+            \def\PYGZus{\discretionary{\char`\_}{\Wrappedafterbreak}{\char`\_}}%
+            \def\PYGZob{\discretionary{}{\Wrappedafterbreak\char`\{}{\char`\{}}%
+            \def\PYGZcb{\discretionary{\char`\}}{\Wrappedafterbreak}{\char`\}}}%
+            \def\PYGZca{\discretionary{\char`\^}{\Wrappedafterbreak}{\char`\^}}%
+            \def\PYGZam{\discretionary{\char`\&}{\Wrappedafterbreak}{\char`\&}}%
+            \def\PYGZlt{\discretionary{}{\Wrappedafterbreak\char`\<}{\char`\<}}%
+            \def\PYGZgt{\discretionary{\char`\>}{\Wrappedafterbreak}{\char`\>}}%
+            \def\PYGZsh{\discretionary{}{\Wrappedafterbreak\char`\#}{\char`\#}}%
+            \def\PYGZpc{\discretionary{}{\Wrappedafterbreak\char`\%}{\char`\%}}%
+            \def\PYGZdl{\discretionary{}{\Wrappedafterbreak\char`\$}{\char`\$}}%
+            \def\PYGZhy{\discretionary{\char`\-}{\Wrappedafterbreak}{\char`\-}}%
+            \def\PYGZsq{\discretionary{}{\Wrappedafterbreak\textquotesingle}{\textquotesingle}}%
+            \def\PYGZdq{\discretionary{}{\Wrappedafterbreak\char`\"}{\char`\"}}%
+            \def\PYGZti{\discretionary{\char`\~}{\Wrappedafterbreak}{\char`\~}}%
+        }
+        % Some characters . , ; ? ! / are not pygmentized.
+        % This macro makes them "active" and they will insert potential linebreaks
+        \newcommand*\Wrappedbreaksatpunct {%
+            \lccode`\~`\.\lowercase{\def~}{\discretionary{\hbox{\char`\.}}{\Wrappedafterbreak}{\hbox{\char`\.}}}%
+            \lccode`\~`\,\lowercase{\def~}{\discretionary{\hbox{\char`\,}}{\Wrappedafterbreak}{\hbox{\char`\,}}}%
+            \lccode`\~`\;\lowercase{\def~}{\discretionary{\hbox{\char`\;}}{\Wrappedafterbreak}{\hbox{\char`\;}}}%
+            \lccode`\~`\:\lowercase{\def~}{\discretionary{\hbox{\char`\:}}{\Wrappedafterbreak}{\hbox{\char`\:}}}%
+            \lccode`\~`\?\lowercase{\def~}{\discretionary{\hbox{\char`\?}}{\Wrappedafterbreak}{\hbox{\char`\?}}}%
+            \lccode`\~`\!\lowercase{\def~}{\discretionary{\hbox{\char`\!}}{\Wrappedafterbreak}{\hbox{\char`\!}}}%
+            \lccode`\~`\/\lowercase{\def~}{\discretionary{\hbox{\char`\/}}{\Wrappedafterbreak}{\hbox{\char`\/}}}%
+            \catcode`\.\active
+            \catcode`\,\active
+            \catcode`\;\active
+            \catcode`\:\active
+            \catcode`\?\active
+            \catcode`\!\active
+            \catcode`\/\active
+            \lccode`\~`\~
+        }
+    \makeatother
+
+    \let\OriginalVerbatim=\Verbatim
+    \makeatletter
+    \renewcommand{\Verbatim}[1][1]{%
+        %\parskip\z@skip
+        \sbox\Wrappedcontinuationbox {\Wrappedcontinuationsymbol}%
+        \sbox\Wrappedvisiblespacebox {\FV@SetupFont\Wrappedvisiblespace}%
+        \def\FancyVerbFormatLine ##1{\hsize\linewidth
+            \vtop{\raggedright\hyphenpenalty\z@\exhyphenpenalty\z@
+                \doublehyphendemerits\z@\finalhyphendemerits\z@
+                \strut ##1\strut}%
+        }%
+        % If the linebreak is at a space, the latter will be displayed as visible
+        % space at end of first line, and a continuation symbol starts next line.
+        % Stretch/shrink are however usually zero for typewriter font.
+        \def\FV@Space {%
+            \nobreak\hskip\z@ plus\fontdimen3\font minus\fontdimen4\font
+            \discretionary{\copy\Wrappedvisiblespacebox}{\Wrappedafterbreak}
+            {\kern\fontdimen2\font}%
+        }%
+
+        % Allow breaks at special characters using \PYG... macros.
+        \Wrappedbreaksatspecials
+        % Breaks at punctuation characters . , ; ? ! and / need catcode=\active
+        \OriginalVerbatim[#1,codes*=\Wrappedbreaksatpunct]%
+    }
+    \makeatother
+
+    % Exact colors from NB
+    \definecolor{incolor}{HTML}{303F9F}
+    \definecolor{outcolor}{HTML}{D84315}
+    \definecolor{cellborder}{HTML}{CFCFCF}
+    \definecolor{cellbackground}{HTML}{F7F7F7}
+
+    % prompt
+    \makeatletter
+    \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
+    \makeatother
+    \newcommand{\prompt}[4]{
+        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+    }
+    
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+\begin{document}
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{solving-finite-discrete-action-games-in-stata-with-dagamesolve}{%
+\section{\texorpdfstring{Solving finite discrete-action games in Stata
+with
+\texttt{dagamesolve}}{Solving finite discrete-action games in Stata with dagamesolve}}\label{solving-finite-discrete-action-games-in-stata-with-dagamesolve}}
+
+\hypertarget{theory-numerical-methods-and-examples}{%
+\subsubsection{Theory, numerical methods, and
+examples}\label{theory-numerical-methods-and-examples}}
+
+\textbf{Matthew J. Baker}\\
+Hunter College and the Graduate Center, CUNY
+
+\emph{Draft: October 2026}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\hypertarget{abstract}{%
+\subsection{Abstract}\label{abstract}}
+
+\texttt{dagamesolve} is a Stata/Mata package for solving finite,
+simultaneous-move, discrete-action games of complete information. The
+package supports an arbitrary number of players, allows players to have
+different numbers of actions, searches for pure, partially mixed, and
+fully mixed Nash equilibria, and can solve a sequence of games with a
+common action structure in a single call.
+
+The computational difficulty is not usually the detection of
+pure-strategy equilibria. The hard part is the systematic search for
+mixed-strategy equilibria. On a particular support, equilibrium requires
+solving a system of nonlinear polynomial equations, and a complete
+search must also consider the relevant supports. \texttt{dagamesolve}
+combines dominance reduction, direct checks for pure equilibria, support
+enumeration, interval methods for the nonlinear systems, and Newton
+refinement. A faster point-based Newton search is also available.
+
+This document explains the representation of games used by the package,
+describes the numerical ideas underlying the solver, and provides
+executable Stata examples. In particular, it emphasizes a feature that
+is useful for econometric applications: a sequence of related games can
+be constructed and solved directly in a Stata dataset.
+
+    \begin{quote}
+\textbf{About this notebook.}\\
+This is intended to be both a technical note and an executable document.
+Markdown cells contain the exposition and equations; Stata cells contain
+examples that can be run directly with a Stata Jupyter kernel. The
+notebook is the master source. A PDF can later be generated from the
+executed notebook.
+
+The theoretical discussion is adapted from the earlier presentation
+\emph{Finding all solutions to discrete games (using Stata)} and updated
+to match the current \texttt{dagamesolve} and \texttt{dagamestrats}
+interfaces.
+\end{quote}
+
+    \hypertarget{setup}{%
+\subsection{1. Setup}\label{setup}}
+
+The examples assume that \texttt{dagamesolve}, \texttt{dagamestrats},
+and their dependencies are already installed or that the notebook is
+being run from a location where the development version of the package
+is on Stata's ado-path.
+
+The package currently depends on \texttt{moremata}, \texttt{int\_utils},
+\texttt{rowmat\_utils}, and \texttt{intsolver}. The
+\texttt{dependency.do} file in the \texttt{DaGameSolve} repository
+installs the required dependencies.
+
+The following cells install the necessary packages, and then checks the
+stata environment and locates the two main commands.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{1}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{ssc} install moremata,\PY{k}{ replace}
+
+\PY{k}{net} install int\PYZus{}utils, \PY{c+cs}{///}
+    from(\PY{l+s}{\PYZdq{}}\PY{l+s}{h}\PY{l+s}{t}\PY{l+s}{t}\PY{l+s}{p}\PY{l+s}{s}\PY{l+s}{:}\PY{l+s}{/}\PY{l+s}{/}\PY{l+s}{r}\PY{l+s}{a}\PY{l+s}{w}\PY{l+s}{.}\PY{l+s}{g}\PY{l+s}{i}\PY{l+s}{t}\PY{l+s}{h}\PY{l+s}{u}\PY{l+s}{b}\PY{l+s}{u}\PY{l+s}{s}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{e}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{.}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{m}\PY{l+s}{/}\PY{l+s}{m}\PY{l+s}{b}\PY{l+s}{a}\PY{l+s}{k}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{2}\PY{l+s}{1}\PY{l+s}{2}\PY{l+s}{3}\PY{l+s}{1}\PY{l+s}{/}\PY{l+s}{i}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{\PYZus{}}\PY{l+s}{u}\PY{l+s}{t}\PY{l+s}{i}\PY{l+s}{l}\PY{l+s}{s}\PY{l+s}{/}\PY{l+s}{m}\PY{l+s}{a}\PY{l+s}{i}\PY{l+s}{n}\PY{l+s}{/}\PY{l+s}{\PYZdq{}})\PY{k}{ replace}
+
+\PY{k}{net} install rowmat\PYZus{}utils, \PY{c+cs}{///}
+    from(\PY{l+s}{\PYZdq{}}\PY{l+s}{h}\PY{l+s}{t}\PY{l+s}{t}\PY{l+s}{p}\PY{l+s}{s}\PY{l+s}{:}\PY{l+s}{/}\PY{l+s}{/}\PY{l+s}{r}\PY{l+s}{a}\PY{l+s}{w}\PY{l+s}{.}\PY{l+s}{g}\PY{l+s}{i}\PY{l+s}{t}\PY{l+s}{h}\PY{l+s}{u}\PY{l+s}{b}\PY{l+s}{u}\PY{l+s}{s}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{e}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{.}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{m}\PY{l+s}{/}\PY{l+s}{m}\PY{l+s}{b}\PY{l+s}{a}\PY{l+s}{k}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{2}\PY{l+s}{1}\PY{l+s}{2}\PY{l+s}{3}\PY{l+s}{1}\PY{l+s}{/}\PY{l+s}{r}\PY{l+s}{o}\PY{l+s}{w}\PY{l+s}{m}\PY{l+s}{a}\PY{l+s}{t}\PY{l+s}{\PYZus{}}\PY{l+s}{u}\PY{l+s}{t}\PY{l+s}{i}\PY{l+s}{l}\PY{l+s}{s}\PY{l+s}{/}\PY{l+s}{m}\PY{l+s}{a}\PY{l+s}{i}\PY{l+s}{n}\PY{l+s}{/}\PY{l+s}{\PYZdq{}})\PY{k}{ replace}
+
+\PY{k}{net} install intsolver, \PY{c+cs}{///}
+    from(\PY{l+s}{\PYZdq{}}\PY{l+s}{h}\PY{l+s}{t}\PY{l+s}{t}\PY{l+s}{p}\PY{l+s}{s}\PY{l+s}{:}\PY{l+s}{/}\PY{l+s}{/}\PY{l+s}{r}\PY{l+s}{a}\PY{l+s}{w}\PY{l+s}{.}\PY{l+s}{g}\PY{l+s}{i}\PY{l+s}{t}\PY{l+s}{h}\PY{l+s}{u}\PY{l+s}{b}\PY{l+s}{u}\PY{l+s}{s}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{e}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{.}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{m}\PY{l+s}{/}\PY{l+s}{m}\PY{l+s}{b}\PY{l+s}{a}\PY{l+s}{k}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{2}\PY{l+s}{1}\PY{l+s}{2}\PY{l+s}{3}\PY{l+s}{1}\PY{l+s}{/}\PY{l+s}{I}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{S}\PY{l+s}{o}\PY{l+s}{l}\PY{l+s}{v}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{/}\PY{l+s}{m}\PY{l+s}{a}\PY{l+s}{i}\PY{l+s}{n}\PY{l+s}{/}\PY{l+s}{\PYZdq{}})\PY{k}{ replace}
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{D}\PY{c+c1}{a}\PY{c+c1}{G}\PY{c+c1}{a}\PY{c+c1}{m}\PY{c+c1}{e}\PY{c+c1}{S}\PY{c+c1}{o}\PY{c+c1}{l}\PY{c+c1}{v}\PY{c+c1}{e}\PY{c+c1}{ }\PY{c+c1}{d}\PY{c+c1}{e}\PY{c+c1}{v}\PY{c+c1}{e}\PY{c+c1}{l}\PY{c+c1}{o}\PY{c+c1}{p}\PY{c+c1}{m}\PY{c+c1}{e}\PY{c+c1}{n}\PY{c+c1}{t}\PY{c+c1}{ }\PY{c+c1}{v}\PY{c+c1}{e}\PY{c+c1}{r}\PY{c+c1}{s}\PY{c+c1}{i}\PY{c+c1}{o}\PY{c+c1}{n}
+\PY{k}{net} install dagamesolve, \PY{c+cs}{///}
+    from(\PY{l+s}{\PYZdq{}}\PY{l+s}{h}\PY{l+s}{t}\PY{l+s}{t}\PY{l+s}{p}\PY{l+s}{s}\PY{l+s}{:}\PY{l+s}{/}\PY{l+s}{/}\PY{l+s}{r}\PY{l+s}{a}\PY{l+s}{w}\PY{l+s}{.}\PY{l+s}{g}\PY{l+s}{i}\PY{l+s}{t}\PY{l+s}{h}\PY{l+s}{u}\PY{l+s}{b}\PY{l+s}{u}\PY{l+s}{s}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{e}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{.}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{m}\PY{l+s}{/}\PY{l+s}{m}\PY{l+s}{b}\PY{l+s}{a}\PY{l+s}{k}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{2}\PY{l+s}{1}\PY{l+s}{2}\PY{l+s}{3}\PY{l+s}{1}\PY{l+s}{/}\PY{l+s}{D}\PY{l+s}{a}\PY{l+s}{G}\PY{l+s}{a}\PY{l+s}{m}\PY{l+s}{e}\PY{l+s}{S}\PY{l+s}{o}\PY{l+s}{l}\PY{l+s}{v}\PY{l+s}{e}\PY{l+s}{/}\PY{l+s}{p}\PY{l+s}{r}\PY{l+s}{o}\PY{l+s}{f}\PY{l+s}{i}\PY{l+s}{l}\PY{l+s}{i}\PY{l+s}{n}\PY{l+s}{g}\PY{l+s}{/}\PY{l+s}{\PYZdq{}})\PY{k}{ replace}
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{R}\PY{c+c1}{e}\PY{c+c1}{f}\PY{c+c1}{r}\PY{c+c1}{e}\PY{c+c1}{s}\PY{c+c1}{h}\PY{c+c1}{ }\PY{c+c1}{M}\PY{c+c1}{a}\PY{c+c1}{t}\PY{c+c1}{a}\PY{c+c1}{\PYZsq{}}\PY{c+c1}{s}\PY{c+c1}{ }\PY{c+c1}{l}\PY{c+c1}{i}\PY{c+c1}{b}\PY{c+c1}{r}\PY{c+c1}{a}\PY{c+c1}{r}\PY{c+c1}{y}\PY{c+c1}{ }\PY{c+c1}{i}\PY{c+c1}{n}\PY{c+c1}{d}\PY{c+c1}{e}\PY{c+c1}{x}
+\PY{k}{mata}:\PY{k}{ mata} mlib index
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+checking moremata consistency and verifying not already installed{\ldots}
+all files already exist and are up to date.
+
+checking int\_utils consistency and verifying not already installed{\ldots}
+all files already exist and are up to date.
+
+checking rowmat\_utils consistency and verifying not already installed{\ldots}
+all files already exist and are up to date.
+
+checking intsolver consistency and verifying not already installed{\ldots}
+all files already exist and are up to date.
+
+checking dagamesolve consistency and verifying not already installed{\ldots}
+all files already exist and are up to date.
+
+.mlib libraries to be searched are now
+    lmatabase;lmataado;lmatabma;lmatacate;lmatacollect;lmatadata;lmataerm;lmataf
+> c;lmatagsem;lmatah2o;lmatahetdid;lmataivqreg;lmatajm;lmatalasso;lmatamcmc;lmat
+> ameta;lmatami;lmatamixlog;lmatanumlib;lmataopt;lmatapath;lmatapostest;lmatapss
+> ;lmatarw;lmatasem;lmatasp;lmatasubexpr;lmatasvy;lmatatab;lmatats;ldagamesolve;
+> lamcmc;lcolrspace;lintsolver;lint\_utils;livreg2;lmoremata;lmoremata10;lmoremat
+> a11;lmoremata14;lrowmat\_utils;lsynth\_mata\_subr;l\_cfrmt
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{2}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{clear} all
+\PY{k}{set}\PY{k}{ more} off
+\PY{k}{set} linesize \PY{l+m}{255}
+
+\PY{k}{about}
+\PY{k}{which} dagamesolve
+\PY{k}{which} dagamestrats
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+
+
+
+
+StataNow/SE 19.5 for Windows (64-bit x86-64)
+Revision 12 Aug 2026
+Copyright 1985-2025 StataCorp LLC
+
+Total physical memory:       16.00 GB
+Available physical memory:    4.98 GB
+
+Stata license: Unlimited-user network, expiring 19 Jan 2027
+Serial number: 401909310562
+  Licensed to: Matthew Baker
+               Hunter College
+
+.\textbackslash{}dagamesolve.ado
+*! dagsolve v1.0.1 MJBaker 21july2014
+*! dagsolve v1.0.2 MJBaker 18sep2014
+*! dagamesolve v1.0.3 MJBaker 8may2023
+
+.\textbackslash{}dagamestrats.ado
+*! dagstrats v1.0.0 MJBaker 17July2014
+*! dagamestrats v2.0.0 MJBaker 30May2023
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{3}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYZpc{}set \PY{o}{\PYZhy{}}\PY{o}{\PYZhy{}}permanently graph\PYZus{}format svg
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{4}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYZpc{}set \PY{o}{\PYZhy{}}\PY{o}{\PYZhy{}}permanently graph\PYZus{}width \PY{l+m}{900}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \hypertarget{why-solve-finite-games-inside-stata}{%
+\subsection{2. Why solve finite games inside
+Stata?}\label{why-solve-finite-games-inside-stata}}
+
+There are at least three motivations.
+
+First, finding all Nash equilibria of a finite game is a nontrivial
+computational problem, to put it mildly. Pure-strategy profiles can be
+checked directly, but mixed strategies require solving nonlinear systems
+and considering alternative supports. More generally, equilibrium
+computation is known to be computationally difficult. Nash's theorem
+guarantees that every finite game possesses at least one mixed-strategy
+equilibrium, so the central computational problem is not one of deciding
+whether a solution exists, but of actually finding one. Computing even a
+single Nash equilibrium of a general finite game is PPAD-complete, a
+complexity class associated with Brouwer fixed-point problems
+(Daskalakis, Goldberg, and Papadimitriou, 2009). The problem of
+recovering the entire equilibrium correspondence is potentially more
+demanding still: even counting the Nash equilibria of a normal-form game
+is \#P-hard (Conitzer and Sandholm, 2008).
+
+Second, many empirical models require finding the equilibria for a
+sequence of games, not just for a single isolated game. Entry models are
+a natural example. Different markets may contain different payoff
+shifters, while the underlying strategic structure and structural
+parameters are common across markets. This repeated-game structure is
+central to a large empirical literature on static discrete games; see
+Aradillas-López (2020) for a recent review. Applications include models
+of entry and market structure in retail, airlines, motels, video rental,
+and other geographically differentiated industries (Bresnahan and Reiss,
+1990, 1991; Berry, 1992; Mazzeo, 2002; Seim, 2006; Jia, 2008; Ciliberto
+and Tamer, 2009). Bajari, Hong, and Ryan (2010), in particular, develop
+an estimator for complete-information discrete games in which Nash
+equilibria must be computed repeatedly as the structural parameters
+vary. If the game solver is embedded in Stata, game construction,
+equilibrium computation, data analysis, and eventually estimation can
+all live in the same environment.
+
+Third, sequences of games are useful and fun to study even outside
+estimation. Part of my own interest in developing these routines came
+from teaching graduate microeconomic theory at the CUNY Graduate Center.
+Some familiar results in game theory become much more provocative when
+one begins to ask what they imply quantitatively. Wilson's oddness
+theorem (Wilson, 1971), for example, says that ``almost all'' finite
+games have an odd number of Nash equilibria; the exceptional games form
+a measure-zero set. The qualifier ``almost all'' naturally raises
+further questions: how many equilibria does a typical game have, how is
+that number distributed across games, and where do equilibria appear or
+disappear as payoffs vary? Related questions arise in McLennan's (2005)
+work on the expected number of Nash equilibria of a random normal-form
+game. The magnitudes implied by those results can initially seem
+surprising, particularly as the numbers of players or available actions
+grow. Berg and McLennan (2005) pursue this question further for large
+two-player normal-form games, deriving asymptotic results for the
+expected number of equilibria. In any event, being able to generate and
+solve large collections of games provides a simple computational
+laboratory in which to explore such results directly: one can vary
+payoff parameters, the number of players, or the number of available
+actions and examine how equilibrium multiplicity changes.
+
+These were the original motivations for developing \texttt{dagamesolve}:
+not merely to solve one textbook game, but to make equilibrium
+computation usable as a component inside a larger empirical workflow.
+There was, however, an obvious reason not to develop yet another game
+solver: \href{https://www.gambit-project.org/}{\textbf{Gambit}}, the
+long-running and remarkably capable suite of software for the
+construction and analysis of finite games developed by McKelvey,
+McLennan, Turocy, and collaborators (2014). Gambit provides a rich
+collection of equilibrium-computation algorithms, command-line tools, a
+graphical interface, and a Python API, and it remains the natural
+benchmark for general-purpose computation in finite games. My motivation
+for writing a separate solver was therefore not that Gambit lacked the
+relevant game-theoretic machinery. Rather, when this project began, I
+wanted something that fit more naturally into the way I was already
+doing empirical work in Stata: games represented directly as
+observations and variables, sequences of related games solved in a
+single call, and equilibrium results returned immediately to the working
+dataset. I also wanted tighter control over the numerical treatment of
+mixed-strategy solutions, particularly in \(N\)-player games where
+support enumeration leads to systems of nonlinear polynomial equations.
+Gambit itself offers exact rational arithmetic for several two-player
+methods, while its general polynomial-equilibrium routines necessarily
+rely on numerical procedures; \texttt{dagamesolve} took a different
+route by combining support enumeration with interval arithmetic and
+subsequent Newton refinement.
+
+The last point of the previous paragraph leads me to a final point, and
+an apology. \texttt{dagamesolve} is slow, in large part because of its
+reliance on interval arithmetic. I will digress on the relative
+advantages and disadvantages of this approach to solving polynomial
+systems below, after first describing the nature of the problem.
+
+    \hypertarget{finite-discrete-action-games}{%
+\subsection{3. Finite discrete-action
+games}\label{finite-discrete-action-games}}
+
+Consider a complete-information simultaneous-move game with players
+\(i \in N\) players where each player has a set of discrete actions:
+
+\[
+A_i=\{1,\ldots,K_i\}.
+\]
+
+A mixed strategy for player \(i\) is a probability vector
+
+\[
+\sigma_i=(\sigma_{i1},\ldots,\sigma_{iK_i}),
+\qquad
+\sigma_{ik}\geq 0,
+\qquad
+\sum_{k=1}^{K_i}\sigma_{ik}=1.
+\]
+
+A strategy profile \[\sigma^*=(\sigma_1^*,\ldots,\sigma_N^*)\] is a Nash
+equilibrium if no player can increase expected payoff through a
+unilateral deviation:
+
+\[
+u_i(\sigma_i^*,\sigma_{-i}^*)
+\geq
+u_i(\sigma_i',\sigma_{-i}^*)
+\quad
+\text{for every feasible }\sigma_i'.
+\]
+
+Pure strategies are special cases in which one action receives a weight
+of probability equal to unity. A partially mixed equilibrium has some
+players mixing and others playing pure strategies. A fully mixed
+equilibrium places positive probability on every action in the relevant
+support.
+
+Mixed strategies matter computationally as well as theoretically. Nash's
+existence theorem permits mixed strategies, and equilibrium search
+cannot in general stop after inspecting the finite collection of pure
+profiles.
+
+    \hypertarget{a-two-action-illustration-of-existence}{%
+\subsubsection{3.1 A two-action illustration of
+existence}\label{a-two-action-illustration-of-existence}}
+
+For intuition, suppose each player has two actions and write
+\[\sigma_i\] for the probability of choosing action 1. One way of
+motivating the fixed-point argument is to define the gain from shifting
+toward action 1,
+
+\[
+g_i(\sigma)
+=
+\max\{u_i(1,\sigma_{-i})-u_i(2,\sigma_{-i}),0\},
+\]
+
+and construct a continuous adjustment mapping on the mixed-strategy
+simplex. A fixed point of an appropriate mapping has the property that
+profitable unilateral adjustments have been exhausted. This connection
+between Nash equilibrium and fixed points underlies a number of
+classical computational approaches to equilibrium.
+
+An alternative formulation, due to McKelvey, turns the same idea into an
+optimization problem. For a general finite game, let
+
+\[
+g_{ij}(\sigma)
+=
+\max\left\{
+u_i(a_{ij},\sigma_{-i})-u_i(\sigma),0
+\right\}
+\]
+
+denote the positive gain, if any, available to player (i) from deviating
+to pure action (a\_\{ij\}). McKelvey constructs the nonnegative function
+
+\[
+V(\sigma) =\sum_i\sum_j[g_{ij}(\sigma)]^2.
+\]
+
+This function has the useful property that
+
+\[
+V(\sigma)=0
+\quad\Longleftrightarrow\quad
+\sigma\text{ is a Nash equilibrium}.
+\]
+
+Thus the computation of Nash equilibrium can alternatively be viewed as
+a constrained global-minimization problem over the product of the
+players' mixed-strategy simplices. McKelvey's formulation is
+particularly attractive because the resulting objective is continuously
+differentiable, allowing standard numerical optimization methods to be
+brought to bear on the equilibrium problem (McKelvey, 1998; McKelvey and
+McLennan, 1996)
+
+The important computational lesson is not the particular fixed-point
+proof. It is that equilibrium may lie in the interior of a probability
+simplex rather than at one of its vertices. A numerical solver therefore
+has to deal with continuous probability variables even though the
+underlying actions are discrete.
+
+The optimization formulation does not, however, make the problem of
+finding all equilibria disappear. Numerical minimization begun from a
+particular starting point can converge to one basin of attraction while
+missing others, and a local minimum with a positive value of \(V\) is
+not a Nash equilibrium. Searching for the entire equilibrium
+correspondence therefore remains a global problem. This
+distinction---between finding an equilibrium and systematically
+searching for all equilibria---is central to the design of
+\texttt{dagamesolve}.
+
+    \hypertarget{representing-a-game-in-list-form}{%
+\subsection{4. Representing a game in ``list''
+form}\label{representing-a-game-in-list-form}}
+
+Games are often displayed in normal form. For computation,
+\texttt{dagamesolve} uses a list representation.
+
+Let \(A\) denote a matrix whose columns enumerate the pure-strategy
+action profiles and let \(\Pi\) contain the corresponding payoffs. If
+there are \(N\) players, both matrices have \(N\) rows. The number of
+columns is
+
+\[
+M=\prod_{i=1}^{N} K_i.
+\]
+
+For a two-player, two-action game, the action-profile matrix is
+
+\[
+A=
+\begin{bmatrix}
+1&1&2&2\\
+1&2&1&2
+\end{bmatrix}.
+\]
+
+Each column is one complete pure-strategy profile. The payoff matrix has
+exactly the same column ordering.
+
+In a Stata dataset, players are observations and action profiles are
+variables. The utility command \texttt{dagamestrats} constructs the
+action-profile variables automatically.
+
+    \hypertarget{example-constructing-action-profiles}{%
+\subsubsection{Example: constructing action
+profiles}\label{example-constructing-action-profiles}}
+
+Suppose player 1 has two actions, player 2 has three, and player 3 has
+two. There are \(2\times3\times2=12\) pure-strategy profiles.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{5}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{set} obs \PY{l+m}{3}
+
+\PY{k}{gen} game = \PY{l+m}{1}
+\PY{k}{gen} acts = \PY{l+m}{2}
+\PY{k}{replace} acts = \PY{l+m}{3}\PY{k}{ in} \PY{l+m}{2}
+
+dagamestrats acts, group(game)\PY{k}{ generate}(a)
+
+\PY{k}{list} game acts a\PY{o}{*}
+\PY{k}{return}\PY{k}{ list}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+Number of observations (\_N) was 0, now 3.
+
+
+
+(1 real change made)
+
+
+
+     +--------------------------------------------------------------------------
+---------+
+     | game   acts   acts   a1   a2   a3   a4   a5   a6   a7   a8   a9   a10
+a11   a12 |
+     |--------------------------------------------------------------------------
+---------|
+  1. |    1      2      2    1    1    1    1    1    1    2    2    2     2
+2     2 |
+  2. |    1      3      3    1    1    2    2    3    3    1    1    2     2
+3     3 |
+  3. |    1      2      2    1    2    1    2    1    2    1    2    1     2
+1     2 |
+     +--------------------------------------------------------------------------
+---------+
+
+
+scalars:
+           r(profiles) =  12
+             r(groups) =  1
+    \end{Verbatim}
+
+    The generated variables \texttt{a1}, \texttt{a2}, \ldots, \texttt{a12}
+are the twelve pure-strategy profiles. Corresponding payoff variables
+can be created in the same order and passed to \texttt{dagamesolve}.
+
+The same organization extends naturally to a \textbf{sequence of games}.
+Each game occupies a group of observations, one observation per player.
+Games in a single call must have the same number of players and the same
+action structure, with corresponding players ordered consistently across
+games.
+
+    \hypertarget{why-mixed-strategy-equilibrium-is-the-difficult-part}{%
+\subsection{5. Why mixed-strategy equilibrium is the difficult
+part}\label{why-mixed-strategy-equilibrium-is-the-difficult-part}}
+
+Suppose, for simplicity, that three players each have two actions
+\(a_i \in \{1,2\}\). Let \(p_i\) be the probability that player \(i\)
+chooses action 1.
+
+If all three players mix, each player must be indifferent between the
+two actions. For player 1 this condition has the form
+
+\[
+\begin{aligned}
+& p_2p_3\,u_1(1,1,1)
++p_2(1-p_3)\,u_1(1,1,2) \\
+&\quad +(1-p_2)p_3\,u_1(1,2,1)
++(1-p_2)(1-p_3)\,u_1(1,2,2) \\
+={}&
+p_2p_3\,u_1(2,1,1)
++p_2(1-p_3)\,u_1(2,1,2) \\
+&\quad +(1-p_2)p_3\,u_1(2,2,1)
++(1-p_2)(1-p_3)\,u_1(2,2,2).
+\end{aligned}
+\]
+
+There is one analogous indifference equation for each mixing player.
+Even in a binary-action game these equations are polynomial in the other
+players' probabilities.
+
+That is only part of the problem. A game may have equilibria on smaller
+supports: one player may mix while another plays a pure strategy, or
+different players may mix over different subsets of their actions. A
+systematic search therefore has to consider candidate supports as well
+as solve the nonlinear systems associated with them.
+
+The number of pure profiles and the number of possible supports both
+grow rapidly as players and actions are added.
+
+    \hypertarget{the-solution-strategy-used-by-dagamesolve}{%
+\subsection{\texorpdfstring{6. The solution strategy used by
+\texttt{dagamesolve}}{6. The solution strategy used by dagamesolve}}\label{the-solution-strategy-used-by-dagamesolve}}
+
+At a high level, the current solver proceeds as follows.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Dominance reduction.} Iteratively eliminate strategies that
+  can be removed by the package's dominance checks. In some games this
+  step alone solves the game.
+\item
+  \textbf{Pure-strategy search.} Test the remaining pure profiles for
+  Nash equilibrium.
+\item
+  \textbf{Support enumeration.} Construct candidate subgames/supports
+  for mixed and partially mixed equilibria.
+\item
+  \textbf{Reduce each support.} Apply dominance checks again inside the
+  candidate subgame. Supports that cannot contain the desired
+  equilibrium are discarded.
+\item
+  \textbf{Construct indifference equations.} For every mixing player,
+  expected payoffs from actions in the support must agree. One
+  probability per player is recovered from the adding-up restriction, so
+  the nonlinear system is expressed in the remaining free probabilities.
+\item
+  \textbf{Solve the nonlinear system.} In the default method, the free
+  probabilities initially lie in interval boxes contained in
+  ({[}0,1{]}\^{}d). Interval contraction and subdivision are used to
+  search the region systematically.
+\item
+  \textbf{Newton refinement.} Candidate solution regions are refined to
+  point solutions.
+\item
+  \textbf{Equilibrium verification and consolidation.} Candidate
+  probability vectors are checked against equilibrium conditions and
+  nearby numerical duplicates are consolidated.
+\end{enumerate}
+
+The \texttt{fast} option skips the interval-search stage and instead
+starts Newton iteration from randomly drawn points in the relevant
+mixed-strategy simplices. This is much faster in many problems, but it
+does not provide the same systematic search of the strategy space.
+
+The default procedure is therefore best described as a complete-search
+procedure \textbf{intended to locate all equilibria} of the finite game.
+As with any numerical procedure, difficult or degenerate games should be
+inspected carefully.
+
+    \hypertarget{digression-on-complete-solution-of-nonlinear-polynomial-systems}{%
+\subsection{Digression on Complete Solution of Nonlinear Polynomial
+Systems}\label{digression-on-complete-solution-of-nonlinear-polynomial-systems}}
+
+6.1 \textbf{Homotopy methods}
+
+Homotopy methods solve a nonlinear system by embedding the problem of
+interest in a continuous family of related problems. One begins with a
+system \(G(x)=0\) whose solutions are known and constructs a homotopy
+
+\[
+H(x,t)=(1-t)G(x)+tF(x)=0,
+\qquad t\in[0,1],
+\]
+
+where \(F(x)=0\) is the system one ultimately wishes to solve. Starting
+from each known solution at \(t=0\), a numerical path-following
+algorithm traces the corresponding solution as \(t\) moves toward one.
+Under appropriate regularity conditions, the endpoints of these paths at
+\(t=1\) provide the solutions to the original system.
+
+This approach is particularly attractive for polynomial systems because
+algebraic results can often tell us how many solution paths must be
+followed. In games, the equilibrium conditions associated with a
+particular support form a polynomial system, so homotopy continuation
+can be used to trace candidate equilibria systematically. A major
+advantage over ordinary Newton iteration is that one is not simply
+choosing arbitrary starting points and hoping that they lie in the
+basins of attraction of all the relevant roots. The continuation
+construction provides a principled collection of paths that can, under
+suitable conditions, recover all isolated solutions of the polynomial
+system.
+
+The complications are largely practical. Paths can pass close to
+singularities, approach one another, or wander through the complex
+domain even when the economically relevant solutions are real. Careful
+predictor-corrector methods, endgames, and numerical precision are
+therefore important. Moreover, polynomial systems may possess many
+complex solutions that must be tracked even though only a small subset
+correspond to real probability vectors satisfying equilibrium
+inequalities. Homotopy methods are consequently powerful and elegant,
+but they may devote substantial computation to solutions that are
+ultimately irrelevant for a finite-game problem.
+
+6.2 \textbf{Algebraic methods}
+
+Algebraic methods treat the equilibrium conditions as a system of
+polynomial equations and apply tools from computational algebraic
+geometry. The best-known examples use Gröbner bases, resultants, or
+related elimination techniques. The basic idea is to transform a
+multivariate polynomial system into an equivalent system with a more
+tractable algebraic structure. In favorable cases, repeated elimination
+reduces the problem to one univariate polynomial; its roots can then be
+recovered and substituted backward to obtain the remaining variables.
+
+The attraction of the algebraic approach is that it works with the
+global structure of the system rather than searching locally from a
+collection of initial values. It can reveal how many algebraic solutions
+exist, characterize multiplicities, and sometimes deliver exact or
+symbolic representations of solutions. This makes it particularly
+appealing from a theoretical perspective. Since mixed-strategy
+equilibrium conditions in finite games are polynomial, they fit
+naturally into this framework, and algebraic methods can in principle
+enumerate the solutions associated with a candidate support. The
+difficulty is that symbolic calculations can grow extraordinarily
+rapidly as the number and degree of the equations increase.
+Gröbner-basis computation in particular may suffer from severe
+intermediate-expression growth, making problems that look modest in
+economic notation computationally demanding. Exact algebraic computation
+also produces all algebraic solutions, including complex roots and roots
+lying outside the probability simplex, which must subsequently be
+filtered. Thus algebraic methods offer considerable theoretical power,
+but their computational burden can become substantial as the numbers of
+players, actions, and candidate supports increase.
+
+6.3 \textbf{Interval methods}
+
+Interval methods take a different approach. Instead of representing an
+unknown probability by a floating-point number \(p\), one represents it
+initially by an interval known to contain it, for example \(p\in[0,1]\).
+Arithmetic operations are then replaced by interval operations
+constructed so that the resulting interval is guaranteed to contain
+every value that the corresponding real-valued expression could attain.
+Applied to a system of equilibrium equations, this makes it possible to
+evaluate an entire box of candidate probabilities at once.
+
+The key computational advantage is exclusion. Suppose a system contains
+an equation \(f(x)=0\), and interval evaluation over a box \(X\)
+produces
+
+\[
+0\notin [f](X).
+\]
+
+Then no solution can exist anywhere in that box, and the entire region
+can be discarded. Boxes that cannot be excluded can be contracted using
+interval versions of Newton or related consistency operators; if a box
+remains too large, it can be subdivided and the procedure repeated. The
+resulting branch-contract-subdivide algorithm progressively eliminates
+regions that cannot contain roots while isolating regions that may
+contain them. This makes interval methods particularly attractive when
+the purpose is not merely to find a root, but to search systematically
+for all real roots in a bounded domain. The price of that reliability is
+computational cost. Interval evaluations can be conservative because
+repeated occurrences of the same variable are treated as though they
+varied independently, producing bounds wider than the true range of a
+function. This ``dependency problem'' can force additional subdivision
+and greatly increase the number of boxes that must be examined.
+Nevertheless, the domain of mixed strategies is naturally bounded---the
+product of probability simplices---and only real solutions are
+economically relevant. Those features make interval methods unusually
+well suited to the objective of dagamesolve: search candidate supports
+over a known bounded region, rule out regions that cannot contain an
+equilibrium, isolate the remaining solutions, and then use an ordinary
+point method such as Newton iteration to refine them.
+
+    \hypertarget{a-short-introduction-to-interval-methods}{%
+\subsection{7. A short introduction to interval
+methods}\label{a-short-introduction-to-interval-methods}}
+
+The interval component is what distinguishes the default mixed-strategy
+search from simply running Newton's method from a collection of guesses.
+
+Let
+
+\[
+[x]=[\underline{x},\overline{x}]
+\]
+
+denote an interval known to contain a scalar (x). Basic interval
+operations are defined so that the resulting interval contains every
+possible real result.
+
+Addition:
+
+\[
+[a,b]+[c,d]=[a+c,b+d].
+\]
+
+Subtraction:
+
+\[
+[a,b]-[c,d]=[a-d,b-c].
+\]
+
+Multiplication:
+
+\[
+[a,b][c,d]
+=
+[\min(ac,ad,bc,bd),\max(ac,ad,bc,bd)].
+\]
+
+Floating-point implementations use \textbf{outward rounding}: lower
+bounds are rounded downward and upper bounds upward so that numerical
+rounding does not incorrectly exclude feasible values.
+
+    \hypertarget{inclusion-functions-and-pessimism}{%
+\subsubsection{7.1 Inclusion functions and
+pessimism}\label{inclusion-functions-and-pessimism}}
+
+Replacing ordinary arithmetic in an expression by interval arithmetic
+produces an inclusion function \([f]([x])\) satisfying
+
+\[
+f([x])\subseteq [f]([x]).
+\]
+
+The inclusion can be wider than the true range because the same variable
+may appear repeatedly in the expression. This is often called the
+dependency problem or interval pessimism.
+
+For example, if \(x\in[-1,2]\), the true range of \(x^2\) is \([0,4]\).
+Evaluating the algebraically equivalent expression \(x\times x\) by
+naive interval multiplication gives
+
+\[
+[-1,2]\times[-1,2]=[-2,4],
+\]
+
+which contains the true range but is wider.
+
+This apparent conservatism is useful for exclusion. If zero is
+\textbf{not} contained in the interval evaluation of an equation over a
+box, no root can lie anywhere inside that box.
+
+    \hypertarget{branch-contract-and-exclude}{%
+\subsubsection{7.2 Branch, contract, and
+exclude}\label{branch-contract-and-exclude}}
+
+Suppose a scalar root is sought on an initial interval \([x]\).
+
+A generic interval search repeats the following operations:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Evaluate an interval inclusion of the equation.
+\item
+  If \(0\notin[f]([x])\), discard the interval.
+\item
+  If zero remains possible, attempt to \textbf{contract} the interval.
+\item
+  If the surviving interval is still too wide, bisect it and place the
+  two smaller intervals back on the work list.
+\item
+  Continue until no unresolved boxes remain.
+\item
+  Refine sufficiently small candidate boxes with a point method such as
+  Newton iteration.
+\end{enumerate}
+
+In several dimensions, intervals become boxes and the Jacobian becomes
+an interval matrix. A Taylor-type inclusion has the schematic form
+
+\[
+\mathbf{f}([\mathbf{x}])
+\subseteq
+\mathbf{f}(\mathbf{m})
++
+[\mathbf{J}]([\mathbf {x}])([\mathbf{x}]-\mathbf{m}),
+\]
+
+where \(\mathbf{m}\) is typically a point such as the midpoint of the
+box.
+
+The interval solver used by \texttt{dagamesolve} performs
+equation-by-equation contraction and subdivision through the companion
+\texttt{intsolver} package.
+
+    \hypertarget{example-1-a-two-player-coordination-game}{%
+\subsection{8. Example 1: a two-player coordination
+game}\label{example-1-a-two-player-coordination-game}}
+
+Consider the game
+
+\begin{longtable}[]{@{}lrr@{}}
+\toprule
+& Player 2: 1 & Player 2: 2 \\
+\midrule
+\endhead
+\textbf{Player 1: 1} & (1,2) & (0,0.1) \\
+\textbf{Player 1: 2} & (0,0) & (3,1) \\
+\bottomrule
+\end{longtable}
+
+The game has two pure-strategy equilibria and one mixed equilibrium.
+
+The code below constructs the action profiles with
+\texttt{dagamestrats}, enters the payoffs in matching profile order, and
+solves the game.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{6}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{clear}
+\PY{k}{set} obs \PY{l+m}{2}
+
+\PY{k}{gen} game = \PY{l+m}{1}
+\PY{k}{gen} acts = \PY{l+m}{2}
+dagamestrats acts, group(game)\PY{k}{ generate}(s)
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{P}\PY{c+c1}{r}\PY{c+c1}{o}\PY{c+c1}{f}\PY{c+c1}{i}\PY{c+c1}{l}\PY{c+c1}{e}\PY{c+c1}{ }\PY{c+c1}{1}\PY{c+c1}{:}\PY{c+c1}{ }\PY{c+c1}{(}\PY{c+c1}{1}\PY{c+c1}{,}\PY{c+c1}{1}\PY{c+c1}{)}\PY{c+c1}{ }\PY{c+c1}{\PYZhy{}}\PY{c+c1}{\PYZgt{}}\PY{c+c1}{ }\PY{c+c1}{p}\PY{c+c1}{a}\PY{c+c1}{y}\PY{c+c1}{o}\PY{c+c1}{f}\PY{c+c1}{f}\PY{c+c1}{s}\PY{c+c1}{ }\PY{c+c1}{(}\PY{c+c1}{1}\PY{c+c1}{,}\PY{c+c1}{2}\PY{c+c1}{)}
+\PY{k}{gen} pay1 = \PY{l+m}{1}
+\PY{k}{replace} pay1 = \PY{l+m}{2}\PY{k}{ in} \PY{l+m}{2}
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{P}\PY{c+c1}{r}\PY{c+c1}{o}\PY{c+c1}{f}\PY{c+c1}{i}\PY{c+c1}{l}\PY{c+c1}{e}\PY{c+c1}{ }\PY{c+c1}{2}\PY{c+c1}{:}\PY{c+c1}{ }\PY{c+c1}{(}\PY{c+c1}{1}\PY{c+c1}{,}\PY{c+c1}{2}\PY{c+c1}{)}\PY{c+c1}{ }\PY{c+c1}{\PYZhy{}}\PY{c+c1}{\PYZgt{}}\PY{c+c1}{ }\PY{c+c1}{p}\PY{c+c1}{a}\PY{c+c1}{y}\PY{c+c1}{o}\PY{c+c1}{f}\PY{c+c1}{f}\PY{c+c1}{s}\PY{c+c1}{ }\PY{c+c1}{(}\PY{c+c1}{0}\PY{c+c1}{,}\PY{c+c1}{.}\PY{c+c1}{1}\PY{c+c1}{)}
+\PY{k}{gen} pay2 = \PY{l+m}{0}
+\PY{k}{replace} pay2 = .\PY{l+m}{1}\PY{k}{ in} \PY{l+m}{2}
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{P}\PY{c+c1}{r}\PY{c+c1}{o}\PY{c+c1}{f}\PY{c+c1}{i}\PY{c+c1}{l}\PY{c+c1}{e}\PY{c+c1}{ }\PY{c+c1}{3}\PY{c+c1}{:}\PY{c+c1}{ }\PY{c+c1}{(}\PY{c+c1}{2}\PY{c+c1}{,}\PY{c+c1}{1}\PY{c+c1}{)}\PY{c+c1}{ }\PY{c+c1}{\PYZhy{}}\PY{c+c1}{\PYZgt{}}\PY{c+c1}{ }\PY{c+c1}{p}\PY{c+c1}{a}\PY{c+c1}{y}\PY{c+c1}{o}\PY{c+c1}{f}\PY{c+c1}{f}\PY{c+c1}{s}\PY{c+c1}{ }\PY{c+c1}{(}\PY{c+c1}{0}\PY{c+c1}{,}\PY{c+c1}{0}\PY{c+c1}{)}
+\PY{k}{gen} pay3 = \PY{l+m}{0}
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{P}\PY{c+c1}{r}\PY{c+c1}{o}\PY{c+c1}{f}\PY{c+c1}{i}\PY{c+c1}{l}\PY{c+c1}{e}\PY{c+c1}{ }\PY{c+c1}{4}\PY{c+c1}{:}\PY{c+c1}{ }\PY{c+c1}{(}\PY{c+c1}{2}\PY{c+c1}{,}\PY{c+c1}{2}\PY{c+c1}{)}\PY{c+c1}{ }\PY{c+c1}{\PYZhy{}}\PY{c+c1}{\PYZgt{}}\PY{c+c1}{ }\PY{c+c1}{p}\PY{c+c1}{a}\PY{c+c1}{y}\PY{c+c1}{o}\PY{c+c1}{f}\PY{c+c1}{f}\PY{c+c1}{s}\PY{c+c1}{ }\PY{c+c1}{(}\PY{c+c1}{3}\PY{c+c1}{,}\PY{c+c1}{1}\PY{c+c1}{)}
+\PY{k}{gen} pay4 = \PY{l+m}{3}
+\PY{k}{replace} pay4 = \PY{l+m}{1}\PY{k}{ in} \PY{l+m}{2}
+
+\PY{k}{list} game acts s1\PY{o}{\PYZhy{}}s4 pay1\PY{o}{\PYZhy{}}pay4, noobs
+
+dagamesolve s1\PY{o}{\PYZhy{}}s4, group(game) payoffs(pay1\PY{o}{\PYZhy{}}pay4) equilibria(eq)
+
+\PY{k}{return}\PY{k}{ list}
+
+\PY{k}{format} eq\PYZus{}\PY{o}{*} \PY{n+nx}{\PYZpc{}6.3f}
+\PY{k}{format} eq\PYZus{}count \PY{n+nx}{\PYZpc{}3.0f}
+
+\PY{k}{format} eq\PYZus{}\PY{o}{*} \PY{n+nx}{\PYZpc{}6.3f}
+
+\PY{k}{list} eq\PYZus{}1\PY{o}{*} eq\PYZus{}rets\PYZus{}1, noobs sep(\PY{l+m}{0})
+\PY{k}{list} eq\PYZus{}2\PY{o}{*} eq\PYZus{}rets\PYZus{}2, noobs sep(\PY{l+m}{0})
+\PY{k}{list} eq\PYZus{}3\PY{o}{*} eq\PYZus{}rets\PYZus{}3, noobs sep(\PY{l+m}{0})
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+
+Number of observations (\_N) was 0, now 2.
+
+
+
+
+
+(1 real change made)
+
+
+(1 real change made)
+
+
+
+(1 real change made)
+
+
+  +-------------------------------------------------------------+
+  | game   acts   s1   s2   s3   s4   pay1   pay2   pay3   pay4 |
+  |-------------------------------------------------------------|
+  |    1      2    1    1    2    2      1      0      0      3 |
+  |    1      2    1    2    1    2      2     .1      0      1 |
+  +-------------------------------------------------------------+
+
+
+
+scalars:
+              r(sdeqs) =  .
+             r(mineqs) =  3
+             r(maxeqs) =  3
+            r(meaneqs) =  3
+              r(games) =  1
+          r(tolerance) =  1.00000000000e-12
+             r(digits) =  1.00000000000e-08
+              r(mnits) =  100
+             r(coltol) =  .0001
+            r(mbwidth) =  .0001
+       r(totalactions) =  4
+
+macros:
+             r(method) : "complete"
+
+matrices:
+      r(playeractions) :  1 x 2
+
+
+
+
+
+  +------------------------------------------------------+
+  | eq\_1\_1\_1   eq\_1\_1\_2   eq\_1\_2\_1   eq\_1\_2\_2   eq\_ret\textasciitilde{}1 |
+  |------------------------------------------------------|
+  |        .          .          .          .      1.000 |
+  |    1.000      0.000      1.000      0.000      2.000 |
+  +------------------------------------------------------+
+
+
+  +------------------------------------------------------+
+  | eq\_2\_1\_1   eq\_2\_1\_2   eq\_2\_2\_1   eq\_2\_2\_2   eq\_ret\textasciitilde{}2 |
+  |------------------------------------------------------|
+  |        .          .          .          .      3.000 |
+  |    0.000      1.000      0.000      1.000      1.000 |
+  +------------------------------------------------------+
+
+
+  +------------------------------------------------------+
+  | eq\_3\_1\_1   eq\_3\_1\_2   eq\_3\_2\_1   eq\_3\_2\_2   eq\_ret\textasciitilde{}3 |
+  |------------------------------------------------------|
+  |        .          .          .          .      0.750 |
+  |    0.345      0.655      0.750      0.250      0.690 |
+  +------------------------------------------------------+
+    \end{Verbatim}
+
+    If \texttt{equilibria(eq)} is specified, strategy probabilities are
+stored in variables of the form
+
+\[
+\texttt{eq\_q\_p\_a},
+\]
+
+where \texttt{q} indexes the equilibrium, \texttt{p} the player, and
+\texttt{a} the action. The complete strategy profile is stored on the
+last player observation for the game. Variables \texttt{eq\_rets\_q}
+contain the player-specific equilibrium payoffs, and \texttt{eq\_count}
+records the number of equilibria found.
+
+    \hypertarget{example-2-matching-pennies}{%
+\subsection{9. Example 2: matching
+pennies}\label{example-2-matching-pennies}}
+
+Matching pennies has no pure-strategy equilibrium. Its unique Nash
+equilibrium is fully mixed, with each player placing probability (1/2)
+on each action.
+
+This is a useful minimal example because a solver restricted to pure
+strategies would report no equilibrium, while a mixed-strategy solver
+should recover the interior solution.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{7}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{clear}
+\PY{k}{set} obs \PY{l+m}{2}
+
+\PY{k}{gen} game = \PY{l+m}{1}
+\PY{k}{gen} acts = \PY{l+m}{2}
+dagamestrats acts, group(game)\PY{k}{ generate}(s)
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{P}\PY{c+c1}{l}\PY{c+c1}{a}\PY{c+c1}{y}\PY{c+c1}{e}\PY{c+c1}{r}\PY{c+c1}{ }\PY{c+c1}{1}\PY{c+c1}{:}\PY{c+c1}{ }\PY{c+c1}{ }\PY{c+c1}{1}\PY{c+c1}{,}\PY{c+c1}{ }\PY{c+c1}{\PYZhy{}}\PY{c+c1}{1}\PY{c+c1}{,}\PY{c+c1}{ }\PY{c+c1}{\PYZhy{}}\PY{c+c1}{1}\PY{c+c1}{,}\PY{c+c1}{ }\PY{c+c1}{ }\PY{c+c1}{1}
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{P}\PY{c+c1}{l}\PY{c+c1}{a}\PY{c+c1}{y}\PY{c+c1}{e}\PY{c+c1}{r}\PY{c+c1}{ }\PY{c+c1}{2}\PY{c+c1}{:}\PY{c+c1}{ }\PY{c+c1}{\PYZhy{}}\PY{c+c1}{1}\PY{c+c1}{,}\PY{c+c1}{ }\PY{c+c1}{ }\PY{c+c1}{1}\PY{c+c1}{,}\PY{c+c1}{ }\PY{c+c1}{ }\PY{c+c1}{1}\PY{c+c1}{,}\PY{c+c1}{ }\PY{c+c1}{\PYZhy{}}\PY{c+c1}{1}
+\PY{k}{gen} pay1 = \PY{n+nf}{cond}(\PYZus{}n\PY{o}{==}\PY{l+m}{1},  \PY{l+m}{1}, \PY{o}{\PYZhy{}}\PY{l+m}{1})
+\PY{k}{gen} pay2 = \PY{n+nf}{cond}(\PYZus{}n\PY{o}{==}\PY{l+m}{1}, \PY{o}{\PYZhy{}}\PY{l+m}{1},  \PY{l+m}{1})
+\PY{k}{gen} pay3 = \PY{n+nf}{cond}(\PYZus{}n\PY{o}{==}\PY{l+m}{1}, \PY{o}{\PYZhy{}}\PY{l+m}{1},  \PY{l+m}{1})
+\PY{k}{gen} pay4 = \PY{n+nf}{cond}(\PYZus{}n\PY{o}{==}\PY{l+m}{1},  \PY{l+m}{1}, \PY{o}{\PYZhy{}}\PY{l+m}{1})
+
+dagamesolve s1\PY{o}{\PYZhy{}}s4, group(game) payoffs(pay1\PY{o}{\PYZhy{}}pay4) equilibria(eq)
+
+\PY{k}{list}\PY{k}{ eq}\PY{o}{*}, noobs
+\PY{k}{return}\PY{k}{ list}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+
+Number of observations (\_N) was 0, now 2.
+
+
+
+
+
+
+
+
+
+
+  +-----------------------------------------------------------------+
+  | eq\_ret\textasciitilde{}1   eq\_1\_1\_1   eq\_1\_1\_2   eq\_1\_2\_1   eq\_1\_2\_2   eq\_count |
+  |-----------------------------------------------------------------|
+  |        0          .          .          .          .          . |
+  |        0         .5         .5         .5         .5          1 |
+  +-----------------------------------------------------------------+
+
+
+scalars:
+              r(sdeqs) =  .
+             r(mineqs) =  1
+             r(maxeqs) =  1
+            r(meaneqs) =  1
+              r(games) =  1
+          r(tolerance) =  1.00000000000e-12
+             r(digits) =  1.00000000000e-08
+              r(mnits) =  100
+             r(coltol) =  .0001
+            r(mbwidth) =  .0001
+       r(totalactions) =  4
+
+macros:
+             r(method) : "complete"
+
+matrices:
+      r(playeractions) :  1 x 2
+    \end{Verbatim}
+
+    \hypertarget{example-3-a-three-player-coordination-game}{%
+\subsection{10. Example 3: a three-player coordination
+game}\label{example-3-a-three-player-coordination-game}}
+
+The earlier presentation used the following three-player game to
+illustrate the list representation. In the presentation actions were
+numbered 0 and 1; here they are numbered 1 and 2 to match
+\texttt{dagamestrats}.
+
+Only the two unanimous profiles have nonzero payoffs:
+
+{[} \Pi(1,1,1)=(2,1,4), \qquad \Pi(2,2,2)=(1.2,2,3), {]}
+
+and the six remaining profiles give all players zero.
+
+The presentation identifies three equilibria in this game. The following
+cell constructs and solves it directly.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{8}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{clear}
+\PY{k}{set} obs \PY{l+m}{3}
+
+\PY{k}{gen} game = \PY{l+m}{1}
+\PY{k}{gen} acts = \PY{l+m}{2}
+dagamestrats acts, group(game)\PY{k}{ generate}(s)
+
+\PY{k}{forvalues} j = \PY{l+m}{1}\PY{o}{/}\PY{l+m}{8} \PYZob{}
+\PY{k}{    gen} pay\PY{n+nv}{`}\PY{n+nv}{j}\PY{n+nv}{\PYZsq{}} = \PY{l+m}{0}
+\PYZcb{}
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{U}\PY{c+c1}{n}\PY{c+c1}{a}\PY{c+c1}{n}\PY{c+c1}{i}\PY{c+c1}{m}\PY{c+c1}{o}\PY{c+c1}{u}\PY{c+c1}{s}\PY{c+c1}{ }\PY{c+c1}{a}\PY{c+c1}{c}\PY{c+c1}{t}\PY{c+c1}{i}\PY{c+c1}{o}\PY{c+c1}{n}\PY{c+c1}{ }\PY{c+c1}{1}
+\PY{k}{replace} pay1 = \PY{l+m}{2}\PY{k}{ in} \PY{l+m}{1}
+\PY{k}{replace} pay1 = \PY{l+m}{1}\PY{k}{ in} \PY{l+m}{2}
+\PY{k}{replace} pay1 = \PY{l+m}{4}\PY{k}{ in} \PY{l+m}{3}
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{U}\PY{c+c1}{n}\PY{c+c1}{a}\PY{c+c1}{n}\PY{c+c1}{i}\PY{c+c1}{m}\PY{c+c1}{o}\PY{c+c1}{u}\PY{c+c1}{s}\PY{c+c1}{ }\PY{c+c1}{a}\PY{c+c1}{c}\PY{c+c1}{t}\PY{c+c1}{i}\PY{c+c1}{o}\PY{c+c1}{n}\PY{c+c1}{ }\PY{c+c1}{2}
+\PY{k}{replace} pay8 = \PY{l+m}{1.2}\PY{k}{ in} \PY{l+m}{1}
+\PY{k}{replace} pay8 = \PY{l+m}{2}  \PY{k}{ in} \PY{l+m}{2}
+\PY{k}{replace} pay8 = \PY{l+m}{3}  \PY{k}{ in} \PY{l+m}{3}
+
+\PY{k}{list} s1\PY{o}{\PYZhy{}}s8 pay1\PY{o}{\PYZhy{}}pay8, noobs
+
+dagamesolve s1\PY{o}{\PYZhy{}}s8, group(game) payoffs(pay1\PY{o}{\PYZhy{}}pay8) equilibria(eq)
+
+\PY{k}{return}\PY{k}{ list}
+
+\PY{k}{list} eq\PYZus{}1\PY{o}{*} eq\PYZus{}rets\PYZus{}1, noobs sep(\PY{l+m}{0})
+\PY{k}{list} eq\PYZus{}2\PY{o}{*} eq\PYZus{}rets\PYZus{}2, noobs sep(\PY{l+m}{0})
+\PY{k}{list} eq\PYZus{}3\PY{o}{*} eq\PYZus{}rets\PYZus{}3, noobs sep(\PY{l+m}{0})
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+
+Number of observations (\_N) was 0, now 3.
+
+
+
+
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+
+  +-----------------------------------------------------------------------------
+------------------+
+  | s1   s2   s3   s4   s5   s6   s7   s8   pay1   pay2   pay3   pay4   pay5
+pay6   pay7   pay8 |
+  |-----------------------------------------------------------------------------
+------------------|
+  |  1    1    1    1    2    2    2    2      2      0      0      0      0
+0      0    1.2 |
+  |  1    1    2    2    1    1    2    2      1      0      0      0      0
+0      0      2 |
+  |  1    2    1    2    1    2    1    2      4      0      0      0      0
+0      0      3 |
+  +-----------------------------------------------------------------------------
+------------------+
+
+
+
+scalars:
+              r(sdeqs) =  .
+             r(mineqs) =  3
+             r(maxeqs) =  3
+            r(meaneqs) =  3
+              r(games) =  1
+          r(tolerance) =  1.00000000000e-12
+             r(digits) =  1.00000000000e-08
+              r(mnits) =  100
+             r(coltol) =  .0001
+            r(mbwidth) =  .0001
+       r(totalactions) =  6
+
+macros:
+             r(method) : "complete"
+
+matrices:
+      r(playeractions) :  1 x 3
+
+
+  +----------------------------------------------------------------------------+
+  | eq\_1\_1\_1   eq\_1\_1\_2   eq\_1\_2\_1   eq\_1\_2\_2   eq\_1\_3\_1   eq\_1\_3\_2   eq\_ret\textasciitilde{}1 |
+  |----------------------------------------------------------------------------|
+  |        .          .          .          .          .          .          2 |
+  |        .          .          .          .          .          .          1 |
+  |        1          0          1          0          1          0          4 |
+  +----------------------------------------------------------------------------+
+
+
+  +----------------------------------------------------------------------------+
+  | eq\_2\_1\_1   eq\_2\_1\_2   eq\_2\_2\_1   eq\_2\_2\_2   eq\_2\_3\_1   eq\_2\_3\_2   eq\_ret\textasciitilde{}2 |
+  |----------------------------------------------------------------------------|
+  |        .          .          .          .          .          .        1.2 |
+  |        .          .          .          .          .          .          2 |
+  |        0          1          0          1          0          1          3 |
+  +----------------------------------------------------------------------------+
+
+
+  +----------------------------------------------------------------------------+
+  | eq\_3\_1\_1   eq\_3\_1\_2   eq\_3\_2\_1   eq\_3\_2\_2   eq\_3\_3\_1   eq\_3\_3\_2   eq\_ret\textasciitilde{}3 |
+  |----------------------------------------------------------------------------|
+  |        .          .          .          .          .          .   .3593619 |
+  |        .          .          .          .          .          .   .3421113 |
+  | .6125741   .3874259   .3217312   .6782688   .5584816   .4415184   .7883368 |
+  +----------------------------------------------------------------------------+
+    \end{Verbatim}
+
+    \hypertarget{the-distinctive-feature-solving-a-sequence-of-games}{%
+\subsection{11. The distinctive feature: solving a sequence of
+games}\label{the-distinctive-feature-solving-a-sequence-of-games}}
+
+For empirical work, it is often more useful to solve a family of related
+games than a single game.
+
+Consider a two-firm entry game. Each player chooses \textbf{Enter} or
+\textbf{Stay Out}. Normalize the payoff from staying out to zero. If a
+firm enters alone, its payoff is (\pi\textgreater0). If both firms
+enter, each receives
+
+\[
+\pi-\delta.
+\]
+
+Thus:
+
+\begin{itemize}
+\tightlist
+\item
+  when \(\delta<\pi\), entry is a dominant action and the unique
+  equilibrium is joint entry;
+\item
+  when \(\delta>\pi\), the game has two asymmetric pure equilibria and a
+  mixed equilibrium;
+\item
+  the knife-edge case \(\delta=\pi\) is deliberately omitted below.
+\end{itemize}
+
+Instead of solving ten games one at a time, we place all ten in one
+Stata dataset and call \texttt{dagamesolve} once.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{9}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{clear}
+\PY{k}{set} obs \PY{l+m}{20}
+
+\PY{k}{gen} game = \PY{n+nf}{ceil}(\PYZus{}n\PY{o}{/}\PY{l+m}{2})
+\PY{k}{bysort} game:\PY{k}{ gen} player = \PYZus{}n
+
+\PY{k}{gen} acts = \PY{l+m}{2}
+dagamestrats acts, group(game)\PY{k}{ generate}(s)
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{C}\PY{c+c1}{o}\PY{c+c1}{m}\PY{c+c1}{m}\PY{c+c1}{o}\PY{c+c1}{n}\PY{c+c1}{ }\PY{c+c1}{m}\PY{c+c1}{o}\PY{c+c1}{n}\PY{c+c1}{o}\PY{c+c1}{p}\PY{c+c1}{o}\PY{c+c1}{l}\PY{c+c1}{y}\PY{c+c1}{\PYZhy{}}\PY{c+c1}{e}\PY{c+c1}{n}\PY{c+c1}{t}\PY{c+c1}{r}\PY{c+c1}{y}\PY{c+c1}{ }\PY{c+c1}{p}\PY{c+c1}{a}\PY{c+c1}{y}\PY{c+c1}{o}\PY{c+c1}{f}\PY{c+c1}{f}
+\PY{k}{gen} pi = \PY{l+m}{1}
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{d}\PY{c+c1}{e}\PY{c+c1}{l}\PY{c+c1}{t}\PY{c+c1}{a}\PY{c+c1}{ }\PY{c+c1}{=}\PY{c+c1}{ }\PY{c+c1}{.}\PY{c+c1}{5}\PY{c+c1}{,}\PY{c+c1}{.}\PY{c+c1}{6}\PY{c+c1}{,}\PY{c+c1}{.}\PY{c+c1}{7}\PY{c+c1}{,}\PY{c+c1}{.}\PY{c+c1}{8}\PY{c+c1}{,}\PY{c+c1}{.}\PY{c+c1}{9}\PY{c+c1}{,}\PY{c+c1}{1}\PY{c+c1}{.}\PY{c+c1}{1}\PY{c+c1}{,}\PY{c+c1}{1}\PY{c+c1}{.}\PY{c+c1}{2}\PY{c+c1}{,}\PY{c+c1}{1}\PY{c+c1}{.}\PY{c+c1}{3}\PY{c+c1}{,}\PY{c+c1}{1}\PY{c+c1}{.}\PY{c+c1}{4}\PY{c+c1}{,}\PY{c+c1}{1}\PY{c+c1}{.}\PY{c+c1}{5}
+\PY{k}{gen} delta = .\PY{l+m}{4} \PY{o}{+} .\PY{l+m}{1}\PY{o}{*}game
+\PY{k}{replace} delta = delta \PY{o}{+} .\PY{l+m}{1}\PY{k}{ if} delta \PY{o}{\PYZgt{}=} \PY{l+m}{1}
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{s}\PY{c+c1}{1}\PY{c+c1}{ }\PY{c+c1}{=}\PY{c+c1}{ }\PY{c+c1}{(}\PY{c+c1}{E}\PY{c+c1}{n}\PY{c+c1}{t}\PY{c+c1}{e}\PY{c+c1}{r}\PY{c+c1}{,}\PY{c+c1}{E}\PY{c+c1}{n}\PY{c+c1}{t}\PY{c+c1}{e}\PY{c+c1}{r}\PY{c+c1}{)}
+\PY{k}{gen} pay1 = pi \PY{o}{\PYZhy{}} delta
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{s}\PY{c+c1}{2}\PY{c+c1}{ }\PY{c+c1}{=}\PY{c+c1}{ }\PY{c+c1}{(}\PY{c+c1}{E}\PY{c+c1}{n}\PY{c+c1}{t}\PY{c+c1}{e}\PY{c+c1}{r}\PY{c+c1}{,}\PY{c+c1}{S}\PY{c+c1}{t}\PY{c+c1}{a}\PY{c+c1}{y}\PY{c+c1}{O}\PY{c+c1}{u}\PY{c+c1}{t}\PY{c+c1}{)}
+\PY{k}{gen} pay2 = \PY{n+nf}{cond}(player\PY{o}{==}\PY{l+m}{1}, pi, \PY{l+m}{0})
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{s}\PY{c+c1}{3}\PY{c+c1}{ }\PY{c+c1}{=}\PY{c+c1}{ }\PY{c+c1}{(}\PY{c+c1}{S}\PY{c+c1}{t}\PY{c+c1}{a}\PY{c+c1}{y}\PY{c+c1}{O}\PY{c+c1}{u}\PY{c+c1}{t}\PY{c+c1}{,}\PY{c+c1}{E}\PY{c+c1}{n}\PY{c+c1}{t}\PY{c+c1}{e}\PY{c+c1}{r}\PY{c+c1}{)}
+\PY{k}{gen} pay3 = \PY{n+nf}{cond}(player\PY{o}{==}\PY{l+m}{1}, \PY{l+m}{0}, pi)
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{s}\PY{c+c1}{4}\PY{c+c1}{ }\PY{c+c1}{=}\PY{c+c1}{ }\PY{c+c1}{(}\PY{c+c1}{S}\PY{c+c1}{t}\PY{c+c1}{a}\PY{c+c1}{y}\PY{c+c1}{O}\PY{c+c1}{u}\PY{c+c1}{t}\PY{c+c1}{,}\PY{c+c1}{S}\PY{c+c1}{t}\PY{c+c1}{a}\PY{c+c1}{y}\PY{c+c1}{O}\PY{c+c1}{u}\PY{c+c1}{t}\PY{c+c1}{)}
+\PY{k}{gen} pay4 = \PY{l+m}{0}
+
+dagamesolve s1\PY{o}{\PYZhy{}}s4, group(game) payoffs(pay1\PY{o}{\PYZhy{}}pay4) equilibria(eq)
+
+\PY{k}{list} game delta eq\PYZus{}count\PY{k}{ if} player\PY{o}{==}\PY{l+m}{2}, noobs sep(\PY{l+m}{0})
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+
+Number of observations (\_N) was 0, now 20.
+
+
+
+
+
+
+
+(10 real changes made)
+
+
+
+
+
+
+
+  +-------------------------+
+  | game   delta   eq\_count |
+  |-------------------------|
+  |    1      .5          1 |
+  |    2      .6          1 |
+  |    3      .7          1 |
+  |    4      .8          1 |
+  |    5      .9          1 |
+  |    6     1.1          3 |
+  |    7     1.2          3 |
+  |    8     1.3          3 |
+  |    9     1.4          3 |
+  |   10     1.5          3 |
+  +-------------------------+
+    \end{Verbatim}
+
+    The equilibrium count should change as \(\delta\) crosses \(\pi\).
+Because the equilibrium count is stored on the last observation of each
+game, a simple plot can summarize the sequence.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{10}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{sort} delta
+
+\PY{k}{twoway} connected eq\PYZus{}count delta\PY{k}{ if} player\PY{o}{==}\PY{l+m}{2}, \PY{c+cs}{///}
+    ytitle(\PY{l+s}{\PYZdq{}}\PY{l+s}{N}\PY{l+s}{u}\PY{l+s}{m}\PY{l+s}{b}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{ }\PY{l+s}{o}\PY{l+s}{f}\PY{l+s}{ }\PY{l+s}{N}\PY{l+s}{a}\PY{l+s}{s}\PY{l+s}{h}\PY{l+s}{ }\PY{l+s}{e}\PY{l+s}{q}\PY{l+s}{u}\PY{l+s}{i}\PY{l+s}{l}\PY{l+s}{i}\PY{l+s}{b}\PY{l+s}{r}\PY{l+s}{i}\PY{l+s}{a}\PY{l+s}{\PYZdq{}}) \PY{c+cs}{///}
+    xtitle(\PY{l+s}{\PYZdq{}}\PY{l+s}{C}\PY{l+s}{o}\PY{l+s}{m}\PY{l+s}{p}\PY{l+s}{e}\PY{l+s}{t}\PY{l+s}{i}\PY{l+s}{t}\PY{l+s}{i}\PY{l+s}{o}\PY{l+s}{n}\PY{l+s}{ }\PY{l+s}{p}\PY{l+s}{a}\PY{l+s}{r}\PY{l+s}{a}\PY{l+s}{m}\PY{l+s}{e}\PY{l+s}{t}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{ }\PY{l+s}{d}\PY{l+s}{e}\PY{l+s}{l}\PY{l+s}{t}\PY{l+s}{a}\PY{l+s}{\PYZdq{}}) \PY{c+cs}{///}
+    title(\PY{l+s}{\PYZdq{}}\PY{l+s}{E}\PY{l+s}{q}\PY{l+s}{u}\PY{l+s}{i}\PY{l+s}{l}\PY{l+s}{i}\PY{l+s}{b}\PY{l+s}{r}\PY{l+s}{i}\PY{l+s}{u}\PY{l+s}{m}\PY{l+s}{ }\PY{l+s}{m}\PY{l+s}{u}\PY{l+s}{l}\PY{l+s}{t}\PY{l+s}{i}\PY{l+s}{p}\PY{l+s}{l}\PY{l+s}{i}\PY{l+s}{c}\PY{l+s}{i}\PY{l+s}{t}\PY{l+s}{y}\PY{l+s}{ }\PY{l+s}{i}\PY{l+s}{n}\PY{l+s}{ }\PY{l+s}{a}\PY{l+s}{ }\PY{l+s}{s}\PY{l+s}{e}\PY{l+s}{q}\PY{l+s}{u}\PY{l+s}{e}\PY{l+s}{n}\PY{l+s}{c}\PY{l+s}{e}\PY{l+s}{ }\PY{l+s}{o}\PY{l+s}{f}\PY{l+s}{ }\PY{l+s}{e}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{r}\PY{l+s}{y}\PY{l+s}{ }\PY{l+s}{g}\PY{l+s}{a}\PY{l+s}{m}\PY{l+s}{e}\PY{l+s}{s}\PY{l+s}{\PYZdq{}})
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{dagamesolve_description_files/dagamesolve_description_30_0.pdf}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    This example captures an important intended use of the software. A
+researcher can generate game-specific payoffs from covariates or
+parameter values, solve the entire sequence, and then feed equilibrium
+objects into subsequent analysis without moving between Stata and a
+stand-alone game-theory program.
+
+    \hypertarget{complete-search-fast-and-pureonly}{%
+\subsection{\texorpdfstring{12. Complete search, \texttt{fast}, and
+\texttt{pureonly}}{12. Complete search, fast, and pureonly}}\label{complete-search-fast-and-pureonly}}
+
+The default mixed-strategy method uses interval search followed by
+Newton refinement. Two useful alternatives are available.
+
+\hypertarget{fast}{%
+\subsubsection{\texorpdfstring{\texttt{fast}}{fast}}\label{fast}}
+
+With \texttt{fast}, the interval-search stage is skipped. For each
+support, random points are drawn from the relevant mixed-strategy
+simplices and used as starting values for Newton iteration.
+\texttt{randompoints(\#)} controls the number of starts.
+
+This may be dramatically faster, but it can miss equilibria if none of
+the random starting points fall in a useful basin of attraction.
+
+\hypertarget{pureonly}{%
+\subsubsection{\texorpdfstring{\texttt{pureonly}}{pureonly}}\label{pureonly}}
+
+With \texttt{pureonly}, no mixed-strategy systems are solved. This is
+useful when only pure equilibria are substantively relevant or when one
+wants a quick preliminary diagnostic.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{11}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{set} seed \PY{l+m}{5150}
+
+dagamesolve s1\PY{o}{\PYZhy{}}s4, group(game) payoffs(pay1\PY{o}{\PYZhy{}}pay4) \PY{c+cs}{///}
+    equilibria(ef) fast randompoints(\PY{l+m}{200})
+
+dagamesolve s1\PY{o}{\PYZhy{}}s4, group(game) payoffs(pay1\PY{o}{\PYZhy{}}pay4) \PY{c+cs}{///}
+    equilibria(ep) pureonly
+
+\PY{k}{list} game delta eq\PYZus{}count ef\PYZus{}count ep\PYZus{}count\PY{k}{ if} player\PY{o}{==}\PY{l+m}{2}, noobs sep(\PY{l+m}{0})
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+
+
+
+
+  +-----------------------------------------------+
+  | game   delta   eq\_count   ef\_count   ep\_count |
+  |-----------------------------------------------|
+  |    1      .5          1          1          1 |
+  |    2      .6          1          1          1 |
+  |    3      .7          1          1          1 |
+  |    4      .8          1          1          1 |
+  |    5      .9          1          1          1 |
+  |    6     1.1          3          3          2 |
+  |    7     1.2          3          3          2 |
+  |    8     1.3          3          3          2 |
+  |    9     1.4          3          3          2 |
+  |   10     1.5          3          3          2 |
+  +-----------------------------------------------+
+    \end{Verbatim}
+
+    For this simple sequence one would expect the default and sufficiently
+thorough \texttt{fast} searches to agree. The \texttt{pureonly} count
+differs when a mixed equilibrium is present. Agreement in a simple
+example should not be interpreted as a general completeness guarantee
+for \texttt{fast}.
+
+    \hypertarget{numerical-controls}{%
+\subsection{13. Numerical controls}\label{numerical-controls}}
+
+The default complete-search settings are:
+
+\begin{longtable}[]{@{}lrl@{}}
+\toprule
+Option & Default & Role \\
+\midrule
+\endhead
+\texttt{mbwidth(\#)} & \texttt{1e-4} & Target maximum interval-box width
+before refinement \\
+\texttt{tolerance(\#)} & \texttt{1e-12} & Newton convergence
+tolerance \\
+\texttt{coltol(\#)} & \texttt{1e-4} & Tolerance for consolidating
+numerically nearby solutions \\
+\texttt{digits(\#)} & \texttt{1e-8} & Precision parameter used in
+interval outward rounding \\
+\texttt{mnits(\#)} & \texttt{100} & Maximum Newton iterations \\
+\bottomrule
+\end{longtable}
+
+For the fast search,
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.30}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.40}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.30}}@{}}
+\toprule
+Option & Default & Role \\
+\midrule
+\endhead
+\texttt{randompoints(\#)} & \texttt{50} & Random Newton starting points
+for each candidate support \\
+\texttt{tolerance(\#)} & \texttt{1e-12} & Newton convergence
+tolerance \\
+\texttt{mnits(\#)} & \texttt{100} & Maximum Newton iterations \\
+\bottomrule
+\end{longtable}
+
+These parameters control different parts of the numerical procedure and
+should not be interpreted as interchangeable measures of ``accuracy.''
+In particular, \texttt{mbwidth()} concerns the interval search,
+\texttt{tolerance()} concerns Newton iteration, \texttt{coltol()}
+concerns consolidation of candidate solutions, and \texttt{digits()}
+concerns interval arithmetic.
+
+    \hypertarget{a-sequence-of-games-regression-test}{%
+\subsection{14. A sequence-of-games regression
+test}\label{a-sequence-of-games-regression-test}}
+
+The package's test suite contains a useful compact example: three
+two-player games are stacked in one dataset.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  a coordination game with three equilibria;
+\item
+  a dominant-strategy game with one equilibrium;
+\item
+  matching pennies with one mixed equilibrium.
+\end{enumerate}
+
+The example below is adapted directly from the current regression test
+and is useful both pedagogically and as a reproducibility check.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{12}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{clear}
+\PY{k}{set} obs \PY{l+m}{6}
+
+\PY{k}{gen} game = \PY{n+nf}{ceil}(\PYZus{}n\PY{o}{/}\PY{l+m}{2})
+\PY{k}{bysort} game:\PY{k}{ gen} player = \PYZus{}n
+
+\PY{k}{gen} acts = \PY{l+m}{2}
+dagamestrats acts, group(game)\PY{k}{ generate}(s)
+
+\PY{k}{forvalues} j = \PY{l+m}{1}\PY{o}{/}\PY{l+m}{4} \PYZob{}
+\PY{k}{    gen} pay\PY{n+nv}{`}\PY{n+nv}{j}\PY{n+nv}{\PYZsq{}} = .
+\PYZcb{}
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{G}\PY{c+c1}{a}\PY{c+c1}{m}\PY{c+c1}{e}\PY{c+c1}{ }\PY{c+c1}{1}\PY{c+c1}{:}\PY{c+c1}{ }\PY{c+c1}{c}\PY{c+c1}{o}\PY{c+c1}{o}\PY{c+c1}{r}\PY{c+c1}{d}\PY{c+c1}{i}\PY{c+c1}{n}\PY{c+c1}{a}\PY{c+c1}{t}\PY{c+c1}{i}\PY{c+c1}{o}\PY{c+c1}{n}
+\PY{k}{replace} pay1 = \PY{l+m}{1}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{1}
+\PY{k}{replace} pay2 = \PY{l+m}{0}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{1}
+\PY{k}{replace} pay3 = \PY{l+m}{0}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{1}
+\PY{k}{replace} pay4 = \PY{l+m}{1}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{1}
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{G}\PY{c+c1}{a}\PY{c+c1}{m}\PY{c+c1}{e}\PY{c+c1}{ }\PY{c+c1}{2}\PY{c+c1}{:}\PY{c+c1}{ }\PY{c+c1}{a}\PY{c+c1}{c}\PY{c+c1}{t}\PY{c+c1}{i}\PY{c+c1}{o}\PY{c+c1}{n}\PY{c+c1}{ }\PY{c+c1}{2}\PY{c+c1}{ }\PY{c+c1}{s}\PY{c+c1}{t}\PY{c+c1}{r}\PY{c+c1}{i}\PY{c+c1}{c}\PY{c+c1}{t}\PY{c+c1}{l}\PY{c+c1}{y}\PY{c+c1}{ }\PY{c+c1}{d}\PY{c+c1}{o}\PY{c+c1}{m}\PY{c+c1}{i}\PY{c+c1}{n}\PY{c+c1}{a}\PY{c+c1}{n}\PY{c+c1}{t}\PY{c+c1}{ }\PY{c+c1}{f}\PY{c+c1}{o}\PY{c+c1}{r}\PY{c+c1}{ }\PY{c+c1}{b}\PY{c+c1}{o}\PY{c+c1}{t}\PY{c+c1}{h}\PY{c+c1}{ }\PY{c+c1}{p}\PY{c+c1}{l}\PY{c+c1}{a}\PY{c+c1}{y}\PY{c+c1}{e}\PY{c+c1}{r}\PY{c+c1}{s}
+\PY{k}{replace} pay1 = \PY{l+m}{3}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{2} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{1}
+\PY{k}{replace} pay2 = \PY{l+m}{0}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{2} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{1}
+\PY{k}{replace} pay3 = \PY{l+m}{5}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{2} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{1}
+\PY{k}{replace} pay4 = \PY{l+m}{1}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{2} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{1}
+
+\PY{k}{replace} pay1 = \PY{l+m}{3}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{2} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{2}
+\PY{k}{replace} pay2 = \PY{l+m}{5}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{2} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{2}
+\PY{k}{replace} pay3 = \PY{l+m}{0}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{2} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{2}
+\PY{k}{replace} pay4 = \PY{l+m}{1}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{2} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{2}
+
+\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{G}\PY{c+c1}{a}\PY{c+c1}{m}\PY{c+c1}{e}\PY{c+c1}{ }\PY{c+c1}{3}\PY{c+c1}{:}\PY{c+c1}{ }\PY{c+c1}{m}\PY{c+c1}{a}\PY{c+c1}{t}\PY{c+c1}{c}\PY{c+c1}{h}\PY{c+c1}{i}\PY{c+c1}{n}\PY{c+c1}{g}\PY{c+c1}{ }\PY{c+c1}{p}\PY{c+c1}{e}\PY{c+c1}{n}\PY{c+c1}{n}\PY{c+c1}{i}\PY{c+c1}{e}\PY{c+c1}{s}
+\PY{k}{replace} pay1 =  \PY{l+m}{1}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{3} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{1}
+\PY{k}{replace} pay2 = \PY{o}{\PYZhy{}}\PY{l+m}{1}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{3} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{1}
+\PY{k}{replace} pay3 = \PY{o}{\PYZhy{}}\PY{l+m}{1}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{3} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{1}
+\PY{k}{replace} pay4 =  \PY{l+m}{1}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{3} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{1}
+
+\PY{k}{replace} pay1 = \PY{o}{\PYZhy{}}\PY{l+m}{1}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{3} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{2}
+\PY{k}{replace} pay2 =  \PY{l+m}{1}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{3} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{2}
+\PY{k}{replace} pay3 =  \PY{l+m}{1}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{3} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{2}
+\PY{k}{replace} pay4 = \PY{o}{\PYZhy{}}\PY{l+m}{1}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{3} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{2}
+
+dagamesolve s1\PY{o}{\PYZhy{}}s4, group(game) payoffs(pay1\PY{o}{\PYZhy{}}pay4) equilibria(e)
+
+\PY{k}{list} game player e\PYZus{}count\PY{k}{ if} \PY{o}{!}\PY{n+nf}{missing}(e\PYZus{}count), noobs sep(\PY{l+m}{0})
+
+\PY{k}{assert} e\PYZus{}count\PY{o}{==}\PY{l+m}{3}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{1} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{2}
+\PY{k}{assert} e\PYZus{}count\PY{o}{==}\PY{l+m}{1}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{2} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{2}
+\PY{k}{assert} e\PYZus{}count\PY{o}{==}\PY{l+m}{1}\PY{k}{ if} game\PY{o}{==}\PY{l+m}{3} \PY{o}{\PYZam{}} player\PY{o}{==}\PY{l+m}{2}
+
+\PY{k}{display}\PY{k}{ as} result \PY{l+s}{\PYZdq{}}\PY{l+s}{P}\PY{l+s}{A}\PY{l+s}{S}\PY{l+s}{S}\PY{l+s}{:}\PY{l+s}{ }\PY{l+s}{s}\PY{l+s}{e}\PY{l+s}{q}\PY{l+s}{u}\PY{l+s}{e}\PY{l+s}{n}\PY{l+s}{c}\PY{l+s}{e}\PY{l+s}{ }\PY{l+s}{o}\PY{l+s}{f}\PY{l+s}{ }\PY{l+s}{g}\PY{l+s}{a}\PY{l+s}{m}\PY{l+s}{e}\PY{l+s}{s}\PY{l+s}{ }\PY{l+s}{s}\PY{l+s}{o}\PY{l+s}{l}\PY{l+s}{v}\PY{l+s}{e}\PY{l+s}{d}\PY{l+s}{ }\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{r}\PY{l+s}{r}\PY{l+s}{e}\PY{l+s}{c}\PY{l+s}{t}\PY{l+s}{l}\PY{l+s}{y}\PY{l+s}{\PYZdq{}}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+
+Number of observations (\_N) was 0, now 6.
+
+
+
+
+
+(6 missing values generated)
+(6 missing values generated)
+(6 missing values generated)
+(6 missing values generated)
+
+(2 real changes made)
+
+(2 real changes made)
+
+(2 real changes made)
+
+(2 real changes made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+(1 real change made)
+
+
+
+  +-------------------------+
+  | game   player   e\_count |
+  |-------------------------|
+  |    1        2         3 |
+  |    2        2         1 |
+  |    3        2         1 |
+  +-------------------------+
+
+
+
+
+PASS: sequence of games solved correctly
+    \end{Verbatim}
+
+    \hypertarget{stored-results}{%
+\subsection{15. Stored results}\label{stored-results}}
+
+\texttt{dagamesolve} stores summary information in \texttt{r()} in
+addition to the variables it creates in the dataset.
+
+Core stored results include:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{r(playeractions)}: number of actions available to each player;
+\item
+  \texttt{r(totalactions)}: total number of player-actions;
+\item
+  \texttt{r(method)}: \texttt{complete} or \texttt{newton};
+\item
+  \texttt{r(games)}: number of games solved;
+\item
+  \texttt{r(meaneqs)}: mean equilibrium count across games;
+\item
+  \texttt{r(maxeqs)}: maximum equilibrium count;
+\item
+  \texttt{r(mineqs)}: minimum equilibrium count;
+\item
+  \texttt{r(sdeqs)}: standard deviation of equilibrium counts.
+\end{itemize}
+
+The complete method also records the interval and Newton settings. The
+fast method records the number of random starting points.
+
+Because the equilibrium probability variables remain in the dataset,
+they can be reshaped, summarized, merged to market-level data, or used
+in subsequent programs without leaving Stata.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{13}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{return}\PY{k}{ list}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+
+scalars:
+              r(sdeqs) =  1.154700538379252
+             r(mineqs) =  1
+             r(maxeqs) =  3
+            r(meaneqs) =  1.666666666666667
+              r(games) =  3
+          r(tolerance) =  1.00000000000e-12
+             r(digits) =  1.00000000000e-08
+              r(mnits) =  100
+             r(coltol) =  .0001
+            r(mbwidth) =  .0001
+       r(totalactions) =  4
+
+macros:
+             r(method) : "complete"
+
+matrices:
+      r(playeractions) :  1 x 2
+    \end{Verbatim}
+
+    \hypertarget{computational-considerations}{%
+\subsection{16. Computational
+considerations}\label{computational-considerations}}
+
+The computational burden grows quickly for two related reasons.
+
+First, the number of pure profiles is
+
+\[
+\prod_i K_i.
+\]
+
+Second, mixed-equilibrium search requires consideration of candidate
+supports. For each surviving support, the solver constructs and solves a
+nonlinear system. Adding players or actions therefore affects both the
+size of individual systems and the number of systems that may have to be
+considered.
+
+Interval methods are intentionally more demanding than point-based
+Newton searches. Their advantage is that boxes can be ruled out over
+entire regions of the strategy space rather than only explored from
+selected starting points.
+
+Several practical implications follow:
+
+\begin{itemize}
+\tightlist
+\item
+  use \texttt{pureonly} when mixed equilibria are irrelevant;
+\item
+  use \texttt{fast} when exploratory speed matters more than systematic
+  coverage;
+\item
+  use the default method when the goal is a systematic search for pure
+  and mixed equilibria;
+\item
+  exploit sequences of games when many games have the same action
+  structure;
+\item
+  inspect difficult, degenerate, or nearly duplicate equilibria
+  carefully;
+\item
+  report numerical settings in applications where equilibrium
+  multiplicity is substantively important.
+\end{itemize}
+
+    \hypertarget{what-this-makes-possible-for-empirical-work}{%
+\subsection{17. What this makes possible for empirical
+work}\label{what-this-makes-possible-for-empirical-work}}
+
+The original motivation for these routines was closely connected to
+empirical models of strategic interaction.
+
+Suppose market \(m\) is associated with a game whose payoff primitives
+depend on observed covariates \(X_m\) and parameters \(\theta\):
+
+\[
+\Pi_m=\Pi(X_m,\theta).
+\]
+
+For a trial value of \(\theta\), one can:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  construct the payoff matrix for every market;
+\item
+  solve the sequence of games;
+\item
+  obtain the equilibrium correspondence market by market;
+\item
+  compare predicted equilibrium behavior with observed outcomes;
+\item
+  embed the calculation in an estimation, simulation, or counterfactual
+  procedure.
+\end{enumerate}
+
+The computational problem is therefore not incidental. When a structural
+model permits multiple equilibria, the ability to obtain the equilibrium
+correspondence repeatedly can be an essential piece of the empirical
+method.
+
+Bajari, Hong, and Ryan (2010) provide an important example of the
+broader connection between discrete games and econometric analysis.
+
+    \hypertarget{conclusions}{%
+\subsection{18. Conclusions}\label{conclusions}}
+
+\texttt{dagamesolve} is designed to make finite-game equilibrium
+computation available inside a data-analysis environment.
+
+The easy part of a finite game is often the part one sees in a textbook:
+enumerate a few pure profiles and check unilateral deviations. The
+difficult part is what happens once mixed and partially mixed equilibria
+are admitted. The problem becomes one of support enumeration and
+nonlinear equation solving.
+
+The package addresses that problem by combining game-specific reductions
+with general numerical tools:
+
+\begin{itemize}
+\tightlist
+\item
+  dominance reduction;
+\item
+  direct pure-strategy checks;
+\item
+  support enumeration;
+\item
+  interval contraction and subdivision;
+\item
+  Newton refinement;
+\item
+  candidate verification and consolidation.
+\end{itemize}
+
+The ability to apply the same machinery to a sequence of games is
+particularly useful for applications in which payoffs vary across
+markets, observations, or counterfactual parameter values.
+
+The present notebook is intended to serve simultaneously as
+documentation, a reproducible collection of examples, and a technical
+description of the solver.
+
+    \hypertarget{references}{%
+\subsection{References}\label{references}}
+
+Aradillas-López, Andrés. 2020. ``The Econometrics of Static Games.''
+\emph{Annual Review of Economics} 12: 135--165.
+
+Bajari, Patrick, Han Hong, John Krainer, and Denis Nekipelov. 2010.
+``Estimating Static Models of Strategic Interactions.'' \emph{Journal of
+Business \& Economic Statistics} 28(4): 469--482.
+
+Bajari, Patrick, Han Hong, and Stephen P. Ryan. 2010. ``Identification
+and Estimation of a Discrete Game of Complete Information.''
+\emph{Econometrica} 78(5): 1529--1568.
+
+Berg, Johannes, and Andrew McLennan. 2005. ``Asymptotic Expected Number
+of Nash Equilibria of Two-Player Normal Form Games.'' \emph{Games and
+Economic Behavior} 51(2): 264--295.
+
+Berry, Steven T. 1992. ``Estimation of a Model of Entry in the Airline
+Industry.'' \emph{Econometrica} 60(4): 889--917.
+
+Bresnahan, Timothy F., and Peter C. Reiss. 1990. ``Entry in Monopoly
+Market.'' \emph{Review of Economic Studies} 57(4): 531--553.
+
+Bresnahan, Timothy F., and Peter C. Reiss. 1991. ``Entry and Competition
+in Concentrated Markets.'' \emph{Journal of Political Economy} 99(5):
+977--1009.
+
+Ciliberto, Federico, and Elie Tamer. 2009. ``Market Structure and
+Multiple Equilibria in Airline Markets.'' \emph{Econometrica} 77(6):
+1791--1828.
+
+Conitzer, Vincent, and Tuomas Sandholm. 2008. ``New Complexity Results
+about Nash Equilibria.'' \emph{Games and Economic Behavior} 63(2):
+621--641.
+
+Daskalakis, Constantinos, Paul W. Goldberg, and Christos H.
+Papadimitriou. 2009. ``The Complexity of Computing a Nash Equilibrium.''
+\emph{SIAM Journal on Computing} 39(1): 195--259.
+
+Etessami, Kousha, and Mihalis Yannakakis. 2010. ``On the Complexity of
+Nash Equilibria and Other Fixed Points.'' \emph{SIAM Journal on
+Computing} 39(6): 2531--2597.
+
+Gilboa, Itzhak, and Eitan Zemel. 1989. ``Nash and Correlated Equilibria:
+Some Complexity Considerations.'' \emph{Games and Economic Behavior}
+1(1): 80--93.
+
+Grieco, Paul L. E. 2014. ``Discrete Games with Flexible Information
+Structures: An Application to Local Grocery Markets.'' \emph{RAND
+Journal of Economics} 45(2): 303--340.
+
+Jaulin, Luc, Michel Kieffer, Olivier Didrit, and Eric Walter. 2001.
+\emph{Applied Interval Analysis}. London: Springer.
+
+Jia, Panle. 2008. ``What Happens When Wal-Mart Comes to Town: An
+Empirical Analysis of the Discount Retailing Industry.''
+\emph{Econometrica} 76(6): 1263--1316.
+
+Mazzeo, Michael J. 2002. ``Product Choice and Oligopoly Market
+Structure.'' \emph{RAND Journal of Economics} 33(2): 221--242.
+
+McKelvey, Richard D. 1998. ``A Liapunov Function for Nash Equilibria.''
+\emph{Social Science Working Paper 953}, California Institute of
+Technology.
+
+McKelvey, Richard D., and Andrew McLennan. 1996. ``Computation of
+Equilibria in Finite Games.'' In \emph{Handbook of Computational
+Economics}, Vol. 1, edited by Hans M. Amman, David A. Kendrick, and John
+Rust, 87--142. Amsterdam: North-Holland.
+
+McKelvey, Richard D., Andrew M. McLennan, and Theodore L. Turocy. 2014.
+\emph{Gambit: Software Tools for Game Theory, Version 14.1.1.} The
+Gambit Project.
+
+McLennan, Andrew. 2005. ``The Expected Number of Nash Equilibria of a
+Normal Form Game.'' \emph{Econometrica} 73(1): 141--174.
+
+de Paula, Áureo. 2013. ``Econometric Analysis of Games with Multiple
+Equilibria.'' \emph{Annual Review of Economics} 5: 107--131.
+
+Seim, Katja. 2006. ``An Empirical Model of Firm Entry with Endogenous
+Product-Type Choices.'' \emph{RAND Journal of Economics} 37(3):
+619--640.
+
+Sweeting, Andrew. 2009. ``The Strategic Timing Incentives of Commercial
+Radio Stations: An Empirical Analysis Using Multiple Equilibria.''
+\emph{RAND Journal of Economics} 40(4): 710--742.
+
+Wilson, Robert. 1971. ``Computing Equilibria of N-Person Games.''
+\emph{SIAM Journal on Applied Mathematics} 21(1): 80--87.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+
+\end{Verbatim}
+\end{tcolorbox}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+\end{document}
