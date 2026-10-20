@@ -1210,10 +1210,10 @@ void mixedStratSolve(struct gameDescription G)
 				
 				CandsInd=rowsum(
 					(CandsInd:<1e-10):*(Cands:>=0)
-				)							/* Shouldn't this be user-defined? */
+				):== cols(Cands)							/* Shouldn't this be user-defined? */
 
-				if (CandsInd==cols(Cands)) {
-					mixedEqs=mixedEqs \ Cands
+				if (any(CandsInd)) {
+					mixedEqs=mixedEqs \ select(Cands,CandsInd)
 				}
 			}
 		}							/* Completes outer if-block */
