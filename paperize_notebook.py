@@ -84,6 +84,7 @@ for cell in nb.cells:
             if heading in {
                 "Digression on Complete Solution of Nonlinear Polynomial Systems",
                 "References",
+                "Appendix A: Installation and software environment",
             }:
                 line = f"{new_hashes} {heading} {{.unnumbered}}"
             else:
@@ -92,38 +93,6 @@ for cell in nb.cells:
         new_lines.append(line)
 
     cell.source = "\n".join(new_lines)
-
-# ------------------------------------------------------------
-# Turn the three labels inside the digression into real
-# subsections. Because the preceding numbered section is 6,
-# LaTeX should naturally label these 6.1, 6.2, and 6.3.
-# ------------------------------------------------------------
-
-for cell in nb.cells:
-
-    if cell.cell_type != "markdown":
-        continue
-
-    cell.source = re.sub(
-        r"^6\.1 \*\*Homotopy methods\*\*$",
-        "## Homotopy methods",
-        cell.source,
-        flags=re.MULTILINE,
-    )
-
-    cell.source = re.sub(
-        r"^6\.2 \*\*Algebraic methods\*\*$",
-        "## Algebraic methods",
-        cell.source,
-        flags=re.MULTILINE,
-    )
-
-    cell.source = re.sub(
-        r"^6\.3 \*\*Interval methods\*\*$",
-        "## Interval methods",
-        cell.source,
-        flags=re.MULTILINE,
-    )
 
 # ------------------------------------------------------------
 # Write paper version

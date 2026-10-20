@@ -622,7 +622,8 @@ real matrix outcomeProbsI(real matrix K,real matrix pI, real scalar digits)
 				payMat=pPrime
 		}
 		else if (i==cols(K)) {
-				KMult=ceil(exp(rowsum(ln(K[1::cols(K)-1]))))
+				KMult=1
+				for (j=1;j<i;j++) KMult=KMult*K[j]
 				pPrime=J(KMult,1,1)#pPrime
 				payMat=payMat#J(K[i],1,1)
 				payMatp=J(rows(payMat),cols(payMat),.)
@@ -639,7 +640,8 @@ real matrix outcomeProbsI(real matrix K,real matrix pI, real scalar digits)
 				payMat=payMatp
 		}
 		else {
-			KMult=ceil(exp(rowsum(ln(K[1::i-1]))))
+			KMult=1
+			for (j=1;j<i;j++) KMult=KMult*K[j]
 			pPrime=J(KMult,1,1)#pPrime
 			payMat=payMat#J(K[i],1,1)
 			payMatp=J(rows(payMat),cols(payMat),.)

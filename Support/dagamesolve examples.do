@@ -11,7 +11,7 @@ scalar profiles=r(profiles)
 forvalues i=1/`=profiles' {
 	gen pay`i'=rnormal(0,1)
 }
-dagamesolve s*, group(id) pay(pay*) eq(e) noisy
+dagamesolve s*, group(id) pay(pay*) eq(e) 
 sum e_count
 
 *Uniform games

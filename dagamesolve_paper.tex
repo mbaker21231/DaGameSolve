@@ -245,7 +245,6 @@
 \@namedef{PY@tok@gr}{\def\PY@tc##1{\textcolor[rgb]{0.89,0.00,0.00}{##1}}}
 \@namedef{PY@tok@ge}{\let\PY@it=\textit}
 \@namedef{PY@tok@gs}{\let\PY@bf=\textbf}
-\@namedef{PY@tok@ges}{\let\PY@bf=\textbf\let\PY@it=\textit}
 \@namedef{PY@tok@gp}{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
 \@namedef{PY@tok@go}{\def\PY@tc##1{\textcolor[rgb]{0.44,0.44,0.44}{##1}}}
 \@namedef{PY@tok@gt}{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
@@ -454,129 +453,14 @@ to match the current \texttt{dagamesolve} and \texttt{dagamestrats}
 interfaces.
 \end{quote}
 
-    \hypertarget{setup}{%
-\section{Setup}\label{setup}}
+\begin{quote}
+To run the examples, install the package and its dependencies first; see
+\textbf{Appendix A} for instructions and software checks. The notebook
+initializes Stata just before the first example.
+\end{quote}
 
-The examples assume that \texttt{dagamesolve}, \texttt{dagamestrats},
-and their dependencies are already installed or that the notebook is
-being run from a location where the development version of the package
-is on Stata's ado-path.
-
-The package currently depends on \texttt{moremata}, \texttt{int\_utils},
-\texttt{rowmat\_utils}, and \texttt{intsolver}. The
-\texttt{dependency.do} file in the \texttt{DaGameSolve} repository
-installs the required dependencies.
-
-The following cells install the necessary packages, and then checks the
-stata environment and locates the two main commands.
-
-    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{1}{\boxspacing}
-\begin{Verbatim}[commandchars=\\\{\}]
-\PY{k}{ssc} install moremata,\PY{k}{ replace}
-
-\PY{k}{net} install int\PYZus{}utils, \PY{c+cs}{///}
-    from(\PY{l+s}{\PYZdq{}}\PY{l+s}{h}\PY{l+s}{t}\PY{l+s}{t}\PY{l+s}{p}\PY{l+s}{s}\PY{l+s}{:}\PY{l+s}{/}\PY{l+s}{/}\PY{l+s}{r}\PY{l+s}{a}\PY{l+s}{w}\PY{l+s}{.}\PY{l+s}{g}\PY{l+s}{i}\PY{l+s}{t}\PY{l+s}{h}\PY{l+s}{u}\PY{l+s}{b}\PY{l+s}{u}\PY{l+s}{s}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{e}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{.}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{m}\PY{l+s}{/}\PY{l+s}{m}\PY{l+s}{b}\PY{l+s}{a}\PY{l+s}{k}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{2}\PY{l+s}{1}\PY{l+s}{2}\PY{l+s}{3}\PY{l+s}{1}\PY{l+s}{/}\PY{l+s}{i}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{\PYZus{}}\PY{l+s}{u}\PY{l+s}{t}\PY{l+s}{i}\PY{l+s}{l}\PY{l+s}{s}\PY{l+s}{/}\PY{l+s}{m}\PY{l+s}{a}\PY{l+s}{i}\PY{l+s}{n}\PY{l+s}{/}\PY{l+s}{\PYZdq{}})\PY{k}{ replace}
-
-\PY{k}{net} install rowmat\PYZus{}utils, \PY{c+cs}{///}
-    from(\PY{l+s}{\PYZdq{}}\PY{l+s}{h}\PY{l+s}{t}\PY{l+s}{t}\PY{l+s}{p}\PY{l+s}{s}\PY{l+s}{:}\PY{l+s}{/}\PY{l+s}{/}\PY{l+s}{r}\PY{l+s}{a}\PY{l+s}{w}\PY{l+s}{.}\PY{l+s}{g}\PY{l+s}{i}\PY{l+s}{t}\PY{l+s}{h}\PY{l+s}{u}\PY{l+s}{b}\PY{l+s}{u}\PY{l+s}{s}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{e}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{.}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{m}\PY{l+s}{/}\PY{l+s}{m}\PY{l+s}{b}\PY{l+s}{a}\PY{l+s}{k}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{2}\PY{l+s}{1}\PY{l+s}{2}\PY{l+s}{3}\PY{l+s}{1}\PY{l+s}{/}\PY{l+s}{r}\PY{l+s}{o}\PY{l+s}{w}\PY{l+s}{m}\PY{l+s}{a}\PY{l+s}{t}\PY{l+s}{\PYZus{}}\PY{l+s}{u}\PY{l+s}{t}\PY{l+s}{i}\PY{l+s}{l}\PY{l+s}{s}\PY{l+s}{/}\PY{l+s}{m}\PY{l+s}{a}\PY{l+s}{i}\PY{l+s}{n}\PY{l+s}{/}\PY{l+s}{\PYZdq{}})\PY{k}{ replace}
-
-\PY{k}{net} install intsolver, \PY{c+cs}{///}
-    from(\PY{l+s}{\PYZdq{}}\PY{l+s}{h}\PY{l+s}{t}\PY{l+s}{t}\PY{l+s}{p}\PY{l+s}{s}\PY{l+s}{:}\PY{l+s}{/}\PY{l+s}{/}\PY{l+s}{r}\PY{l+s}{a}\PY{l+s}{w}\PY{l+s}{.}\PY{l+s}{g}\PY{l+s}{i}\PY{l+s}{t}\PY{l+s}{h}\PY{l+s}{u}\PY{l+s}{b}\PY{l+s}{u}\PY{l+s}{s}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{e}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{.}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{m}\PY{l+s}{/}\PY{l+s}{m}\PY{l+s}{b}\PY{l+s}{a}\PY{l+s}{k}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{2}\PY{l+s}{1}\PY{l+s}{2}\PY{l+s}{3}\PY{l+s}{1}\PY{l+s}{/}\PY{l+s}{I}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{S}\PY{l+s}{o}\PY{l+s}{l}\PY{l+s}{v}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{/}\PY{l+s}{m}\PY{l+s}{a}\PY{l+s}{i}\PY{l+s}{n}\PY{l+s}{/}\PY{l+s}{\PYZdq{}})\PY{k}{ replace}
-
-\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{D}\PY{c+c1}{a}\PY{c+c1}{G}\PY{c+c1}{a}\PY{c+c1}{m}\PY{c+c1}{e}\PY{c+c1}{S}\PY{c+c1}{o}\PY{c+c1}{l}\PY{c+c1}{v}\PY{c+c1}{e}\PY{c+c1}{ }\PY{c+c1}{d}\PY{c+c1}{e}\PY{c+c1}{v}\PY{c+c1}{e}\PY{c+c1}{l}\PY{c+c1}{o}\PY{c+c1}{p}\PY{c+c1}{m}\PY{c+c1}{e}\PY{c+c1}{n}\PY{c+c1}{t}\PY{c+c1}{ }\PY{c+c1}{v}\PY{c+c1}{e}\PY{c+c1}{r}\PY{c+c1}{s}\PY{c+c1}{i}\PY{c+c1}{o}\PY{c+c1}{n}
-\PY{k}{net} install dagamesolve, \PY{c+cs}{///}
-    from(\PY{l+s}{\PYZdq{}}\PY{l+s}{h}\PY{l+s}{t}\PY{l+s}{t}\PY{l+s}{p}\PY{l+s}{s}\PY{l+s}{:}\PY{l+s}{/}\PY{l+s}{/}\PY{l+s}{r}\PY{l+s}{a}\PY{l+s}{w}\PY{l+s}{.}\PY{l+s}{g}\PY{l+s}{i}\PY{l+s}{t}\PY{l+s}{h}\PY{l+s}{u}\PY{l+s}{b}\PY{l+s}{u}\PY{l+s}{s}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{e}\PY{l+s}{n}\PY{l+s}{t}\PY{l+s}{.}\PY{l+s}{c}\PY{l+s}{o}\PY{l+s}{m}\PY{l+s}{/}\PY{l+s}{m}\PY{l+s}{b}\PY{l+s}{a}\PY{l+s}{k}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{2}\PY{l+s}{1}\PY{l+s}{2}\PY{l+s}{3}\PY{l+s}{1}\PY{l+s}{/}\PY{l+s}{D}\PY{l+s}{a}\PY{l+s}{G}\PY{l+s}{a}\PY{l+s}{m}\PY{l+s}{e}\PY{l+s}{S}\PY{l+s}{o}\PY{l+s}{l}\PY{l+s}{v}\PY{l+s}{e}\PY{l+s}{/}\PY{l+s}{p}\PY{l+s}{r}\PY{l+s}{o}\PY{l+s}{f}\PY{l+s}{i}\PY{l+s}{l}\PY{l+s}{i}\PY{l+s}{n}\PY{l+s}{g}\PY{l+s}{/}\PY{l+s}{\PYZdq{}})\PY{k}{ replace}
-
-\PY{c+c1}{*}\PY{c+c1}{ }\PY{c+c1}{R}\PY{c+c1}{e}\PY{c+c1}{f}\PY{c+c1}{r}\PY{c+c1}{e}\PY{c+c1}{s}\PY{c+c1}{h}\PY{c+c1}{ }\PY{c+c1}{M}\PY{c+c1}{a}\PY{c+c1}{t}\PY{c+c1}{a}\PY{c+c1}{\PYZsq{}}\PY{c+c1}{s}\PY{c+c1}{ }\PY{c+c1}{l}\PY{c+c1}{i}\PY{c+c1}{b}\PY{c+c1}{r}\PY{c+c1}{a}\PY{c+c1}{r}\PY{c+c1}{y}\PY{c+c1}{ }\PY{c+c1}{i}\PY{c+c1}{n}\PY{c+c1}{d}\PY{c+c1}{e}\PY{c+c1}{x}
-\PY{k}{mata}:\PY{k}{ mata} mlib index
-\end{Verbatim}
-\end{tcolorbox}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-
-checking moremata consistency and verifying not already installed{\ldots}
-all files already exist and are up to date.
-
-checking int\_utils consistency and verifying not already installed{\ldots}
-all files already exist and are up to date.
-
-checking rowmat\_utils consistency and verifying not already installed{\ldots}
-all files already exist and are up to date.
-
-checking intsolver consistency and verifying not already installed{\ldots}
-all files already exist and are up to date.
-
-checking dagamesolve consistency and verifying not already installed{\ldots}
-all files already exist and are up to date.
-
-.mlib libraries to be searched are now
-    lmatabase;lmataado;lmatabma;lmatacate;lmatacollect;lmatadata;lmataerm;lmataf
-> c;lmatagsem;lmatah2o;lmatahetdid;lmataivqreg;lmatajm;lmatalasso;lmatamcmc;lmat
-> ameta;lmatami;lmatamixlog;lmatanumlib;lmataopt;lmatapath;lmatapostest;lmatapss
-> ;lmatarw;lmatasem;lmatasp;lmatasubexpr;lmatasvy;lmatatab;lmatats;ldagamesolve;
-> lamcmc;lcolrspace;lintsolver;lint\_utils;livreg2;lmoremata;lmoremata10;lmoremat
-> a11;lmoremata14;lrowmat\_utils;lsynth\_mata\_subr;l\_cfrmt
-    \end{Verbatim}
-
-    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{2}{\boxspacing}
-\begin{Verbatim}[commandchars=\\\{\}]
-\PY{k}{clear} all
-\PY{k}{set}\PY{k}{ more} off
-\PY{k}{set} linesize \PY{l+m}{255}
-
-\PY{k}{about}
-\PY{k}{which} dagamesolve
-\PY{k}{which} dagamestrats
-\end{Verbatim}
-\end{tcolorbox}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-
-
-
-
-
-StataNow/SE 19.5 for Windows (64-bit x86-64)
-Revision 12 Aug 2026
-Copyright 1985-2025 StataCorp LLC
-
-Total physical memory:       16.00 GB
-Available physical memory:    4.98 GB
-
-Stata license: Unlimited-user network, expiring 19 Jan 2027
-Serial number: 401909310562
-  Licensed to: Matthew Baker
-               Hunter College
-
-.\textbackslash{}dagamesolve.ado
-*! dagsolve v1.0.1 MJBaker 21july2014
-*! dagsolve v1.0.2 MJBaker 18sep2014
-*! dagamesolve v1.0.3 MJBaker 8may2023
-
-.\textbackslash{}dagamestrats.ado
-*! dagstrats v1.0.0 MJBaker 17July2014
-*! dagamestrats v2.0.0 MJBaker 30May2023
-    \end{Verbatim}
-
-    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{3}{\boxspacing}
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYZpc{}set \PY{o}{\PYZhy{}}\PY{o}{\PYZhy{}}permanently graph\PYZus{}format svg
-\end{Verbatim}
-\end{tcolorbox}
-
-    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{4}{\boxspacing}
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYZpc{}set \PY{o}{\PYZhy{}}\PY{o}{\PYZhy{}}permanently graph\PYZus{}width \PY{l+m}{900}
-\end{Verbatim}
-\end{tcolorbox}
-
-    \hypertarget{why-solve-finite-games-inside-stata}{%
-\section{Why solve finite games inside
-Stata?}\label{why-solve-finite-games-inside-stata}}
+    \section{Why solve finite games inside
+Stata?}\label{why-solve-finite-games-inside-stata}
 
 There are at least three motivations.
 
@@ -666,9 +550,8 @@ reliance on interval arithmetic. I will digress on the relative
 advantages and disadvantages of this approach to solving polynomial
 systems below, after first describing the nature of the problem.
 
-    \hypertarget{finite-discrete-action-games}{%
-\section{Finite discrete-action
-games}\label{finite-discrete-action-games}}
+    \section{Finite discrete-action
+games}\label{finite-discrete-action-games}
 
 Consider a complete-information simultaneous-move game with players
 \(i \in N\) players where each player has a set of discrete actions:
@@ -710,9 +593,8 @@ existence theorem permits mixed strategies, and equilibrium search
 cannot in general stop after inspecting the finite collection of pure
 profiles.
 
-    \hypertarget{a-two-action-illustration-of-existence}{%
-\subsection{A two-action illustration of
-existence}\label{a-two-action-illustration-of-existence}}
+    \subsection{A two-action illustration of
+existence}\label{a-two-action-illustration-of-existence}
 
 For intuition, suppose each player has two actions and write
 \[\sigma_i\] for the probability of choosing action 1. One way of
@@ -781,9 +663,8 @@ distinction---between finding an equilibrium and systematically
 searching for all equilibria---is central to the design of
 \texttt{dagamesolve}.
 
-    \hypertarget{representing-a-game-in-list-form}{%
-\section{Representing a game in ``list''
-form}\label{representing-a-game-in-list-form}}
+    \section{Representing a game in ``list''
+form}\label{representing-a-game-in-list-form}
 
 Games are often displayed in normal form. For computation,
 \texttt{dagamesolve} uses a list representation.
@@ -814,15 +695,45 @@ In a Stata dataset, players are observations and action profiles are
 variables. The utility command \texttt{dagamestrats} constructs the
 action-profile variables automatically.
 
-    \hypertarget{example-constructing-action-profiles}{%
-\subsection{Example: constructing action
-profiles}\label{example-constructing-action-profiles}}
+    \subsection{Example: constructing action
+profiles}\label{example-constructing-action-profiles}
 
 Suppose player 1 has two actions, player 2 has three, and player 3 has
 two. There are \(2\times3\times2=12\) pure-strategy profiles.
 
+    Before running the examples below, initialize the Stata session and set
+the notebook graphics format. See Appendix A for installation
+instructions.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{5}{\boxspacing}
+\prompt{In}{incolor}{72}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{clear} all
+\PY{k}{set}\PY{k}{ more} off
+\PY{k}{set} linesize \PY{l+m}{255}
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{73}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYZpc{}set graph\PYZus{}format = png
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+graph\_format was png, is now png
+    \end{Verbatim}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{74}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYZpc{}set graph\PYZus{}width = 900px
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{75}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{set} obs \PY{l+m}{3}
 
@@ -838,14 +749,8 @@ dagamestrats acts, group(game)\PY{k}{ generate}(a)
 \end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-
 Number of observations (\_N) was 0, now 3.
-
-
-
 (1 real change made)
-
-
 
      +--------------------------------------------------------------------------
 ---------+
@@ -862,7 +767,6 @@ a11   a12 |
      +--------------------------------------------------------------------------
 ---------+
 
-
 scalars:
            r(profiles) =  12
              r(groups) =  1
@@ -878,9 +782,8 @@ Games in a single call must have the same number of players and the same
 action structure, with corresponding players ordered consistently across
 games.
 
-    \hypertarget{why-mixed-strategy-equilibrium-is-the-difficult-part}{%
-\section{Why mixed-strategy equilibrium is the difficult
-part}\label{why-mixed-strategy-equilibrium-is-the-difficult-part}}
+    \section{Why mixed-strategy equilibrium is the difficult
+part}\label{why-mixed-strategy-equilibrium-is-the-difficult-part}
 
 Suppose, for simplicity, that three players each have two actions
 \(a_i \in \{1,2\}\). Let \(p_i\) be the probability that player \(i\)
@@ -916,9 +819,8 @@ as solve the nonlinear systems associated with them.
 The number of pure profiles and the number of possible supports both
 grow rapidly as players and actions are added.
 
-    \hypertarget{the-solution-strategy-used-by-dagamesolve}{%
-\section{\texorpdfstring{The solution strategy used by
-\texttt{dagamesolve}}{The solution strategy used by dagamesolve}}\label{the-solution-strategy-used-by-dagamesolve}}
+    \section{\texorpdfstring{The solution strategy used by
+\texttt{dagamesolve}}{The solution strategy used by dagamesolve}}\label{the-solution-strategy-used-by-dagamesolve}
 
 At a high level, the current solver proceeds as follows.
 
@@ -967,14 +869,12 @@ procedure \textbf{intended to locate all equilibria} of the finite game.
 As with any numerical procedure, difficult or degenerate games should be
 inspected carefully.
 
-    \hypertarget{digression-on-complete-solution-of-nonlinear-polynomial-systems}{%
-\section*{Digression on Complete Solution of Nonlinear Polynomial
-Systems}\label{digression-on-complete-solution-of-nonlinear-polynomial-systems}}
+    \section*{Digression on Complete Solution of Nonlinear Polynomial
+Systems}\label{digression-on-complete-solution-of-nonlinear-polynomial-systems}
 \addcontentsline{toc}{section}{Digression on Complete Solution of
 Nonlinear Polynomial Systems}
 
-\hypertarget{homotopy-methods}{%
-\subsection{Homotopy methods}\label{homotopy-methods}}
+\subsection{Homotopy methods}\label{homotopy-methods}
 
 Homotopy methods solve a nonlinear system by embedding the problem of
 interest in a continuous family of related problems. One begins with a
@@ -1014,8 +914,7 @@ inequalities. Homotopy methods are consequently powerful and elegant,
 but they may devote substantial computation to solutions that are
 ultimately irrelevant for a finite-game problem.
 
-\hypertarget{algebraic-methods}{%
-\subsection{Algebraic methods}\label{algebraic-methods}}
+\subsection{Algebraic methods}\label{algebraic-methods}
 
 Algebraic methods treat the equilibrium conditions as a system of
 polynomial equations and apply tools from computational algebraic
@@ -1046,8 +945,7 @@ filtered. Thus algebraic methods offer considerable theoretical power,
 but their computational burden can become substantial as the numbers of
 players, actions, and candidate supports increase.
 
-\hypertarget{interval-methods}{%
-\subsection{Interval methods}\label{interval-methods}}
+\subsection{Interval methods}\label{interval-methods}
 
 Interval methods take a different approach. Instead of representing an
 unknown probability by a floating-point number \(p\), one represents it
@@ -1088,9 +986,8 @@ over a known bounded region, rule out regions that cannot contain an
 equilibrium, isolate the remaining solutions, and then use an ordinary
 point method such as Newton iteration to refine them.
 
-    \hypertarget{a-short-introduction-to-interval-methods}{%
-\section{A short introduction to interval
-methods}\label{a-short-introduction-to-interval-methods}}
+    \section{A short introduction to interval
+methods}\label{a-short-introduction-to-interval-methods}
 
 The interval component is what distinguishes the default mixed-strategy
 search from simply running Newton's method from a collection of guesses.
@@ -1129,9 +1026,8 @@ Floating-point implementations use \textbf{outward rounding}: lower
 bounds are rounded downward and upper bounds upward so that numerical
 rounding does not incorrectly exclude feasible values.
 
-    \hypertarget{inclusion-functions-and-pessimism}{%
-\subsection{Inclusion functions and
-pessimism}\label{inclusion-functions-and-pessimism}}
+    \subsection{Inclusion functions and
+pessimism}\label{inclusion-functions-and-pessimism}
 
 Replacing ordinary arithmetic in an expression by interval arithmetic
 produces an inclusion function \([f]([x])\) satisfying
@@ -1158,9 +1054,8 @@ This apparent conservatism is useful for exclusion. If zero is
 \textbf{not} contained in the interval evaluation of an equation over a
 box, no root can lie anywhere inside that box.
 
-    \hypertarget{branch-contract-and-exclude}{%
-\subsection{Branch, contract, and
-exclude}\label{branch-contract-and-exclude}}
+    \subsection{Branch, contract, and
+exclude}\label{branch-contract-and-exclude}
 
 Suppose a scalar root is sought on an initial interval \([x]\).
 
@@ -1203,21 +1098,23 @@ The interval solver used by \texttt{dagamesolve} performs
 equation-by-equation contraction and subdivision through the companion
 \texttt{intsolver} package.
 
-    \hypertarget{example-1-a-two-player-coordination-game}{%
-\section{Example 1: a two-player coordination
-game}\label{example-1-a-two-player-coordination-game}}
+    \section{Example 1: a two-player coordination
+game}\label{example-1-a-two-player-coordination-game}
 
 Consider the game
 
+{\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}lrr@{}}
-\toprule
+\toprule\noalign{}
 & Player 2: 1 & Player 2: 2 \\
-\midrule
+\midrule\noalign{}
 \endhead
+\bottomrule\noalign{}
+\endlastfoot
 \textbf{Player 1: 1} & (1,2) & (0,0.1) \\
 \textbf{Player 1: 2} & (0,0) & (3,1) \\
-\bottomrule
 \end{longtable}
+}
 
 The game has two pure-strategy equilibria and one mixed equilibrium.
 
@@ -1226,7 +1123,7 @@ The code below constructs the action profiles with
 solves the game.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{6}{\boxspacing}
+\prompt{In}{incolor}{84}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{clear}
 \PY{k}{set} obs \PY{l+m}{2}
@@ -1268,23 +1165,10 @@ dagamesolve s1\PY{o}{\PYZhy{}}s4, group(game) payoffs(pay1\PY{o}{\PYZhy{}}pay4) 
 \end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-
-
 Number of observations (\_N) was 0, now 2.
-
-
-
-
-
 (1 real change made)
-
-
 (1 real change made)
-
-
-
 (1 real change made)
-
 
   +-------------------------------------------------------------+
   | game   acts   s1   s2   s3   s4   pay1   pay2   pay3   pay4 |
@@ -1292,8 +1176,6 @@ Number of observations (\_N) was 0, now 2.
   |    1      2    1    1    2    2      1      0      0      3 |
   |    1      2    1    2    1    2      2     .1      0      1 |
   +-------------------------------------------------------------+
-
-
 
 scalars:
               r(sdeqs) =  .
@@ -1314,10 +1196,6 @@ macros:
 matrices:
       r(playeractions) :  1 x 2
 
-
-
-
-
   +------------------------------------------------------+
   | eq\_1\_1\_1   eq\_1\_1\_2   eq\_1\_2\_1   eq\_1\_2\_2   eq\_ret\textasciitilde{}1 |
   |------------------------------------------------------|
@@ -1325,14 +1203,12 @@ matrices:
   |    1.000      0.000      1.000      0.000      2.000 |
   +------------------------------------------------------+
 
-
   +------------------------------------------------------+
   | eq\_2\_1\_1   eq\_2\_1\_2   eq\_2\_2\_1   eq\_2\_2\_2   eq\_ret\textasciitilde{}2 |
   |------------------------------------------------------|
   |        .          .          .          .      3.000 |
   |    0.000      1.000      0.000      1.000      1.000 |
   +------------------------------------------------------+
-
 
   +------------------------------------------------------+
   | eq\_3\_1\_1   eq\_3\_1\_2   eq\_3\_2\_1   eq\_3\_2\_2   eq\_ret\textasciitilde{}3 |
@@ -1355,8 +1231,7 @@ last player observation for the game. Variables \texttt{eq\_rets\_q}
 contain the player-specific equilibrium payoffs, and \texttt{eq\_count}
 records the number of equilibria found.
 
-    \hypertarget{example-2-matching-pennies}{%
-\section{Example 2: matching pennies}\label{example-2-matching-pennies}}
+    \section{Example 2: matching pennies}\label{example-2-matching-pennies}
 
 Matching pennies has no pure-strategy equilibrium. Its unique Nash
 equilibrium is fully mixed, with each player placing probability (1/2)
@@ -1367,7 +1242,7 @@ strategies would report no equilibrium, while a mixed-strategy solver
 should recover the interior solution.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{7}{\boxspacing}
+\prompt{In}{incolor}{87}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{clear}
 \PY{k}{set} obs \PY{l+m}{2}
@@ -1391,18 +1266,7 @@ dagamesolve s1\PY{o}{\PYZhy{}}s4, group(game) payoffs(pay1\PY{o}{\PYZhy{}}pay4) 
 \end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-
-
 Number of observations (\_N) was 0, now 2.
-
-
-
-
-
-
-
-
-
 
   +-----------------------------------------------------------------+
   | eq\_ret\textasciitilde{}1   eq\_1\_1\_1   eq\_1\_1\_2   eq\_1\_2\_1   eq\_1\_2\_2   eq\_count |
@@ -1410,7 +1274,6 @@ Number of observations (\_N) was 0, now 2.
   |        0          .          .          .          .          . |
   |        0         .5         .5         .5         .5          1 |
   +-----------------------------------------------------------------+
-
 
 scalars:
               r(sdeqs) =  .
@@ -1432,9 +1295,8 @@ matrices:
       r(playeractions) :  1 x 2
     \end{Verbatim}
 
-    \hypertarget{example-3-a-three-player-coordination-game}{%
-\section{Example 3: a three-player coordination
-game}\label{example-3-a-three-player-coordination-game}}
+    \section{Example 3: a three-player coordination
+game}\label{example-3-a-three-player-coordination-game}
 
 The earlier presentation used the following three-player game to
 illustrate the list representation. In the presentation actions were
@@ -1451,7 +1313,7 @@ The presentation identifies three equilibria in this game. The following
 cell constructs and solves it directly.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{8}{\boxspacing}
+\prompt{In}{incolor}{89}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{clear}
 \PY{k}{set} obs \PY{l+m}{3}
@@ -1474,7 +1336,8 @@ dagamestrats acts, group(game)\PY{k}{ generate}(s)
 \PY{k}{replace} pay8 = \PY{l+m}{2}  \PY{k}{ in} \PY{l+m}{2}
 \PY{k}{replace} pay8 = \PY{l+m}{3}  \PY{k}{ in} \PY{l+m}{3}
 
-\PY{k}{list} s1\PY{o}{\PYZhy{}}s8 pay1\PY{o}{\PYZhy{}}pay8, noobs
+\PY{k}{list} s1\PY{o}{\PYZhy{}}s8, noobs
+\PY{k}{list} pay1\PY{o}{\PYZhy{}}pay8, noobs
 
 dagamesolve s1\PY{o}{\PYZhy{}}s8, group(game) payoffs(pay1\PY{o}{\PYZhy{}}pay8) equilibria(eq)
 
@@ -1487,43 +1350,29 @@ dagamesolve s1\PY{o}{\PYZhy{}}s8, group(game) payoffs(pay1\PY{o}{\PYZhy{}}pay8) 
 \end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-
-
 Number of observations (\_N) was 0, now 3.
-
-
-
-
-
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
+(1 real change made)
 (1 real change made)
 
-(1 real change made)
+  +---------------------------------------+
+  | s1   s2   s3   s4   s5   s6   s7   s8 |
+  |---------------------------------------|
+  |  1    1    1    1    2    2    2    2 |
+  |  1    1    2    2    1    1    2    2 |
+  |  1    2    1    2    1    2    1    2 |
+  +---------------------------------------+
 
-(1 real change made)
-
-(1 real change made)
-
-(1 real change made)
-
-(1 real change made)
-
-
-  +-----------------------------------------------------------------------------
-------------------+
-  | s1   s2   s3   s4   s5   s6   s7   s8   pay1   pay2   pay3   pay4   pay5
-pay6   pay7   pay8 |
-  |-----------------------------------------------------------------------------
-------------------|
-  |  1    1    1    1    2    2    2    2      2      0      0      0      0
-0      0    1.2 |
-  |  1    1    2    2    1    1    2    2      1      0      0      0      0
-0      0      2 |
-  |  1    2    1    2    1    2    1    2      4      0      0      0      0
-0      0      3 |
-  +-----------------------------------------------------------------------------
-------------------+
-
-
+  +-------------------------------------------------------+
+  | pay1   pay2   pay3   pay4   pay5   pay6   pay7   pay8 |
+  |-------------------------------------------------------|
+  |    2      0      0      0      0      0      0    1.2 |
+  |    1      0      0      0      0      0      0      2 |
+  |    4      0      0      0      0      0      0      3 |
+  +-------------------------------------------------------+
 
 scalars:
               r(sdeqs) =  .
@@ -1544,7 +1393,6 @@ macros:
 matrices:
       r(playeractions) :  1 x 3
 
-
   +----------------------------------------------------------------------------+
   | eq\_1\_1\_1   eq\_1\_1\_2   eq\_1\_2\_1   eq\_1\_2\_2   eq\_1\_3\_1   eq\_1\_3\_2   eq\_ret\textasciitilde{}1 |
   |----------------------------------------------------------------------------|
@@ -1553,7 +1401,6 @@ matrices:
   |        1          0          1          0          1          0          4 |
   +----------------------------------------------------------------------------+
 
-
   +----------------------------------------------------------------------------+
   | eq\_2\_1\_1   eq\_2\_1\_2   eq\_2\_2\_1   eq\_2\_2\_2   eq\_2\_3\_1   eq\_2\_3\_2   eq\_ret\textasciitilde{}2 |
   |----------------------------------------------------------------------------|
@@ -1561,7 +1408,6 @@ matrices:
   |        .          .          .          .          .          .          2 |
   |        0          1          0          1          0          1          3 |
   +----------------------------------------------------------------------------+
-
 
   +----------------------------------------------------------------------------+
   | eq\_3\_1\_1   eq\_3\_1\_2   eq\_3\_2\_1   eq\_3\_2\_2   eq\_3\_3\_1   eq\_3\_3\_2   eq\_ret\textasciitilde{}3 |
@@ -1572,9 +1418,8 @@ matrices:
   +----------------------------------------------------------------------------+
     \end{Verbatim}
 
-    \hypertarget{the-distinctive-feature-solving-a-sequence-of-games}{%
-\section{The distinctive feature: solving a sequence of
-games}\label{the-distinctive-feature-solving-a-sequence-of-games}}
+    \section{The distinctive feature: solving a sequence of
+games}\label{the-distinctive-feature-solving-a-sequence-of-games}
 
 For empirical work, it is often more useful to solve a family of related
 games than a single game.
@@ -1605,8 +1450,12 @@ Thus:
 Instead of solving ten games one at a time, we place all ten in one
 Stata dataset and call \texttt{dagamesolve} once.
 
+    The equilibrium count should change as \(\delta\) crosses \(\pi\).
+Because the equilibrium count is stored on the last observation of each
+game, a simple plot can summarize the sequence.
+
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{9}{\boxspacing}
+\prompt{In}{incolor}{92}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{clear}
 \PY{k}{set} obs \PY{l+m}{20}
@@ -1643,23 +1492,8 @@ dagamesolve s1\PY{o}{\PYZhy{}}s4, group(game) payoffs(pay1\PY{o}{\PYZhy{}}pay4) 
 \end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-
-
 Number of observations (\_N) was 0, now 20.
-
-
-
-
-
-
-
 (10 real changes made)
-
-
-
-
-
-
 
   +-------------------------+
   | game   delta   eq\_count |
@@ -1677,12 +1511,8 @@ Number of observations (\_N) was 0, now 20.
   +-------------------------+
     \end{Verbatim}
 
-    The equilibrium count should change as \(\delta\) crosses \(\pi\).
-Because the equilibrium count is stored on the last observation of each
-game, a simple plot can summarize the sequence.
-
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{10}{\boxspacing}
+\prompt{In}{incolor}{93}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{sort} delta
 
@@ -1694,7 +1524,7 @@ game, a simple plot can summarize the sequence.
 \end{tcolorbox}
 
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{dagamesolve_paper_files/dagamesolve_paper_30_0.pdf}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{dagamesolve_paper_files/dagamesolve_paper_29_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
@@ -1704,15 +1534,13 @@ parameter values, solve the entire sequence, and then feed equilibrium
 objects into subsequent analysis without moving between Stata and a
 stand-alone game-theory program.
 
-    \hypertarget{complete-search-fast-and-pureonly}{%
-\section{\texorpdfstring{Complete search, \texttt{fast}, and
-\texttt{pureonly}}{Complete search, fast, and pureonly}}\label{complete-search-fast-and-pureonly}}
+    \section{\texorpdfstring{Complete search, \texttt{fast}, and
+\texttt{pureonly}}{Complete search, fast, and pureonly}}\label{complete-search-fast-and-pureonly}
 
 The default mixed-strategy method uses interval search followed by
 Newton refinement. Two useful alternatives are available.
 
-\hypertarget{fast}{%
-\subsection{\texorpdfstring{\texttt{fast}}{fast}}\label{fast}}
+\subsection{\texorpdfstring{\texttt{fast}}{fast}}\label{fast}
 
 With \texttt{fast}, the interval-search stage is skipped. For each
 support, random points are drawn from the relevant mixed-strategy
@@ -1722,15 +1550,14 @@ simplices and used as starting values for Newton iteration.
 This may be dramatically faster, but it can miss equilibria if none of
 the random starting points fall in a useful basin of attraction.
 
-\hypertarget{pureonly}{%
-\subsection{\texorpdfstring{\texttt{pureonly}}{pureonly}}\label{pureonly}}
+\subsection{\texorpdfstring{\texttt{pureonly}}{pureonly}}\label{pureonly}
 
 With \texttt{pureonly}, no mixed-strategy systems are solved. This is
 useful when only pure equilibria are substantively relevant or when one
 wants a quick preliminary diagnostic.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{11}{\boxspacing}
+\prompt{In}{incolor}{96}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{set} seed \PY{l+m}{5150}
 
@@ -1745,10 +1572,6 @@ dagamesolve s1\PY{o}{\PYZhy{}}s4, group(game) payoffs(pay1\PY{o}{\PYZhy{}}pay4) 
 \end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-
-
-
-
 
   +-----------------------------------------------+
   | game   delta   eq\_count   ef\_count   ep\_count |
@@ -1772,16 +1595,27 @@ differs when a mixed equilibrium is present. Agreement in a simple
 example should not be interpreted as a general completeness guarantee
 for \texttt{fast}.
 
-    \hypertarget{numerical-controls}{%
-\section{Numerical controls}\label{numerical-controls}}
+    \section{Numerical controls}\label{numerical-controls}
 
 The default complete-search settings are:
 
-\begin{longtable}[]{@{}lrl@{}}
-\toprule
-Option & Default & Role \\
-\midrule
+{\def\LTcaptype{none} % do not increment counter
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3000}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Option
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Default
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Role
+\end{minipage} \\
+\midrule\noalign{}
 \endhead
+\bottomrule\noalign{}
+\endlastfoot
 \texttt{mbwidth(\#)} & \texttt{1e-4} & Target maximum interval-box width
 before refinement \\
 \texttt{tolerance(\#)} & \texttt{1e-12} & Newton convergence
@@ -1791,26 +1625,35 @@ numerically nearby solutions \\
 \texttt{digits(\#)} & \texttt{1e-8} & Precision parameter used in
 interval outward rounding \\
 \texttt{mnits(\#)} & \texttt{100} & Maximum Newton iterations \\
-\bottomrule
 \end{longtable}
+}
 
 For the fast search,
 
+{\def\LTcaptype{none} % do not increment counter
 \begin{longtable}[]{@{}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.30}}
-  >{\raggedleft\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.40}}
-  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.30}}@{}}
-\toprule
-Option & Default & Role \\
-\midrule
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3000}}
+  >{\raggedleft\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.4000}}
+  >{\raggedright\arraybackslash}p{(\linewidth - 4\tabcolsep) * \real{0.3000}}@{}}
+\toprule\noalign{}
+\begin{minipage}[b]{\linewidth}\raggedright
+Option
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+Default
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+Role
+\end{minipage} \\
+\midrule\noalign{}
 \endhead
+\bottomrule\noalign{}
+\endlastfoot
 \texttt{randompoints(\#)} & \texttt{50} & Random Newton starting points
 for each candidate support \\
 \texttt{tolerance(\#)} & \texttt{1e-12} & Newton convergence
 tolerance \\
 \texttt{mnits(\#)} & \texttt{100} & Maximum Newton iterations \\
-\bottomrule
 \end{longtable}
+}
 
 These parameters control different parts of the numerical procedure and
 should not be interpreted as interchangeable measures of ``accuracy.''
@@ -1819,9 +1662,8 @@ In particular, \texttt{mbwidth()} concerns the interval search,
 concerns consolidation of candidate solutions, and \texttt{digits()}
 concerns interval arithmetic.
 
-    \hypertarget{a-sequence-of-games-regression-test}{%
-\section{A sequence-of-games regression
-test}\label{a-sequence-of-games-regression-test}}
+    \section{A sequence-of-games regression
+test}\label{a-sequence-of-games-regression-test}
 
 The package's test suite contains a useful compact example: three
 two-player games are stacked in one dataset.
@@ -1841,7 +1683,7 @@ The example below is adapted directly from the current regression test
 and is useful both pedagogically and as a reproducibility check.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{12}{\boxspacing}
+\prompt{In}{incolor}{100}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{clear}
 \PY{k}{set} obs \PY{l+m}{6}
@@ -1897,60 +1739,31 @@ dagamesolve s1\PY{o}{\PYZhy{}}s4, group(game) payoffs(pay1\PY{o}{\PYZhy{}}pay4) 
 \end{tcolorbox}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-
-
 Number of observations (\_N) was 0, now 6.
-
-
-
-
-
 (6 missing values generated)
 (6 missing values generated)
 (6 missing values generated)
 (6 missing values generated)
-
 (2 real changes made)
-
 (2 real changes made)
-
 (2 real changes made)
-
 (2 real changes made)
-
 (1 real change made)
-
 (1 real change made)
-
 (1 real change made)
-
 (1 real change made)
-
 (1 real change made)
-
 (1 real change made)
-
 (1 real change made)
-
 (1 real change made)
-
 (1 real change made)
-
 (1 real change made)
-
 (1 real change made)
-
 (1 real change made)
-
 (1 real change made)
-
 (1 real change made)
-
 (1 real change made)
-
 (1 real change made)
-
-
 
   +-------------------------+
   | game   player   e\_count |
@@ -1959,15 +1772,10 @@ Number of observations (\_N) was 0, now 6.
   |    2        2         1 |
   |    3        2         1 |
   +-------------------------+
-
-
-
-
 PASS: sequence of games solved correctly
     \end{Verbatim}
 
-    \hypertarget{stored-results}{%
-\section{Stored results}\label{stored-results}}
+    \section{Stored results}\label{stored-results}
 
 \texttt{dagamesolve} stores summary information in \texttt{r()} in
 addition to the variables it creates in the dataset.
@@ -2002,7 +1810,7 @@ they can be reshaped, summarized, merged to market-level data, or used
 in subsequent programs without leaving Stata.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
-\prompt{In}{incolor}{13}{\boxspacing}
+\prompt{In}{incolor}{102}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
 \PY{k}{return}\PY{k}{ list}
 \end{Verbatim}
@@ -2030,9 +1838,8 @@ matrices:
       r(playeractions) :  1 x 2
     \end{Verbatim}
 
-    \hypertarget{computational-considerations}{%
-\section{Computational
-considerations}\label{computational-considerations}}
+    \section{Computational
+considerations}\label{computational-considerations}
 
 The computational burden grows quickly for two related reasons.
 
@@ -2076,9 +1883,8 @@ Several practical implications follow:
   multiplicity is substantively important.
 \end{itemize}
 
-    \hypertarget{what-this-makes-possible-for-empirical-work}{%
-\section{What this makes possible for empirical
-work}\label{what-this-makes-possible-for-empirical-work}}
+    \section{What this makes possible for empirical
+work}\label{what-this-makes-possible-for-empirical-work}
 
 The original motivation for these routines was closely connected to
 empirical models of strategic interaction.
@@ -2116,8 +1922,7 @@ method.
 Bajari, Hong, and Ryan (2010) provide an important example of the
 broader connection between discrete games and econometric analysis.
 
-    \hypertarget{conclusions}{%
-\section{Conclusions}\label{conclusions}}
+    \section{Conclusions}\label{conclusions}
 
 \texttt{dagamesolve} is designed to make finite-game equilibrium
 computation available inside a data-analysis environment.
@@ -2155,8 +1960,7 @@ The present notebook is intended to serve simultaneously as
 documentation, a reproducible collection of examples, and a technical
 description of the solver.
 
-    \hypertarget{references}{%
-\section*{References}\label{references}}
+    \section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
 
 Aradillas-López, Andrés. 2020. ``The Econometrics of Static Games.''
@@ -2247,6 +2051,79 @@ Radio Stations: An Empirical Analysis Using Multiple Equilibria.''
 
 Wilson, Robert. 1971. ``Computing Equilibria of N-Person Games.''
 \emph{SIAM Journal on Applied Mathematics} 21(1): 80--87.
+
+    \section*{Appendix A: Installation and software
+environment}\label{appendix-a-installation-and-software-environment}
+\addcontentsline{toc}{section}{Appendix A: Installation and software
+environment}
+
+The executable examples require Stata, a Jupyter installation with the
+\textbf{Stata (nbstata)} kernel, and the Stata/Mata packages
+\texttt{dagamesolve}, \texttt{dagamestrats}, \texttt{moremata},
+\texttt{int\_utils}, \texttt{rowmat\_utils}, and \texttt{intsolver}.
+\texttt{dagamestrats} is supplied with \texttt{dagamesolve}. The
+\texttt{dependency.do} file in the DaGameSolve repository also documents
+installation of the dependencies.
+
+\textbf{Installation.} If these packages are not already available on
+Stata's ado-path, run the following commands in Stata \textbf{before}
+running the examples. They are shown as a code listing rather than an
+automatically executing cell: this prevents Jupyter's \emph{Run All}
+command from unnecessarily reinstalling packages (the \texttt{replace}
+option can overwrite an existing installation).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ssc}\NormalTok{ install moremata, }\KeywordTok{replace}
+
+\NormalTok{net install int\_utils, }\CommentTok{///}
+\NormalTok{    from(}\StringTok{"https://raw.githubusercontent.com/mbaker21231/int\_utils/main/"}\NormalTok{) }\KeywordTok{replace}
+
+\NormalTok{net install rowmat\_utils, }\CommentTok{///}
+\NormalTok{    from(}\StringTok{"https://raw.githubusercontent.com/mbaker21231/rowmat\_utils/main/"}\NormalTok{) }\KeywordTok{replace}
+
+\NormalTok{net install intsolver, }\CommentTok{///}
+\NormalTok{    from(}\StringTok{"https://raw.githubusercontent.com/mbaker21231/IntSolver/main/"}\NormalTok{) }\KeywordTok{replace}
+
+\NormalTok{* DaGameSolve development }\KeywordTok{version}\NormalTok{ (profiling branch)}
+\NormalTok{net install dagamesolve, }\CommentTok{///}
+\NormalTok{    from(}\StringTok{"https://raw.githubusercontent.com/mbaker21231/DaGameSolve/profiling/"}\NormalTok{) }\KeywordTok{replace}
+
+\NormalTok{* Refresh Mata\textquotesingle{}s library }\FunctionTok{index}
+\KeywordTok{mata}\NormalTok{: }\KeywordTok{mata}\NormalTok{ mlib }\FunctionTok{index}
+\end{Highlighting}
+\end{Shaded}
+
+The DaGameSolve URL above intentionally selects the
+\textbf{\texttt{profiling}} branch, matching the installation used while
+preparing this notebook; it is not necessarily the released version.
+
+\textbf{Environment and package checks.} The following cell reports the
+Stata version and finds the installed implementations of the two main
+commands. It can be rerun after installing or updating packages. Using
+\texttt{c(stata\_version)} (rather than \texttt{about}) avoids embedding
+Stata license information in a notebook that may later be shared or
+published.
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{108}{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{display}\PY{k}{ as} text \PY{l+s}{\PYZdq{}}\PY{l+s}{S}\PY{l+s}{t}\PY{l+s}{a}\PY{l+s}{t}\PY{l+s}{a}\PY{l+s}{ }\PY{l+s}{v}\PY{l+s}{e}\PY{l+s}{r}\PY{l+s}{s}\PY{l+s}{i}\PY{l+s}{o}\PY{l+s}{n}\PY{l+s}{:}\PY{l+s}{ }\PY{l+s}{\PYZdq{}} \PY{n+nf}{c}(stata\PYZus{}version)
+\PY{k}{which} dagamesolve
+\PY{k}{which} dagamestrats
+\end{Verbatim}
+\end{tcolorbox}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Stata version: 19.5
+.\textbackslash{}dagamesolve.ado
+*! dagsolve v1.0.1 MJBaker 21july2014
+*! dagsolve v1.0.2 MJBaker 18sep2014
+*! dagamesolve v1.0.3 MJBaker 8may2023
+.\textbackslash{}dagamestrats.ado
+*! dagstrats v1.0.0 MJBaker 17July2014
+*! dagamestrats v2.0.0 MJBaker 30May2023
+    \end{Verbatim}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
